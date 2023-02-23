@@ -153,14 +153,36 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		m_camOrientation.y += m_camRotRate;
 	}
+	if (m_InputCommands.LMButtonDown) {
+		m_camOrientation.x += m_camRotRate;
+	}
 
-	//create look direction from Euler angles in m_camOrientation
-	m_camLookDirection.x = sin((m_camOrientation.y)*3.1415 / 180);
-	m_camLookDirection.z = cos((m_camOrientation.y)*3.1415 / 180);
+
+	////create look direction from Euler angles in m_camOrientation
+	//m_camLookDirection.x = sin((m_camOrientation.y)*3.1415 / 180);
+	//m_camLookDirection.z = cos((m_camOrientation.y)*3.1415 / 180);
+	//m_camLookDirection.Normalize();
+	
+	// parametric equations of a sphere
+	m_camLookDirection.x = cos((m_camOrientation.x) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
+	m_camLookDirection.y = sin((m_camOrientation.z) * 3.1415 / 180);
+	m_camLookDirection.z = sin((m_camOrientation.x) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
 	m_camLookDirection.Normalize();
 
+	
+	
+	
+	/*if (GetAsyncKeyState(VK_LBUTTON)) {
+		int deltaX = 
+	}*/
 	//create right vector from look Direction
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
+
+	//// parametric equations of a sphere
+	//m_camLookDirection.x = cos((m_camOrientation.x) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
+	//m_camLookDirection.y = sin((m_camOrientation.x) * 3.1415 / 180);
+	//m_camLookDirection.z = sin((m_camOrientation.x) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
+	//m_camLookDirection.Normalize();
 
 	//process input and update stuff
 	if (m_InputCommands.forward)

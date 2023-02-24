@@ -52,6 +52,9 @@ Game::Game()
 	m_camOrientation.x = 0.0f;
 	m_camOrientation.y = 0.0f;
 	m_camOrientation.z = 0.0f;
+	
+	m_pitch = 0.0f;
+	m_yaw = 0.0f;
 
 }
 
@@ -142,8 +145,8 @@ void Game::Update(DX::StepTimer const& timer)
 {
 	//TODO  any more complex than this, and the camera should be abstracted out to somewhere else
 	//camera motion is on a plane, so kill the 7 component of the look direction
-	Vector3 planarMotionVector = m_camLookDirection;
-	planarMotionVector.y = 0.0;
+	/*Vector3 planarMotionVector = m_camLookDirection;
+	planarMotionVector.y = 0.0;*/
 
 	if (m_InputCommands.rotRight)
 	{
@@ -154,9 +157,26 @@ void Game::Update(DX::StepTimer const& timer)
 		m_camOrientation.y += m_camRotRate;
 	}
 	if (m_InputCommands.LMButtonDown) {
+		
 		m_camOrientation.x += m_camRotRate;
 	}
+	
+	//auto mouse = m_mouse->GetState();
 
+	//if (mouse.positionMode == Mouse::MODE_RELATIVE)
+	//{
+	//	Vector3 delta = Vector3(float(mouse.x), float(mouse.y), 0.f)
+	//		* m_camRotRate;
+
+	//	m_pitch -= delta.y;
+	//	m_yaw -= delta.x;
+	//}
+
+	//m_mouse->SetMode(mouse.leftButton
+	//	? Mouse::MODE_RELATIVE : Mouse::MODE_ABSOLUTE);
+
+
+	//XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f);
 
 	////create look direction from Euler angles in m_camOrientation
 	//m_camLookDirection.x = sin((m_camOrientation.y)*3.1415 / 180);
@@ -165,8 +185,8 @@ void Game::Update(DX::StepTimer const& timer)
 	
 	// parametric equations of a sphere
 	m_camLookDirection.x = cos((m_camOrientation.x) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
-	m_camLookDirection.y = sin((m_camOrientation.z) * 3.1415 / 180);
-	m_camLookDirection.z = sin((m_camOrientation.x) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
+	m_camLookDirection.y = sin((m_camOrientation.x) * 3.1415 / 180);
+	m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.y) * 3.1415 / 180);
 	m_camLookDirection.Normalize();
 
 	

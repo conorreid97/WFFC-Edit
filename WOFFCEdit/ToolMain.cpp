@@ -354,4 +354,9 @@ void ToolMain::UpdateInput(MSG * msg)
 	else m_toolInputCommands.rotLeft = false;
 
 	//WASD
+
+
+	// Mouse Controls
+	if (m_keyArray[])
+
 }

@@ -357,6 +357,13 @@ void ToolMain::UpdateInput(MSG * msg)
 
 
 	// Mouse Controls
-	if (m_keyArray[])
+	if (m_keyArray['RMB']) {
+		m_toolInputCommands.RMButtonDown = true;
+	}
+	else m_toolInputCommands.RMButtonDown = false;
+	if (m_keyArray['LMB']) {
+		m_toolInputCommands.LMButtonDown = true;
+	}
+	else m_toolInputCommands.LMButtonDown = false;
 
 }

@@ -148,17 +148,17 @@ void Game::Update(DX::StepTimer const& timer)
 	/*Vector3 planarMotionVector = m_camLookDirection;
 	planarMotionVector.y = 0.0;*/
 
-	if (m_InputCommands.rotRight)
+	/*if (m_InputCommands.rotRight)
 	{
 		m_camOrientation.y -= m_camRotRate;
-	}
-	if (m_InputCommands.rotLeft)
-	{
-		m_camOrientation.y += m_camRotRate;
-	}
-	if (m_InputCommands.LMButtonDown) {
-		
-		m_camOrientation.x += m_camRotRate;
+	}*/
+	
+	if (m_InputCommands.RMButtonDown) {
+		if (/*m_InputCommands.rotLeft*/ m_InputCommands.MouseMoving)
+		{
+			m_camOrientation.y += m_camRotRate;
+		}
+		//m_camOrientation.x += m_camRotRate;
 	}
 	
 	//auto mouse = m_mouse->GetState();

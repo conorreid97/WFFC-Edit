@@ -20,5 +20,7 @@ struct InputCommands
 	bool LMButtonDown;
 	// mouse r button
 	bool RMButtonDown;
+
+	bool MouseMoving;
 	
 };

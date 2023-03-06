@@ -306,7 +306,11 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 	case WM_MOUSEMOVE:
+		//if (m_toolInputCommands.RMButtonDown) {
+		m_toolInputCommands.MouseMoving = true;
+		//}
 		break;
+	
 
 	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
@@ -316,6 +320,10 @@ void ToolMain::UpdateInput(MSG * msg)
 	case WM_LBUTTONUP:
 		m_toolInputCommands.LMButtonDown = false;
 		break;
+	case WM_RBUTTONDOWN:
+		m_toolInputCommands.RMButtonDown = true;
+	case WM_RBUTTONUP:
+		m_toolInputCommands.RMButtonDown = false;
 	}
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement
@@ -356,14 +364,14 @@ void ToolMain::UpdateInput(MSG * msg)
 	//WASD
 
 
-	// Mouse Controls
-	if (m_keyArray['RMB']) {
-		m_toolInputCommands.RMButtonDown = true;
-	}
-	else m_toolInputCommands.RMButtonDown = false;
-	if (m_keyArray['LMB']) {
-		m_toolInputCommands.LMButtonDown = true;
-	}
-	else m_toolInputCommands.LMButtonDown = false;
+	//// Mouse Controls
+	//if (m_keyArray['RMB']) {
+	//	m_toolInputCommands.RMButtonDown = true;
+	//}
+	//else m_toolInputCommands.RMButtonDown = false;
+	//if (m_keyArray['LMB']) {
+	//	m_toolInputCommands.LMButtonDown = true;
+	//}
+	//else m_toolInputCommands.LMButtonDown = false;
 
 }

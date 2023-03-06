@@ -153,8 +153,9 @@ void Game::Update(DX::StepTimer const& timer)
 		m_camOrientation.y -= m_camRotRate;
 	}*/
 	
-	if (m_InputCommands.RMButtonDown) {
-		if (/*m_InputCommands.rotLeft*/ m_InputCommands.MouseMoving)
+	
+	if (m_InputCommands.LMButtonDown) {
+		if (m_InputCommands.mousePosXPrev > 600)
 		{
 			m_camOrientation.y += m_camRotRate;
 		}

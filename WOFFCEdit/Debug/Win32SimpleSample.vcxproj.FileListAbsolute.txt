@@ -1,3 +1,4 @@
 D:\conor\Github\CMP405_Tools\WOFFCEdit\Debug\WoFEdit.exe
 D:\LocalWorkDir\1802776\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe
 D:\LocalWorkDir\1802776\CMP405\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe
+D:\LocalWorkDir\1802776\Github\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe

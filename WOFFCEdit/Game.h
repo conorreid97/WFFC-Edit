@@ -51,6 +51,10 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
 
+	// mouse select
+	int MousePicking();
+
+
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif
@@ -81,6 +85,9 @@ private:
 	float m_pitch;
 	float m_yaw;
 	float m_camRotRate;
+
+	// Select tool
+	RECT	m_ScreenDimensions;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

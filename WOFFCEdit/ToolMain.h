@@ -6,7 +6,9 @@
 #include "sqlite3.h"
 #include "SceneObject.h"
 #include "InputCommands.h"
+
 #include <vector>
+
 
 
 class ToolMain
@@ -27,8 +29,10 @@ public: //methods
 	void	UpdateInput(MSG *msg);
 
 	//float getPosVector() { return PosVector; };
-	float currentPos;
-	float prevPos;
+	float currentPosX;
+	float prevPosX;
+	float currentPosY;
+	float prevPosY;
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
@@ -55,5 +59,7 @@ private:	//variables
 	POINT p;
 	
 	// track drag positions
-	std::vector<float>PosVector;
+	std::vector<float>PosVectorX;
+	std::vector<float>PosVectorY;
+
 };

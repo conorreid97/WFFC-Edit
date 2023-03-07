@@ -20,11 +20,17 @@ ToolMain::ToolMain()
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
 
-	PosVector.push_back(0.0f); //= 0.0f;
-	PosVector.push_back(0.0f);
+	PosVectorX.push_back(0.0f); //= 0.0f;
+	PosVectorX.push_back(0.0f);
+	PosVectorY.push_back(0.0f);
+	PosVectorY.push_back(0.0f);
 
-	currentPos = PosVector.back();
-	prevPos = PosVector[PosVector.size() - 1];
+
+	currentPosX = PosVectorX.back();
+	prevPosX = PosVectorX[PosVectorX.size() - 1];
+	currentPosY = PosVectorY.back();
+	prevPosY = PosVectorY[PosVectorY.size() - 1];
+
 }
 
 
@@ -293,6 +299,12 @@ void ToolMain::Tick(MSG *msg)
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
 
+	if (m_toolInputCommands.LMButtonDown) {
+		m_selectedObject = m_d3dRenderer.MousePicking();
+		m_toolInputCommands.LMButtonDown = false;
+	}
+
+
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
 }
@@ -322,13 +334,20 @@ void ToolMain::UpdateInput(MSG * msg)
 		//if (m_toolInputCommands.RMButtonDown) {
 		m_toolInputCommands.mousePosX = p.x;
 		m_toolInputCommands.mousePosY = p.y;
-		PosVector.push_back(p.x);
+		PosVectorX.push_back(p.x);
+		PosVectorY.push_back(p.y);
 		
-		currentPos = PosVector.back();
-		prevPos = PosVector[PosVector.size() - 2];
+		currentPosX = PosVectorX.back();
+		prevPosX = PosVectorX[PosVectorX.size() - 2];
+		currentPosY = PosVectorY.back();
+		prevPosY = PosVectorY[PosVectorY.size() - 2];
 
-		m_toolInputCommands.mousePosX = currentPos;
-		m_toolInputCommands.mousePosXPrev = prevPos;
+		m_toolInputCommands.mousePosX = currentPosX;
+		m_toolInputCommands.mousePosXPrev = prevPosX;
+		m_toolInputCommands.mousePosY = currentPosY;
+		m_toolInputCommands.mousePosYPrev = prevPosY;
+
+
 		//}
 		break;
 	
@@ -343,8 +362,10 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 	case WM_RBUTTONDOWN:
 		m_toolInputCommands.RMButtonDown = true;
+		break;
 	case WM_RBUTTONUP:
 		m_toolInputCommands.RMButtonDown = false;
+		break;
 	}
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement

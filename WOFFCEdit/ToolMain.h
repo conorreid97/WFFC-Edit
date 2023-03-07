@@ -26,6 +26,10 @@ public: //methods
 	void	Tick(MSG *msg);
 	void	UpdateInput(MSG *msg);
 
+	//float getPosVector() { return PosVector; };
+	float currentPos;
+	float prevPos;
+
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
 	ChunkObject					m_chunk;		//our landscape chunk
@@ -50,4 +54,6 @@ private:	//variables
 	
 	POINT p;
 	
+	// track drag positions
+	std::vector<float>PosVector;
 };

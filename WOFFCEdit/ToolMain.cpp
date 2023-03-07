@@ -19,7 +19,12 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back		= false;
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
-	
+
+	PosVector.push_back(0.0f); //= 0.0f;
+	PosVector.push_back(0.0f);
+
+	currentPos = PosVector.back();
+	prevPos = PosVector[PosVector.size() - 1];
 }
 
 
@@ -294,7 +299,9 @@ void ToolMain::Tick(MSG *msg)
 
 void ToolMain::UpdateInput(MSG * msg)
 {
-	std::vector<float>PosVector;
+	
+
+
 	switch (msg->message)
 	{
 		//Global inputs,  mouse position and keys etc
@@ -307,9 +314,9 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 		
 	case WM_MOUSEMOVE:
-		GetCursorPos(&p);
+		/*GetCursorPos(&p);
 		m_toolInputCommands.mousePosXPrev = p.x;
-		m_toolInputCommands.mousePosYPrev = p.y;
+		m_toolInputCommands.mousePosYPrev = p.y;*/
 
 		GetCursorPos(&p);
 		//if (m_toolInputCommands.RMButtonDown) {
@@ -317,6 +324,11 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.mousePosY = p.y;
 		PosVector.push_back(p.x);
 		
+		currentPos = PosVector.back();
+		prevPos = PosVector[PosVector.size() - 2];
+
+		m_toolInputCommands.mousePosX = currentPos;
+		m_toolInputCommands.mousePosXPrev = prevPos;
 		//}
 		break;
 	

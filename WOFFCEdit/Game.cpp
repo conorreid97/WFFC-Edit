@@ -155,7 +155,11 @@ void Game::Update(DX::StepTimer const& timer)
 	
 	
 	if (m_InputCommands.LMButtonDown) {
-		if (m_InputCommands.mousePosXPrev > 600)
+		if (m_InputCommands.mousePosX > m_InputCommands.mousePosXPrev)
+		{
+			m_camOrientation.y -= m_camRotRate;
+		}
+		else if (m_InputCommands.mousePosX < m_InputCommands.mousePosXPrev)
 		{
 			m_camOrientation.y += m_camRotRate;
 		}
@@ -179,16 +183,16 @@ void Game::Update(DX::StepTimer const& timer)
 
 	//XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f);
 
-	////create look direction from Euler angles in m_camOrientation
-	//m_camLookDirection.x = sin((m_camOrientation.y)*3.1415 / 180);
-	//m_camLookDirection.z = cos((m_camOrientation.y)*3.1415 / 180);
-	//m_camLookDirection.Normalize();
-	
-	// parametric equations of a sphere
-	m_camLookDirection.x = cos((m_camOrientation.x) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
-	m_camLookDirection.y = sin((m_camOrientation.x) * 3.1415 / 180);
-	m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.y) * 3.1415 / 180);
+	//create look direction from Euler angles in m_camOrientation
+	m_camLookDirection.x = sin((m_camOrientation.y)*3.1415 / 180);
+	m_camLookDirection.z = cos((m_camOrientation.y)*3.1415 / 180);
 	m_camLookDirection.Normalize();
+	
+	//// parametric equations of a sphere
+	//m_camLookDirection.x = sin((m_camOrientation.y) * 3.1415 / 180) * sin((m_camOrientation.x) * 3.1415 / 180);
+	//m_camLookDirection.y = cos((m_camOrientation.x) * 3.1415 / 180);
+	//m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * sin((m_camOrientation.x) * 3.1415 / 180);
+	//m_camLookDirection.Normalize();
 
 	
 	

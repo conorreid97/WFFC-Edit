@@ -56,6 +56,9 @@ Game::Game()
 	m_pitch = 0.0f;
 	m_yaw = 0.0f;
 
+	pickedDistance = 1000.0f;
+	closestPick = 1000.0f;
+
 }
 
 Game::~Game()
@@ -151,27 +154,27 @@ void Game::Update(DX::StepTimer const& timer)
 	/*Vector3 planarMotionVector = m_camLookDirection;
 	planarMotionVector.y = 0.0;*/
 
-	/*if (m_InputCommands.rotRight)
-	{
-		m_camOrientation.y -= m_camRotRate;
-	}*/
+	//if (m_InputCommands.rotRight)
+	//{
+	//	m_camOrientation.x -= m_camRotRate;
+	//}
 	
 	
 	if (m_InputCommands.RMButtonDown) {
 		if (m_InputCommands.mousePosX > m_InputCommands.mousePosXPrev)
 		{
-			m_camOrientation.y -= m_camRotRate;
+			m_camOrientation.y += m_camRotRate;
 		}
 		else if (m_InputCommands.mousePosX < m_InputCommands.mousePosXPrev)
 		{
-			m_camOrientation.y += m_camRotRate;
+			m_camOrientation.y -= m_camRotRate;
 		}
 		if (m_InputCommands.mousePosY > m_InputCommands.mousePosYPrev) {
-			m_camOrientation.z -= m_camRotRate;
+			m_camOrientation.x -= m_camRotRate;
 		}
 		else if (m_InputCommands.mousePosY < m_InputCommands.mousePosYPrev)
 		{
-			m_camOrientation.z += m_camRotRate;
+			m_camOrientation.x += m_camRotRate;
 		}
 		//m_camOrientation.x += m_camRotRate;
 	}
@@ -204,9 +207,9 @@ void Game::Update(DX::StepTimer const& timer)
 	m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * sin((m_camOrientation.x) * 3.1415 / 180);*/
 
 	// parametric equations of a sphere
-	m_camLookDirection.x = cos((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.x));
-	m_camLookDirection.y = sin((m_camOrientation.z) * 3.1415 / 180);
-	m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.x));
+	m_camLookDirection.x = cos((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
+	m_camLookDirection.y = sin((m_camOrientation.x) * 3.1415 / 180);
+	m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
 	m_camLookDirection.Normalize();
 
 	
@@ -309,6 +312,8 @@ void Game::Render()
 	WCHAR   Buffer[256];
 	std::wstring var = L"Cam X: " + std::to_wstring(m_camPosition.x) + L"Cam Z: " + std::to_wstring(m_camPosition.z);
 	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
+	std::wstring pickVar = L"Closest Pick Dist: " + std::to_wstring(closestPick) + L"Current pick dist: " + std::to_wstring(pickedDistance);
+	m_font->DrawString(m_sprites.get(), pickVar.c_str(), XMFLOAT2(100, 40), Colors::Yellow);
 	m_sprites->End();
 
 	//RENDER OBJECTS FROM SCENEGRAPH
@@ -680,7 +685,8 @@ std::wstring StringToWCHART(std::string s)
 
 int Game::MousePicking() {
 	int selectedID = -1;
-	float pickedDistance = 0;
+	//pickedDistance = 0;
+	//closestPick = 0.0f;
 
 	//setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
 	//they may look the same but note, the difference in Z
@@ -716,10 +722,18 @@ int Game::MousePicking() {
 			//checking for ray intersection
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
+				XMFLOAT3 modelPos = XMFLOAT3(m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z); 
+				float Distance = float(sqrtf((modelPos.x - m_camPosition.x) * (modelPos.x - m_camPosition.x) + (modelPos.y - m_camPosition.y) * (modelPos.y - m_camPosition.y) + (modelPos.z - m_camPosition.z) * (modelPos.z - m_camPosition.z)));//XMFLOAT3()
+				pickedDistance = Distance;
+				if (pickedDistance < closestPick) {
+					closestPick = pickedDistance;
+				}
 				selectedID = i;
 			}
 		}
 	}
+
+
 
 	//if we got a hit.  return it.  
 	return selectedID;

@@ -332,10 +332,11 @@ void ToolMain::UpdateInput(MSG * msg)
 
 		GetCursorPos(&p);
 		//if (m_toolInputCommands.RMButtonDown) {
-		m_toolInputCommands.mousePosX = p.x;
-		m_toolInputCommands.mousePosY = p.y;
-		PosVectorX.push_back(p.x);
-		PosVectorY.push_back(p.y);
+		
+		m_toolInputCommands.mousePosX = GET_X_LPARAM(msg->lParam);/* p.x*/
+		m_toolInputCommands.mousePosY = GET_X_LPARAM(msg->lParam);/*p.y;*/
+		PosVectorX.push_back(/*m_toolInputCommands.mousePosX*/p.x);
+		PosVectorY.push_back(/*m_toolInputCommands.mousePosY*/p.y);
 		
 		currentPosX = PosVectorX.back();
 		prevPosX = PosVectorX[PosVectorX.size() - 2];

@@ -73,6 +73,9 @@ private:
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
 
+	float pickedDistance;
+	float closestPick;
+
 	//functionality
 	float								m_movespeed;
 

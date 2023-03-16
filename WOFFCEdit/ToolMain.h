@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "sqlite3.h"
 #include "SceneObject.h"
+//#include "DirectXHelpers.h"
 #include "InputCommands.h"
 #include <vector>
 
@@ -48,6 +49,6 @@ private:	//variables
 	int m_height;
 	int m_currentChunk;			//the current chunk of thedatabase that we are operating on.  Dictates loading and saving. 
 	
-
-	
+	std::vector<int>posVectorX;
+	std::vector<int>posVectorY;
 };

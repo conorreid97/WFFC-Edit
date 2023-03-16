@@ -38,6 +38,8 @@ public:
 	virtual void OnDeviceLost() override;
 	virtual void OnDeviceRestored() override;
 
+	int MousePicking();
+
 	// Messages
 	void OnActivated();
 	void OnDeactivated();
@@ -50,6 +52,9 @@ public:
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
+
+
+	RECT		m_ScreenDimensions;
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();

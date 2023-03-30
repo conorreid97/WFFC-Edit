@@ -290,6 +290,9 @@ void ToolMain::Tick(MSG *msg)
 		//update Scenegraph
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
+	
+
+
 
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
@@ -297,8 +300,15 @@ void ToolMain::Tick(MSG *msg)
 		m_toolInputCommands.mouse_LB_Down = false;
 	}
 
+	// change selected object to wireframe mode
+	m_sceneGraph[m_selectedObject].editor_wireframe = true;
+
+	
+
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
+	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
+
 }
 
 void ToolMain::UpdateInput(MSG * msg)

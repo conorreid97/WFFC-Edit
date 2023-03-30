@@ -137,6 +137,7 @@ void Game::Tick(InputCommands *Input)
 #endif
 
     Render();
+
 }
 
 // Updates the world.
@@ -164,18 +165,19 @@ void Game::Update(DX::StepTimer const& timer)
 			m_camOrientation.y += m_camRotRate;
 		}
 		else if (m_InputCommands.mouse_Y > m_InputCommands.prev_mouse_Y) {
-			m_camOrientation.z -= m_camRotRate;
+			m_camOrientation.x -= m_camRotRate;
 		}
 		else if (m_InputCommands.mouse_Y < m_InputCommands.prev_mouse_Y) {
-			m_camOrientation.z += m_camRotRate;
+			m_camOrientation.x += m_camRotRate;
 		}
 	}
 
-	//create look direction from Euler angles in m_camOrientation
+	// parametric equations of a sphere
 	m_camLookDirection.x = cos((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
-	m_camLookDirection.y = sin((m_camOrientation.z) * 3.1415 / 180);
+	m_camLookDirection.y = sin((m_camOrientation.x) * 3.1415 / 180);
 	m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
 	m_camLookDirection.Normalize();
+
 
 	//create right vector from look Direction
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
@@ -282,7 +284,8 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, m_displayList[i].m_wireframe);	//last variable in draw,  make TRUE for wireframe
+		
 
 		m_deviceResources->PIXEndEvent();
 	}
@@ -292,7 +295,7 @@ void Game::Render()
 	context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
 	context->OMSetDepthStencilState(m_states->DepthDefault(),0);
 	context->RSSetState(m_states->CullNone());
-//	context->RSSetState(m_states->Wireframe());		//uncomment for wireframe
+	//context->RSSetState(m_states->Wireframe());		//uncomment for wireframe
 
 	//Render the batch,  This is handled in the Display chunk becuase it has the potential to get complex
 	m_displayChunk.RenderBatch(m_deviceResources);
@@ -632,6 +635,8 @@ std::wstring StringToWCHART(std::string s)
 
 int Game::MousePicking()
 {
+	auto context = m_deviceResources->GetD3DDeviceContext();
+
 	int selectedID = -1;
 	float pickedDistance = 0;
 
@@ -670,8 +675,13 @@ int Game::MousePicking()
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
 				selectedID = i;
+				m_displayList[i].m_wireframe = true;
+
+				m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, true);	//last variable in draw,  make TRUE for wireframe
+
 			}
 		}
+		
 	}
 
 	//if we got a hit.  return it.  

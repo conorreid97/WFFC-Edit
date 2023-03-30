@@ -14,6 +14,6 @@ struct InputCommands
 	int prev_mouse_Y;
 	bool mouse_LB_Down;
 	bool mouse_RB_Down;
-
+	bool multiSelect;
 
 };

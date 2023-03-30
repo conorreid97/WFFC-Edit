@@ -108,6 +108,14 @@ void Game::Initialize(HWND window, int width, int height)
     m_effect1->Play(true);
     m_effect2->Play();
 #endif
+
+	// set my variables
+	bSelected = false;
+	selectedID = -1;
+	pickedDistance = 0;
+	for (int i = 0; i < 15; i++) {
+		selectedID_List.push_back(-1);
+	}
 }
 
 void Game::SetGridState(bool state)
@@ -236,7 +244,13 @@ void Game::Update(DX::StepTimer const& timer)
     }
 #endif
 
-   
+   // reset selected list
+	if (!m_InputCommands.multiSelect)
+	{
+		for (int i = 15; i < selectedID_List.size(); i++) {
+			selectedID_List.pop_back();
+		}
+	}
 }
 #pragma endregion
 
@@ -283,12 +297,34 @@ void Game::Render()
 															m_displayList[i].m_orientation.z *3.1415 / 180);
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
+		for (int j = 0; j < selectedID_List.size(); j++) {
+			if (i == selectedID_List[j]) {
+				m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, m_displayList[i].m_wireframe);	//last variable in draw,  make TRUE for wireframe
+			}
+		}
+		if (i == selectedID) {
+			m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
+			
+		}
+		else if (i == selectedID_List[i])
+		{
+			m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);
+		}
+		else {
+			m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+
+			//if (m_InputCommands.multiSelect) {
+			//	if (i == selectedID_List.back()) {
+			//		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
+			//	}
+			//}
+		}
+		//m_displayList[currentID].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);
 		
-
 		m_deviceResources->PIXEndEvent();
 	}
+
     m_deviceResources->PIXEndEvent();
 
 	//RENDER TERRAIN
@@ -637,8 +673,7 @@ int Game::MousePicking()
 {
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
-	int selectedID = -1;
-	float pickedDistance = 0;
+	
 
 	//setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
 		//they may look the same but note, the difference in Z
@@ -675,10 +710,10 @@ int Game::MousePicking()
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 			{
 				selectedID = i;
-				m_displayList[i].m_wireframe = true;
-
-				m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, true);	//last variable in draw,  make TRUE for wireframe
-
+				if (m_InputCommands.multiSelect) {
+					selectedID_List.push_back(i);
+				}
+				bSelected = true;
 			}
 		}
 		

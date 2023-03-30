@@ -389,6 +389,9 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.rotLeft = true;
 	}
 	else m_toolInputCommands.rotLeft = false;
-
+	if (m_keyArray[17]) {	// 17 is the number for the ctrl button
+		m_toolInputCommands.multiSelect = true;
+	}
+	else m_toolInputCommands.multiSelect = false;
 	//WASD
 }

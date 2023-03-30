@@ -132,6 +132,12 @@ private:
     DirectX::SimpleMath::Matrix                                             m_projection;
 
 
+	// bool for deselecting
+	bool bSelected;
+	int selectedID;
+	float pickedDistance;
+
+	std::vector<int>selectedID_List;
 };
 
 std::wstring StringToWCHART(std::string s);

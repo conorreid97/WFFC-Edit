@@ -135,7 +135,10 @@ private:
 	// bool for deselecting
 	bool bSelected;
 	int selectedID;
-	float pickedDistance;
+
+	//picking distance
+	float selectedDistance;
+	float closestPick;
 
 	std::vector<int>selectedID_List;
 };

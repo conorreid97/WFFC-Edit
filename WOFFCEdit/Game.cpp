@@ -53,6 +53,8 @@ Game::Game()
 	m_camOrientation.y = 0.0f;
 	m_camOrientation.z = 0.0f;
 
+	
+
 }
 
 Game::~Game()
@@ -112,10 +114,11 @@ void Game::Initialize(HWND window, int width, int height)
 	// set my variables
 	bSelected = false;
 	selectedID = -1;
-	pickedDistance = 0;
 	for (int i = 0; i < 15; i++) {
 		selectedID_List.push_back(-1);
 	}
+	selectedDistance = 1000.0f;
+	closestPick = 1000.0f;
 }
 
 void Game::SetGridState(bool state)
@@ -294,7 +297,8 @@ void Game::Render()
 	std::wstring varRot = L"Cam X Rot: " + std::to_wstring(m_camOrientation.x) + L"Cam Y Rot: " + std::to_wstring(m_camOrientation.y) + L"Cam Z Rot: " + std::to_wstring(m_camOrientation.z);
 	m_font->DrawString(m_sprites.get(), varRot.c_str(), XMFLOAT2(100, 50), Colors::Yellow);
 
-
+	std::wstring varSelected = L"Closest Pick Distance: " + std::to_wstring(closestPick) + L"Current Pick Distance: " + std::to_wstring(selectedDistance);
+	m_font->DrawString(m_sprites.get(), varSelected.c_str(), XMFLOAT2(100, 90), Colors::Yellow);
 	m_sprites->End();
 
 	//RENDER OBJECTS FROM SCENEGRAPH
@@ -327,6 +331,7 @@ void Game::Render()
 			for (int j = 0; j < selectedID_List.size(); j++) {
 				if (i == selectedID_List[j]) {
 					m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
+					
 				}
 				//else if (j != selectedID_List[j]) {
 				//	m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
@@ -470,7 +475,6 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 	int numObjects = SceneGraph->size();
 	for (int i = 0; i < numObjects; i++)
 	{
-		
 		//create a temp display object that we will populate then append to the display list.
 		DisplayObject newDisplayObject;
 		
@@ -532,10 +536,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		
 		m_displayList.push_back(newDisplayObject);
 		
-	}
-		
-		
-		
+	}	
 }
 
 void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
@@ -721,8 +722,21 @@ int Game::MousePicking()
 		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
 		{
 			//checking for ray intersection
-			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
+			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, selectedDistance))
 			{
+				XMFLOAT3 modelPos = XMFLOAT3(m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z);
+				
+				// get the distance from selection
+				float distance = float(sqrtf((modelPos.x - m_camPosition.x) * (modelPos.x - m_camPosition.x) +
+											(modelPos.y - m_camPosition.y) * (modelPos.y - m_camPosition.y) +
+											(modelPos.z - m_camPosition.z) * (modelPos.z - m_camPosition.z)));
+				// update the closest pick
+				selectedDistance = distance;
+				if (selectedDistance < closestPick) {
+					closestPick = selectedDistance;
+				}
+
+				// selecting and multi-selecting
 				selectedID = i;
 				if (m_InputCommands.multiSelect) {
 					selectedID_List.push_back(i);

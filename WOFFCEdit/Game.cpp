@@ -166,10 +166,10 @@ void Game::Update(DX::StepTimer const& timer)
 	}*/
 
 	if (m_InputCommands.mouse_RB_Down) {
-		if (m_InputCommands.mouse_X > m_InputCommands.prev_mouse_X) {
+		if (m_InputCommands.mouse_X < m_InputCommands.prev_mouse_X) {
 			m_camOrientation.y -= m_camRotRate;
 		}
-		else if (m_InputCommands.mouse_X < m_InputCommands.prev_mouse_X) {
+		else if (m_InputCommands.mouse_X > m_InputCommands.prev_mouse_X) {
 			m_camOrientation.y += m_camRotRate;
 		}
 		else if (m_InputCommands.mouse_Y > m_InputCommands.prev_mouse_Y) {
@@ -178,6 +178,14 @@ void Game::Update(DX::StepTimer const& timer)
 		else if (m_InputCommands.mouse_Y < m_InputCommands.prev_mouse_Y) {
 			m_camOrientation.x += m_camRotRate;
 		}
+	}
+
+	// lock the camera when reaches the bottom and top
+	if (m_camOrientation.x <= -90) {
+		m_camOrientation.x = -90;
+	}
+	if (m_camOrientation.x >= 90) {
+		m_camOrientation.x = 90;
 	}
 
 	// parametric equations of a sphere
@@ -258,16 +266,16 @@ void Game::Update(DX::StepTimer const& timer)
 // Draws the scene.
 void Game::Render()
 {
-    // Don't try to render anything before the first Update.
-    if (m_timer.GetFrameCount() == 0)
-    {
-        return;
-    }
+	// Don't try to render anything before the first Update.
+	if (m_timer.GetFrameCount() == 0)
+	{
+		return;
+	}
 
-    Clear();
+	Clear();
 
-    m_deviceResources->PIXBeginEvent(L"Render");
-    auto context = m_deviceResources->GetD3DDeviceContext();
+	m_deviceResources->PIXBeginEvent(L"Render");
+	auto context = m_deviceResources->GetD3DDeviceContext();
 
 	if (m_grid)
 	{
@@ -276,11 +284,17 @@ void Game::Render()
 		const XMVECTORF32 yaxis = { 0.f, 0.f, 512.f };
 		DrawGrid(xaxis, yaxis, g_XMZero, 512, 512, Colors::Gray);
 	}
+
 	//CAMERA POSITION ON HUD
 	m_sprites->Begin();
 	WCHAR   Buffer[256];
-	std::wstring var = L"Cam X: " + std::to_wstring(m_camPosition.x) + L"Cam Z: " + std::to_wstring(m_camPosition.z);
-	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
+	std::wstring varPos = L"Cam X: " + std::to_wstring(m_camPosition.x) + L"Cam Y: " + std::to_wstring(m_camPosition.y) + L"Cam Z: " + std::to_wstring(m_camPosition.z);
+	m_font->DrawString(m_sprites.get(), varPos.c_str(), XMFLOAT2(100, 10), Colors::Yellow);
+
+	std::wstring varRot = L"Cam X Rot: " + std::to_wstring(m_camOrientation.x) + L"Cam Y Rot: " + std::to_wstring(m_camOrientation.y) + L"Cam Z Rot: " + std::to_wstring(m_camOrientation.z);
+	m_font->DrawString(m_sprites.get(), varRot.c_str(), XMFLOAT2(100, 50), Colors::Yellow);
+
+
 	m_sprites->End();
 
 	//RENDER OBJECTS FROM SCENEGRAPH
@@ -292,52 +306,52 @@ void Game::Render()
 		const XMVECTORF32 translate = { m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z };
 
 		//convert degrees into radians for rotation matrix
-		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y *3.1415 / 180,
-															m_displayList[i].m_orientation.x *3.1415 / 180,
-															m_displayList[i].m_orientation.z *3.1415 / 180);
+		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y * 3.1415 / 180,
+			m_displayList[i].m_orientation.x * 3.1415 / 180,
+			m_displayList[i].m_orientation.z * 3.1415 / 180);
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
-		for (int j = 0; j < selectedID_List.size(); j++) {
-			if (i == selectedID_List[j]) {
+	
+		// normal selecting
+		if (!m_InputCommands.multiSelect) {
+			if (i == selectedID) {
 				m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
-
+			}
+			else if (i != selectedID) {
+				m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
 			}
 		}
-		if (i == selectedID) {
-			m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
-			
-		}
-		else if (i == selectedID_List[i])
-		{
-			m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);
-		}
-		else {
-			m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+		// multiple selection
+		if (m_InputCommands.multiSelect) {
 
-			//if (m_InputCommands.multiSelect) {
-			//	if (i == selectedID_List.back()) {
-			//		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
-			//	}
-			//}
+			for (int j = 0; j < selectedID_List.size(); j++) {
+				if (i == selectedID_List[j]) {
+					m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
+				}
+				//else if (j != selectedID_List[j]) {
+				//	m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+				//}
+				else if (!m_InputCommands.multiSelect) {
+					m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+				}
+			}
 		}
-		//m_displayList[currentID].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);
-		
 		m_deviceResources->PIXEndEvent();
 	}
-
-    m_deviceResources->PIXEndEvent();
+	m_deviceResources->PIXEndEvent();
 
 	//RENDER TERRAIN
 	context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
-	context->OMSetDepthStencilState(m_states->DepthDefault(),0);
+	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	context->RSSetState(m_states->CullNone());
 	//context->RSSetState(m_states->Wireframe());		//uncomment for wireframe
 
 	//Render the batch,  This is handled in the Display chunk becuase it has the potential to get complex
 	m_displayChunk.RenderBatch(m_deviceResources);
 
-    m_deviceResources->Present();
+	m_deviceResources->Present();
 }
+
 
 // Helper method to clear the back buffers.
 void Game::Clear()

@@ -38,6 +38,7 @@ public:
 	virtual void OnDeviceLost() override;
 	virtual void OnDeviceRestored() override;
 
+	// change to return list of ints
 	int MousePicking();
 
 	// Messages

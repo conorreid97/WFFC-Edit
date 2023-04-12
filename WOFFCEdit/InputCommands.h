@@ -8,19 +8,12 @@ struct InputCommands
 	bool left;
 	bool rotRight;
 	bool rotLeft;
-	// mouse x position
-	float mousePosX;
-	// mouse y position
-	float mousePosY;
-	//mouse x drag last frame?
-	float mousePosXPrev;
-	// mouse y drag
-	float mousePosYPrev;
-	// mouse l button
-	bool LMButtonDown;
-	// mouse r button
-	bool RMButtonDown;
+	int mouse_X;
+	int mouse_Y;
+	int prev_mouse_X;
+	int prev_mouse_Y;
+	bool mouse_LB_Down;
+	bool mouse_RB_Down;
+	bool multiSelect;
 
-	bool MouseMoving;
-	
 };

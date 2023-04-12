@@ -1,6 +1,5 @@
 #include "ToolMain.h"
 #include "resource.h"
-#include "windowsx.h"
 #include <vector>
 #include <sstream>
 
@@ -19,18 +18,11 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back		= false;
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
-
-	PosVectorX.push_back(0.0f); //= 0.0f;
-	PosVectorX.push_back(0.0f);
-	PosVectorY.push_back(0.0f);
-	PosVectorY.push_back(0.0f);
-
-
-	currentPosX = PosVectorX.back();
-	prevPosX = PosVectorX[PosVectorX.size() - 1];
-	currentPosY = PosVectorY.back();
-	prevPosY = PosVectorY[PosVectorY.size() - 1];
-
+	
+	for (int i = 0; i < 5; i++) {
+		posVectorX.push_back(0);
+		posVectorY.push_back(0);
+	}
 }
 
 
@@ -298,21 +290,29 @@ void ToolMain::Tick(MSG *msg)
 		//update Scenegraph
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
+	
 
-	if (m_toolInputCommands.LMButtonDown) {
+
+
+	if (m_toolInputCommands.mouse_LB_Down)
+	{
 		m_selectedObject = m_d3dRenderer.MousePicking();
-		m_toolInputCommands.LMButtonDown = false;
+		m_toolInputCommands.mouse_LB_Down = false;
 	}
 
+	// change selected object to wireframe mode
+	m_sceneGraph[m_selectedObject].editor_wireframe = true;
+
+	
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
+	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
+
 }
 
 void ToolMain::UpdateInput(MSG * msg)
 {
-	
-
 
 	switch (msg->message)
 	{
@@ -324,50 +324,36 @@ void ToolMain::UpdateInput(MSG * msg)
 	case WM_KEYUP:
 		m_keyArray[msg->wParam] = false;
 		break;
-		
+
 	case WM_MOUSEMOVE:
-		/*GetCursorPos(&p);
-		m_toolInputCommands.mousePosXPrev = p.x;
-		m_toolInputCommands.mousePosYPrev = p.y;*/
+		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
+		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
 
-		GetCursorPos(&p);
-		//if (m_toolInputCommands.RMButtonDown) {
+		posVectorX.push_back(m_toolInputCommands.mouse_X);
+		posVectorY.push_back(m_toolInputCommands.mouse_Y);
 		
-		m_toolInputCommands.mousePosX = GET_X_LPARAM(msg->lParam);/* p.x*/
-		m_toolInputCommands.mousePosY = GET_X_LPARAM(msg->lParam);/*p.y;*/
-		PosVectorX.push_back(/*m_toolInputCommands.mousePosX*/p.x);
-		PosVectorY.push_back(/*m_toolInputCommands.mousePosY*/p.y);
-		
-		currentPosX = PosVectorX.back();
-		prevPosX = PosVectorX[PosVectorX.size() - 2];
-		currentPosY = PosVectorY.back();
-		prevPosY = PosVectorY[PosVectorY.size() - 2];
+		m_toolInputCommands.prev_mouse_X = posVectorX[posVectorX.size() - 2];
+		m_toolInputCommands.prev_mouse_Y = posVectorY[posVectorY.size() - 2];
 
-		m_toolInputCommands.mousePosX = currentPosX;
-		m_toolInputCommands.mousePosXPrev = prevPosX;
-		m_toolInputCommands.mousePosY = currentPosY;
-		m_toolInputCommands.mousePosYPrev = prevPosY;
-
-
-		//}
 		break;
-	
 
 	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
-		m_toolInputCommands.LMButtonDown = true;
+		m_toolInputCommands.mouse_LB_Down = true;
 		break;
-
+	
 	case WM_LBUTTONUP:
-		m_toolInputCommands.LMButtonDown = false;
+		m_toolInputCommands.mouse_LB_Down = false;
 		break;
 	case WM_RBUTTONDOWN:
-		m_toolInputCommands.RMButtonDown = true;
+		m_toolInputCommands.mouse_RB_Down = true;
 		break;
 	case WM_RBUTTONUP:
-		m_toolInputCommands.RMButtonDown = false;
+		m_toolInputCommands.mouse_RB_Down = false;
 		break;
 	}
+
+
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement
 	if (m_keyArray['W'])
@@ -403,18 +389,9 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.rotLeft = true;
 	}
 	else m_toolInputCommands.rotLeft = false;
-
+	if (m_keyArray[17]) {	// 17 is the number for the ctrl button
+		m_toolInputCommands.multiSelect = true;
+	}
+	else m_toolInputCommands.multiSelect = false;
 	//WASD
-
-
-	//// Mouse Controls
-	//if (m_keyArray['RMB']) {
-	//	m_toolInputCommands.RMButtonDown = true;
-	//}
-	//else m_toolInputCommands.RMButtonDown = false;
-	//if (m_keyArray['LMB']) {
-	//	m_toolInputCommands.LMButtonDown = true;
-	//}
-	//else m_toolInputCommands.LMButtonDown = false;
-
 }

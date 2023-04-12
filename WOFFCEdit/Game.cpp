@@ -52,12 +52,8 @@ Game::Game()
 	m_camOrientation.x = 0.0f;
 	m_camOrientation.y = 0.0f;
 	m_camOrientation.z = 0.0f;
-	
-	m_pitch = 0.0f;
-	m_yaw = 0.0f;
 
-	pickedDistance = 1000.0f;
-	closestPick = 1000.0f;
+	
 
 }
 
@@ -90,7 +86,6 @@ void Game::Initialize(HWND window, int width, int height)
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
-	// select tool
 	GetClientRect(window, &m_ScreenDimensions);
 
 #ifdef DXTK_AUDIO
@@ -115,6 +110,15 @@ void Game::Initialize(HWND window, int width, int height)
     m_effect1->Play(true);
     m_effect2->Play();
 #endif
+
+	// set my variables
+	bSelected = false;
+	selectedID = -1;
+	for (int i = 0; i < 15; i++) {
+		selectedID_List.push_back(-1);
+	}
+	selectedDistance = 1000.0f;
+	closestPick = 1000.0f;
 }
 
 void Game::SetGridState(bool state)
@@ -144,6 +148,7 @@ void Game::Tick(InputCommands *Input)
 #endif
 
     Render();
+
 }
 
 // Updates the world.
@@ -151,60 +156,40 @@ void Game::Update(DX::StepTimer const& timer)
 {
 	//TODO  any more complex than this, and the camera should be abstracted out to somewhere else
 	//camera motion is on a plane, so kill the 7 component of the look direction
-	/*Vector3 planarMotionVector = m_camLookDirection;
-	planarMotionVector.y = 0.0;*/
+	Vector3 planarMotionVector = m_camLookDirection;
+	planarMotionVector.y = 0.0;
 
-	//if (m_InputCommands.rotRight)
-	//{
-	//	m_camOrientation.x -= m_camRotRate;
-	//}
-	
-	
-	if (m_InputCommands.RMButtonDown) {
-		if (m_InputCommands.mousePosX > m_InputCommands.mousePosXPrev)
-		{
-			m_camOrientation.y += m_camRotRate;
-		}
-		else if (m_InputCommands.mousePosX < m_InputCommands.mousePosXPrev)
-		{
+	/*if (m_InputCommands.rotRight)
+	{
+		m_camOrientation.y -= m_camRotRate;
+	}
+	if (m_InputCommands.rotLeft)
+	{
+		m_camOrientation.y += m_camRotRate;
+	}*/
+
+	if (m_InputCommands.mouse_RB_Down) {
+		if (m_InputCommands.mouse_X < m_InputCommands.prev_mouse_X) {
 			m_camOrientation.y -= m_camRotRate;
 		}
-		if (m_InputCommands.mousePosY > m_InputCommands.mousePosYPrev) {
+		else if (m_InputCommands.mouse_X > m_InputCommands.prev_mouse_X) {
+			m_camOrientation.y += m_camRotRate;
+		}
+		else if (m_InputCommands.mouse_Y > m_InputCommands.prev_mouse_Y) {
 			m_camOrientation.x -= m_camRotRate;
 		}
-		else if (m_InputCommands.mousePosY < m_InputCommands.mousePosYPrev)
-		{
+		else if (m_InputCommands.mouse_Y < m_InputCommands.prev_mouse_Y) {
 			m_camOrientation.x += m_camRotRate;
 		}
-		//m_camOrientation.x += m_camRotRate;
 	}
-	
-	//auto mouse = m_mouse->GetState();
 
-	//if (mouse.positionMode == Mouse::MODE_RELATIVE)
-	//{
-	//	Vector3 delta = Vector3(float(mouse.x), float(mouse.y), 0.f)
-	//		* m_camRotRate;
-
-	//	m_pitch -= delta.y;
-	//	m_yaw -= delta.x;
-	//}
-
-	//m_mouse->SetMode(mouse.leftButton
-	//	? Mouse::MODE_RELATIVE : Mouse::MODE_ABSOLUTE);
-
-
-	//XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f);
-
-	////create look direction from Euler angles in m_camOrientation
-	//m_camLookDirection.x = sin((m_camOrientation.y)*3.1415 / 180);
-	//m_camLookDirection.z = cos((m_camOrientation.y)*3.1415 / 180);
-	//m_camLookDirection.Normalize();
-
-
-	/*m_camLookDirection.x = cos((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
-	m_camLookDirection.y = cos((m_camOrientation.z) * 3.1415 / 180);
-	m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * sin((m_camOrientation.x) * 3.1415 / 180);*/
+	// lock the camera when reaches the bottom and top
+	if (m_camOrientation.x <= -90) {
+		m_camOrientation.x = -90;
+	}
+	if (m_camOrientation.x >= 90) {
+		m_camOrientation.x = 90;
+	}
 
 	// parametric equations of a sphere
 	m_camLookDirection.x = cos((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
@@ -212,20 +197,9 @@ void Game::Update(DX::StepTimer const& timer)
 	m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
 	m_camLookDirection.Normalize();
 
-	
-	
-	
-	/*if (GetAsyncKeyState(VK_LBUTTON)) {
-		int deltaX = 
-	}*/
+
 	//create right vector from look Direction
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
-
-	//// parametric equations of a sphere
-	//m_camLookDirection.x = cos((m_camOrientation.x) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
-	//m_camLookDirection.y = sin((m_camOrientation.x) * 3.1415 / 180);
-	//m_camLookDirection.z = sin((m_camOrientation.x) * 3.1415 / 180) * cos((m_camOrientation.x) * 3.1415 / 180);
-	//m_camLookDirection.Normalize();
 
 	//process input and update stuff
 	if (m_InputCommands.forward)
@@ -281,7 +255,13 @@ void Game::Update(DX::StepTimer const& timer)
     }
 #endif
 
-   
+   // reset selected list
+	if (!m_InputCommands.multiSelect)
+	{
+		for (int i = 15; i < selectedID_List.size(); i++) {
+			selectedID_List.pop_back();
+		}
+	}
 }
 #pragma endregion
 
@@ -289,16 +269,16 @@ void Game::Update(DX::StepTimer const& timer)
 // Draws the scene.
 void Game::Render()
 {
-    // Don't try to render anything before the first Update.
-    if (m_timer.GetFrameCount() == 0)
-    {
-        return;
-    }
+	// Don't try to render anything before the first Update.
+	if (m_timer.GetFrameCount() == 0)
+	{
+		return;
+	}
 
-    Clear();
+	Clear();
 
-    m_deviceResources->PIXBeginEvent(L"Render");
-    auto context = m_deviceResources->GetD3DDeviceContext();
+	m_deviceResources->PIXBeginEvent(L"Render");
+	auto context = m_deviceResources->GetD3DDeviceContext();
 
 	if (m_grid)
 	{
@@ -307,13 +287,18 @@ void Game::Render()
 		const XMVECTORF32 yaxis = { 0.f, 0.f, 512.f };
 		DrawGrid(xaxis, yaxis, g_XMZero, 512, 512, Colors::Gray);
 	}
+
 	//CAMERA POSITION ON HUD
 	m_sprites->Begin();
 	WCHAR   Buffer[256];
-	std::wstring var = L"Cam X: " + std::to_wstring(m_camPosition.x) + L"Cam Z: " + std::to_wstring(m_camPosition.z);
-	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
-	std::wstring pickVar = L"Closest Pick Dist: " + std::to_wstring(closestPick) + L"Current pick dist: " + std::to_wstring(pickedDistance);
-	m_font->DrawString(m_sprites.get(), pickVar.c_str(), XMFLOAT2(100, 40), Colors::Yellow);
+	std::wstring varPos = L"Cam X: " + std::to_wstring(m_camPosition.x) + L"Cam Y: " + std::to_wstring(m_camPosition.y) + L"Cam Z: " + std::to_wstring(m_camPosition.z);
+	m_font->DrawString(m_sprites.get(), varPos.c_str(), XMFLOAT2(100, 10), Colors::Yellow);
+
+	std::wstring varRot = L"Cam X Rot: " + std::to_wstring(m_camOrientation.x) + L"Cam Y Rot: " + std::to_wstring(m_camOrientation.y) + L"Cam Z Rot: " + std::to_wstring(m_camOrientation.z);
+	m_font->DrawString(m_sprites.get(), varRot.c_str(), XMFLOAT2(100, 50), Colors::Yellow);
+
+	std::wstring varSelected = L"Closest Pick Distance: " + std::to_wstring(closestPick) + L"Current Pick Distance: " + std::to_wstring(selectedDistance);
+	m_font->DrawString(m_sprites.get(), varSelected.c_str(), XMFLOAT2(100, 90), Colors::Yellow);
 	m_sprites->End();
 
 	//RENDER OBJECTS FROM SCENEGRAPH
@@ -325,32 +310,53 @@ void Game::Render()
 		const XMVECTORF32 translate = { m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z };
 
 		//convert degrees into radians for rotation matrix
-		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y *3.1415 / 180,
-															m_displayList[i].m_orientation.x *3.1415 / 180,
-															m_displayList[i].m_orientation.z *3.1415 / 180);
+		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y * 3.1415 / 180,
+			m_displayList[i].m_orientation.x * 3.1415 / 180,
+			m_displayList[i].m_orientation.z * 3.1415 / 180);
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
+	
+		// normal selecting
+		if (!m_InputCommands.multiSelect) {
+			if (i == selectedID) {
+				m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
+			}
+			else if (i != selectedID) {
+				m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+			}
+		}
+		// multiple selection
+		if (m_InputCommands.multiSelect) {
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
-
+			for (int j = 0; j < selectedID_List.size(); j++) {
+				if (i == selectedID_List[j]) {
+					m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
+					
+				}
+				//else if (j != selectedID_List[j]) {
+				//	m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+				//}
+				else if (!m_InputCommands.multiSelect) {
+					m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+				}
+			}
+		}
 		m_deviceResources->PIXEndEvent();
 	}
-    m_deviceResources->PIXEndEvent();
+	m_deviceResources->PIXEndEvent();
 
 	//RENDER TERRAIN
 	context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
-	context->OMSetDepthStencilState(m_states->DepthDefault(),0);
+	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	context->RSSetState(m_states->CullNone());
-//	context->RSSetState(m_states->Wireframe());		//uncomment for wireframe
-
-
-	
+	//context->RSSetState(m_states->Wireframe());		//uncomment for wireframe
 
 	//Render the batch,  This is handled in the Display chunk becuase it has the potential to get complex
 	m_displayChunk.RenderBatch(m_deviceResources);
 
-    m_deviceResources->Present();
+	m_deviceResources->Present();
 }
+
 
 // Helper method to clear the back buffers.
 void Game::Clear()
@@ -469,7 +475,6 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 	int numObjects = SceneGraph->size();
 	for (int i = 0; i < numObjects; i++)
 	{
-		
 		//create a temp display object that we will populate then append to the display list.
 		DisplayObject newDisplayObject;
 		
@@ -531,10 +536,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		
 		m_displayList.push_back(newDisplayObject);
 		
-	}
-		
-		
-		
+	}	
 }
 
 void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
@@ -682,27 +684,26 @@ std::wstring StringToWCHART(std::string s)
 	return r;
 }
 
+int Game::MousePicking()
+{
+	auto context = m_deviceResources->GetD3DDeviceContext();
 
-int Game::MousePicking() {
-	int selectedID = -1;
-	//pickedDistance = 0;
-	//closestPick = 0.0f;
+	
 
 	//setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
-	//they may look the same but note, the difference in Z
-	const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mousePosX, m_InputCommands.mousePosY, 0.0f, 1.0f);
-	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mousePosX, m_InputCommands.mousePosY, 1.0f, 1.0f);
+		//they may look the same but note, the difference in Z
+	const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
+	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
 
 	//Loop through entire display list of objects and pick with each in turn. 
 	for (int i = 0; i < m_displayList.size(); i++)
 	{
 		//Get the scale factor and translation of the object
 		const XMVECTORF32 scale = { m_displayList[i].m_scale.x,		m_displayList[i].m_scale.y,		m_displayList[i].m_scale.z };
-		const XMVECTORF32 translate = { m_displayList[i].m_position.x,	m_displayList[i].m_position.y,	m_displayList[i].m_position.z };
+		const XMVECTORF32 translate = { m_displayList[i].m_position.x,		m_displayList[i].m_position.y,	m_displayList[i].m_position.z };
 
 		//convert euler angles into a quaternion for the rotation of the object
-		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y * 3.1415 / 180,
-			m_displayList[i].m_orientation.x * 3.1415 / 180,
+		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y * 3.1415 / 180, m_displayList[i].m_orientation.x * 3.1415 / 180,
 			m_displayList[i].m_orientation.z * 3.1415 / 180);
 
 		//create set the matrix of the selected object in the world based on the translation, scale and rotation.
@@ -710,6 +711,7 @@ int Game::MousePicking() {
 
 		//Unproject the points on the near and far plane, with respect to the matrix we just created.
 		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+
 		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
 
 		//turn the transformed points into our picking vector. 
@@ -720,21 +722,32 @@ int Game::MousePicking() {
 		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
 		{
 			//checking for ray intersection
-			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
+			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, selectedDistance))
 			{
-				XMFLOAT3 modelPos = XMFLOAT3(m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z); 
-				float Distance = float(sqrtf((modelPos.x - m_camPosition.x) * (modelPos.x - m_camPosition.x) + (modelPos.y - m_camPosition.y) * (modelPos.y - m_camPosition.y) + (modelPos.z - m_camPosition.z) * (modelPos.z - m_camPosition.z)));//XMFLOAT3()
-				pickedDistance = Distance;
-				if (pickedDistance < closestPick) {
-					closestPick = pickedDistance;
+				XMFLOAT3 modelPos = XMFLOAT3(m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z);
+				
+				// get the distance from selection
+				float distance = float(sqrtf((modelPos.x - m_camPosition.x) * (modelPos.x - m_camPosition.x) +
+											(modelPos.y - m_camPosition.y) * (modelPos.y - m_camPosition.y) +
+											(modelPos.z - m_camPosition.z) * (modelPos.z - m_camPosition.z)));
+				// update the closest pick
+				selectedDistance = distance;
+				if (selectedDistance < closestPick) {
+					closestPick = selectedDistance;
 				}
+
+				// selecting and multi-selecting
 				selectedID = i;
+				if (m_InputCommands.multiSelect) {
+					selectedID_List.push_back(i);
+				}
+				bSelected = true;
 			}
 		}
+		
 	}
-
-
 
 	//if we got a hit.  return it.  
 	return selectedID;
 }
+

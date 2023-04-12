@@ -38,6 +38,9 @@ public:
 	virtual void OnDeviceLost() override;
 	virtual void OnDeviceRestored() override;
 
+	// change to return list of ints
+	int MousePicking();
+
 	// Messages
 	void OnActivated();
 	void OnDeactivated();
@@ -51,9 +54,8 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
 
-	// mouse select
-	int MousePicking();
 
+	RECT		m_ScreenDimensions;
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
@@ -73,9 +75,6 @@ private:
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
 
-	float pickedDistance;
-	float closestPick;
-
 	//functionality
 	float								m_movespeed;
 
@@ -85,12 +84,7 @@ private:
 	DirectX::SimpleMath::Vector3		m_camLookAt;
 	DirectX::SimpleMath::Vector3		m_camLookDirection;
 	DirectX::SimpleMath::Vector3		m_camRight;
-	float m_pitch;
-	float m_yaw;
 	float m_camRotRate;
-
-	// Select tool
-	RECT	m_ScreenDimensions;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off
@@ -139,6 +133,15 @@ private:
     DirectX::SimpleMath::Matrix                                             m_projection;
 
 
+	// bool for deselecting
+	bool bSelected;
+	int selectedID;
+
+	//picking distance
+	float selectedDistance;
+	float closestPick;
+
+	std::vector<int>selectedID_List;
 };
 
 std::wstring StringToWCHART(std::string s);

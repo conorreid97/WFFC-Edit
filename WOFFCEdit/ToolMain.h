@@ -5,10 +5,9 @@
 #include "Game.h"
 #include "sqlite3.h"
 #include "SceneObject.h"
+//#include "DirectXHelpers.h"
 #include "InputCommands.h"
-
 #include <vector>
-
 
 
 class ToolMain
@@ -27,12 +26,6 @@ public: //methods
 
 	void	Tick(MSG *msg);
 	void	UpdateInput(MSG *msg);
-
-	//float getPosVector() { return PosVector; };
-	float currentPosX;
-	float prevPosX;
-	float currentPosY;
-	float prevPosY;
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
@@ -56,10 +49,6 @@ private:	//variables
 	int m_height;
 	int m_currentChunk;			//the current chunk of thedatabase that we are operating on.  Dictates loading and saving. 
 	
-	POINT p;
-	
-	// track drag positions
-	std::vector<float>PosVectorX;
-	std::vector<float>PosVectorY;
-
+	std::vector<int>posVectorX;
+	std::vector<int>posVectorY;
 };

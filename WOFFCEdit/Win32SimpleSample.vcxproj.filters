@@ -59,6 +59,7 @@
     <ClCompile Include="SelectDialogue.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
+    <ClCompile Include="CameraSpline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceResources.h">
@@ -108,6 +109,7 @@
     <ClInclude Include="SelectDialogue.h">
       <Filter>MFC</Filter>
     </ClInclude>
+    <ClInclude Include="CameraSpline.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

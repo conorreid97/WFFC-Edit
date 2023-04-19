@@ -23,6 +23,7 @@ ToolMain::ToolMain()
 		posVectorX.push_back(0);
 		posVectorY.push_back(0);
 	}
+	
 }
 
 
@@ -61,6 +62,17 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 	}
 
 	onActionLoad();
+}
+
+void ToolMain::onActionFocusCamera()
+{
+}
+
+void ToolMain::onActivateCamSpline()
+{
+	
+	//pos1 = camSpline.p0;
+	m_d3dRenderer.CamSplineTool();
 }
 
 void ToolMain::onActionLoad()
@@ -292,7 +304,7 @@ void ToolMain::Tick(MSG *msg)
 		//resend scenegraph to Direct X renderer
 	
 
-
+	
 
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
@@ -300,8 +312,36 @@ void ToolMain::Tick(MSG *msg)
 		m_toolInputCommands.mouse_LB_Down = false;
 	}
 
+	//m_sceneGraph[m_selectedObject].posX
+	
+	if (m_d3dRenderer.bCamPath) {
+		m_sceneGraph[3].posX = camSpline.p0.x;
+		m_sceneGraph[3].posX = camSpline.p0.y;
+		m_sceneGraph[3].posX = camSpline.p0.z;
+
+		m_sceneGraph[4].posX = camSpline.p1.x;
+		m_sceneGraph[4].posX = camSpline.p1.y;
+		m_sceneGraph[4].posX = camSpline.p1.z;
+
+		m_sceneGraph[5].posX = camSpline.p2.x;
+		m_sceneGraph[5].posX = camSpline.p2.y;
+		m_sceneGraph[5].posX = camSpline.p2.z;
+
+		m_sceneGraph[6].posX = camSpline.p3.x;
+		m_sceneGraph[6].posX = camSpline.p3.y;
+		m_sceneGraph[6].posX = camSpline.p3.z;
+
+		XMFLOAT3 camPos = XMFLOAT3(m_sceneGraph[8].posX, m_sceneGraph[8].posY, m_sceneGraph[8].posZ);
+		camPos = camSpline.update();
+
+		m_sceneGraph[8].posX = camPos.x;
+		m_sceneGraph[8].posY = camPos.y;
+		m_sceneGraph[8].posZ = camPos.z;
+	}
+	
+	//m_d3dRenderer.CamSplineTool()
 	// change selected object to wireframe mode
-	m_sceneGraph[m_selectedObject].editor_wireframe = true;
+	//m_sceneGraph[m_selectedObject].editor_wireframe = true;
 
 	
 

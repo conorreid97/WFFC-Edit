@@ -11,6 +11,7 @@
 #include "DisplayChunk.h"
 #include "ChunkObject.h"
 #include "InputCommands.h"
+#include "CameraSpline.h"
 #include <vector>
 
 
@@ -52,6 +53,8 @@ public:
 	void BuildDisplayList(std::vector<SceneObject> * SceneGraph); //note vector passed by reference 
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
+
+	void CamSplineTool();
 	void ClearDisplayList();
 
 
@@ -142,6 +145,12 @@ private:
 	float closestPick;
 
 	std::vector<int>selectedID_List;
+public:
+
+	// Spline
+	CameraSpline camSpline;
+	bool bCamPath;
+
 };
 
 std::wstring StringToWCHART(std::string s);

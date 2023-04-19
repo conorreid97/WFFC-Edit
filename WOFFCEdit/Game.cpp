@@ -53,7 +53,7 @@ Game::Game()
 	m_camOrientation.y = 0.0f;
 	m_camOrientation.z = 0.0f;
 
-	
+	bCamPath = false;
 
 }
 
@@ -87,6 +87,8 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
 	GetClientRect(window, &m_ScreenDimensions);
+
+	
 
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -552,6 +554,13 @@ void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
 void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 {
 	m_displayChunk.SaveHeightMap();			//save heightmap to file.
+}
+
+void Game::CamSplineTool()
+{
+	bCamPath = true;
+	
+	
 }
 
 #ifdef DXTK_AUDIO

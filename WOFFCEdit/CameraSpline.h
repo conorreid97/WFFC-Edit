@@ -9,13 +9,13 @@ class CameraSpline
 {
 private:
 
-	XMVECTOR p0, p1, p2, p3;
+	
 
-	XMVECTOR a1, a2, a3;
+	XMFLOAT3 a1, a2, a3;
 
-	XMVECTOR b1, b2;
+	XMFLOAT3 b1, b2;
 
-	XMVECTOR c;
+	XMFLOAT3 c;
 
 	// Determine timings
 	const float timeDelta = 0.001f;;
@@ -38,5 +38,7 @@ public:
 
 	XMFLOAT3 update();
 
+	//XMVECTOR p0, p1, p2, p3;
+	XMFLOAT3 p0, p1, p2, p3;
 };
 

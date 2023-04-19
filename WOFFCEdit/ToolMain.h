@@ -55,5 +55,9 @@ private:	//variables
 
 	// Splines
 	CameraSpline camSpline;
-	XMVECTOR pos1;
+	
+	// drag 
+	bool bDragging;
+
+
 };

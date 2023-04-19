@@ -26,7 +26,7 @@ Game::Game()
 
 	//functional
 	m_movespeed = 0.30;
-	m_camRotRate = 3.0;
+	m_camRotRate = 2.0;
 
 	//camera
 	m_camPosition.x = 0.0f;
@@ -161,14 +161,14 @@ void Game::Update(DX::StepTimer const& timer)
 	Vector3 planarMotionVector = m_camLookDirection;
 	planarMotionVector.y = 0.0;
 
-	/*if (m_InputCommands.rotRight)
+	if (m_InputCommands.rotRight)
 	{
-		m_camOrientation.y -= m_camRotRate;
+		m_camPosition.y -= (m_camRotRate / 3);
 	}
 	if (m_InputCommands.rotLeft)
 	{
-		m_camOrientation.y += m_camRotRate;
-	}*/
+		m_camPosition.y += (m_camRotRate / 3);
+	}
 
 	if (m_InputCommands.mouse_RB_Down) {
 		if (m_InputCommands.mouse_X < m_InputCommands.prev_mouse_X) {
@@ -184,6 +184,12 @@ void Game::Update(DX::StepTimer const& timer)
 			m_camOrientation.x += m_camRotRate;
 		}
 	}
+
+	//if (m_InputCommands.drag) {
+	//	if (m_InputCommands.mouse_X < m_InputCommands.prev_mouse_X) {
+	//		m_camOrientation.y -= m_camRotRate;
+	//	}
+	//}
 
 	// lock the camera when reaches the bottom and top
 	if (m_camOrientation.x <= -90) {
@@ -558,9 +564,13 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 
 void Game::CamSplineTool()
 {
-	bCamPath = true;
-	
-	
+	if (!bCamPath) {
+
+		bCamPath = true;
+	}
+	else {
+		bCamPath = false;
+	}
 }
 
 #ifdef DXTK_AUDIO

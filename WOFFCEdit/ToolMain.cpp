@@ -303,14 +303,28 @@ void ToolMain::Tick(MSG *msg)
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
 	
-
+	if (bDragging) {
+		m_toolInputCommands.drag = true;
+	}
+	else if (!bDragging) {
+		m_toolInputCommands.drag = false;
+	}
 	
 
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
 		m_selectedObject = m_d3dRenderer.MousePicking();
 		m_toolInputCommands.mouse_LB_Down = false;
+
+		if (bDragging) {
+			if (posVectorX.back() < posVectorX[posVectorX.size() - 2]) {
+				m_sceneGraph[m_selectedObject].posX += 1.0;
+			}
+			//m_sceneGraph
+		}
 	}
+
+	
 
 	//m_sceneGraph[m_selectedObject].posX
 	
@@ -339,11 +353,6 @@ void ToolMain::Tick(MSG *msg)
 		m_sceneGraph[8].posZ = camPos.z;
 	}
 	
-	//m_d3dRenderer.CamSplineTool()
-	// change selected object to wireframe mode
-	//m_sceneGraph[m_selectedObject].editor_wireframe = true;
-
-	
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
@@ -365,23 +374,31 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_keyArray[msg->wParam] = false;
 		break;
 
-	case WM_MOUSEMOVE:
-		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
-		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
 
-		posVectorX.push_back(m_toolInputCommands.mouse_X);
-		posVectorY.push_back(m_toolInputCommands.mouse_Y);
-		
-		m_toolInputCommands.prev_mouse_X = posVectorX[posVectorX.size() - 2];
-		m_toolInputCommands.prev_mouse_Y = posVectorY[posVectorY.size() - 2];
-
-		break;
 
 	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
 		m_toolInputCommands.mouse_LB_Down = true;
 		break;
-	
+	case WM_MOUSEMOVE:
+		if (m_toolInputCommands.mouse_LB_Down) {
+			bDragging = true;
+		}
+		else if (!m_toolInputCommands.mouse_LB_Down) {
+			bDragging = false;
+		}
+
+		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
+		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
+
+		posVectorX.push_back(m_toolInputCommands.mouse_X);
+		posVectorY.push_back(m_toolInputCommands.mouse_Y);
+
+		m_toolInputCommands.prev_mouse_X = posVectorX[posVectorX.size() - 2];
+		m_toolInputCommands.prev_mouse_Y = posVectorY[posVectorY.size() - 2];
+
+
+		break;
 	case WM_LBUTTONUP:
 		m_toolInputCommands.mouse_LB_Down = false;
 		break;

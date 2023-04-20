@@ -309,8 +309,15 @@ void ToolMain::Tick(MSG *msg)
 	else if (!bDragging) {
 		m_toolInputCommands.drag = false;
 	}
-	
+	// set the dragging to false if mouse isnt currently moving 
+	if (posVectorX.back() == posVectorX[posVectorX.size() - 2]) {
+		bDragging = false;
+	}
+	else if (posVectorY.back() == posVectorY[posVectorY.size() - 2]) {
+		bDragging = false;
+	}
 
+	
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
 		if (bDragging) {
@@ -382,12 +389,13 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.mouse_LB_Down = true;
 		break;
 	case WM_MOUSEMOVE:
-		if (m_toolInputCommands.mouse_LB_Down) {
+		bDragging = true;
+		/*if (m_toolInputCommands.mouse_LB_Down) {
 			bDragging = true;
 		}
 		else if (!m_toolInputCommands.mouse_LB_Down) {
 			bDragging = false;
-		}
+		}*/
 
 		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
 		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
@@ -400,6 +408,10 @@ void ToolMain::UpdateInput(MSG * msg)
 
 
 		break;
+	case WM_MOUSEHOVER:
+		bDragging = false;
+
+		break;
 	case WM_LBUTTONUP:
 		m_toolInputCommands.mouse_LB_Down = false;
 		break;
@@ -410,7 +422,6 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.mouse_RB_Down = false;
 		break;
 	}
-
 
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement

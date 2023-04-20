@@ -171,7 +171,7 @@ void Game::Update(DX::StepTimer const& timer)
 		m_camPosition.y += (m_camRotRate / 3);
 	}
 
-	if (m_InputCommands.mouse_RB_Down) {
+	if (m_InputCommands.mouse_RB_Down && m_InputCommands.drag) {
 		if (m_InputCommands.mouse_X < m_InputCommands.prev_mouse_X) {
 			m_camOrientation.y -= m_camRotRate;
 		}
@@ -339,14 +339,7 @@ void Game::Render()
 
 			for (int j = 0; j < selectedID_List.size(); j++) {
 				if (i == selectedID_List[j]) {
-					m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
-					
-				}
-				//else if (j != selectedID_List[j]) {
-				//	m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
-				//}
-				else if (!m_InputCommands.multiSelect) {
-					m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+					m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe	
 				}
 			}
 		}

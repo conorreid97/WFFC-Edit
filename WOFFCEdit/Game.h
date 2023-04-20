@@ -145,6 +145,13 @@ private:
 	float closestPick;
 
 	std::vector<int>selectedID_List;
+	//depth check
+	XMFLOAT3 currentPos;
+	XMFLOAT3 SelectedVector;
+	XMFLOAT3 prevPos;
+	std::vector<XMFLOAT3> vectorVictor;
+
+
 public:
 
 	// Spline

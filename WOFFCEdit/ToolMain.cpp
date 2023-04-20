@@ -313,15 +313,18 @@ void ToolMain::Tick(MSG *msg)
 
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
-		m_selectedObject = m_d3dRenderer.MousePicking();
-		m_toolInputCommands.mouse_LB_Down = false;
-
 		if (bDragging) {
-			if (posVectorX.back() < posVectorX[posVectorX.size() - 2]) {
+			if (posVectorX.back() > posVectorX[posVectorX.size() - 2]) {
 				m_sceneGraph[m_selectedObject].posX += 1.0;
 			}
 			//m_sceneGraph
 		}
+
+		m_selectedObject = m_d3dRenderer.MousePicking();
+
+	
+		m_toolInputCommands.mouse_LB_Down = false;
+
 	}
 
 	
@@ -330,20 +333,20 @@ void ToolMain::Tick(MSG *msg)
 	
 	if (m_d3dRenderer.bCamPath) {
 		m_sceneGraph[3].posX = camSpline.p0.x;
-		m_sceneGraph[3].posX = camSpline.p0.y;
-		m_sceneGraph[3].posX = camSpline.p0.z;
+		m_sceneGraph[3].posY = camSpline.p0.y;
+		m_sceneGraph[3].posZ = camSpline.p0.z;
 
 		m_sceneGraph[4].posX = camSpline.p1.x;
-		m_sceneGraph[4].posX = camSpline.p1.y;
-		m_sceneGraph[4].posX = camSpline.p1.z;
+		m_sceneGraph[4].posY = camSpline.p1.y;
+		m_sceneGraph[4].posZ = camSpline.p1.z;
 
 		m_sceneGraph[5].posX = camSpline.p2.x;
-		m_sceneGraph[5].posX = camSpline.p2.y;
-		m_sceneGraph[5].posX = camSpline.p2.z;
+		m_sceneGraph[5].posY = camSpline.p2.y;
+		m_sceneGraph[5].posZ = camSpline.p2.z;
 
 		m_sceneGraph[6].posX = camSpline.p3.x;
-		m_sceneGraph[6].posX = camSpline.p3.y;
-		m_sceneGraph[6].posX = camSpline.p3.z;
+		m_sceneGraph[6].posY = camSpline.p3.y;
+		m_sceneGraph[6].posZ = camSpline.p3.z;
 
 		XMFLOAT3 camPos = XMFLOAT3(m_sceneGraph[8].posX, m_sceneGraph[8].posY, m_sceneGraph[8].posZ);
 		camPos = camSpline.update();
@@ -373,8 +376,6 @@ void ToolMain::UpdateInput(MSG * msg)
 	case WM_KEYUP:
 		m_keyArray[msg->wParam] = false;
 		break;
-
-
 
 	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands

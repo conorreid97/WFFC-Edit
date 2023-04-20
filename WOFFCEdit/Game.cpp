@@ -118,6 +118,7 @@ void Game::Initialize(HWND window, int width, int height)
 	selectedID = -1;
 	for (int i = 0; i < 15; i++) {
 		selectedID_List.push_back(-1);
+		vectorVictor.push_back(XMFLOAT3(0.0,0.0,0.0));
 	}
 	selectedDistance = 1000.0f;
 	closestPick = 1000.0f;
@@ -740,9 +741,26 @@ int Game::MousePicking()
 		//loop through mesh list for object
 		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
 		{
+			
+
 			//checking for ray intersection
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, selectedDistance))
 			{
+				// depth check
+				// Story position of object that is currently selected
+				currentPos = m_displayList[i].m_position;
+				// Get the distance to the camera
+				SelectedVector = currentPos - m_camPosition;
+				// push that to a vector
+				vectorVictor.push_back(SelectedVector);
+				// Get previous position
+				prevPos = vectorVictor[vectorVictor.size() - 2];
+				// compare distance to get closest one to the camera
+				if (SelectedVector.z < prevPos.z) {
+					selectedID = i;
+				}
+
+				// closest pick ui ///////////////////////////////////////////////////
 				XMFLOAT3 modelPos = XMFLOAT3(m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z);
 				
 				// get the distance from selection
@@ -755,8 +773,10 @@ int Game::MousePicking()
 					closestPick = selectedDistance;
 				}
 
+				////////////////////////////////////////////////////////
+
 				// selecting and multi-selecting
-				selectedID = i;
+				//selectedID = i;
 				if (m_InputCommands.multiSelect) {
 					selectedID_List.push_back(i);
 				}

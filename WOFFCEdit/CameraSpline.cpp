@@ -3,7 +3,7 @@
 CameraSpline::CameraSpline()
 {
 
-	p0 = XMFLOAT3(-10.0f, 0.0f, 0.0f);
+	p0 = XMFLOAT3(-400.0f, 0.0f, 0.0f);
 	p1 = XMFLOAT3(-5.0f, 5.0f, 0.0f);
 	p2 = XMFLOAT3(5.0f, -5.0f, 0.0f);
 	p3 = XMFLOAT3(10.0f, 0.0f, 0.0f);

@@ -1,4 +1,1 @@
-﻿  SelectDialogue.cpp
-  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
-D:\conor\Github\CMP405_Tools\WOFFCEdit\SelectDialogue.cpp(41,44): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Win32SimpleSample.vcxproj -> D:\conor\Github\CMP405_Tools\WOFFCEdit\x64\Debug\WoFEdit.exe
+﻿  Win32SimpleSample.vcxproj -> D:\conor\Github\CMP405_Tools\WOFFCEdit\x64\Debug\WoFEdit.exe

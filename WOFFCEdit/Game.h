@@ -41,6 +41,7 @@ public:
 
 	// change to return list of ints
 	int MousePicking();
+	void MoveObject();
 
 	// Messages
 	void OnActivated();

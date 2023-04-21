@@ -783,3 +783,8 @@ int Game::MousePicking()
 	return selectedID;
 }
 
+void Game::MoveObject()
+{
+	//m_displayList[selectedID].m_position.x += 0.5f;
+}
+

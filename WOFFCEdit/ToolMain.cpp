@@ -317,18 +317,21 @@ void ToolMain::Tick(MSG *msg)
 		bDragging = false;
 	}
 
-	
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
 		if (bDragging) {
+
 			if (posVectorX.back() > posVectorX[posVectorX.size() - 2]) {
 				m_sceneGraph[m_selectedObject].posX += 1.0;
+			}
+			else if (posVectorX.back() < posVectorX[posVectorX.size() - 2]) {
+				m_sceneGraph[m_selectedObject].posX -= 1.0;
+				//m_d3dRenderer.MoveObject();
 			}
 			//m_sceneGraph
 		}
 
 		m_selectedObject = m_d3dRenderer.MousePicking();
-
 	
 		m_toolInputCommands.mouse_LB_Down = false;
 
@@ -406,12 +409,8 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.prev_mouse_X = posVectorX[posVectorX.size() - 2];
 		m_toolInputCommands.prev_mouse_Y = posVectorY[posVectorY.size() - 2];
 
-
 		break;
-	case WM_MOUSEHOVER:
-		bDragging = false;
 
-		break;
 	case WM_LBUTTONUP:
 		m_toolInputCommands.mouse_LB_Down = false;
 		break;

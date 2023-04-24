@@ -61,6 +61,7 @@
     </ClCompile>
     <ClCompile Include="CameraSpline.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ArcballCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceResources.h">
@@ -112,6 +113,7 @@
     </ClInclude>
     <ClInclude Include="CameraSpline.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ArcballCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

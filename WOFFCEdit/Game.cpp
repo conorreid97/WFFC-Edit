@@ -236,10 +236,13 @@ void Game::Update(DX::StepTimer const& timer)
  //   m_view = Matrix::CreateLookAt(m_camPosition, m_camLookAt, Vector3::UnitY);
 
 	cam1.update(&m_InputCommands);
+	arcBallCam.Update(&m_InputCommands);
 
-    m_batchEffect->SetView(cam1.m_view);
+   // m_batchEffect->SetView(cam1.m_view);
+	m_batchEffect->SetView(arcBallCam.getViewMatrix());
     m_batchEffect->SetWorld(Matrix::Identity);
-	m_displayChunk.m_terrainEffect->SetView(cam1.m_view);
+	//m_displayChunk.m_terrainEffect->SetView(cam1.m_view);
+	m_displayChunk.m_terrainEffect->SetView(arcBallCam.getViewMatrix());
 	m_displayChunk.m_terrainEffect->SetWorld(Matrix::Identity);
 
 #ifdef DXTK_AUDIO
@@ -331,10 +334,10 @@ void Game::Render()
 		// normal selecting
 		if (!m_InputCommands.multiSelect) {
 			if (i == selectedID) {
-				m_displayList[i].m_model->Draw(context, *m_states, local, cam1.m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
+				m_displayList[i].m_model->Draw(context, *m_states, local, arcBallCam.getViewMatrix()/*cam1.m_view*/, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
 			}
 			else if (i != selectedID) {
-				m_displayList[i].m_model->Draw(context, *m_states, local, cam1.m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+				m_displayList[i].m_model->Draw(context, *m_states, local, arcBallCam.getViewMatrix()/*cam1.m_view*/, m_projection, false);	//last variable in draw,  make TRUE for wireframe
 			}
 		}
 		// multiple selection
@@ -342,7 +345,7 @@ void Game::Render()
 
 			for (int j = 0; j < selectedID_List.size(); j++) {
 				if (i == selectedID_List[j]) {
-					m_displayList[i].m_model->Draw(context, *m_states, local, cam1.m_view, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe	
+					m_displayList[i].m_model->Draw(context, *m_states, local, arcBallCam.getViewMatrix()/*cam1.m_view*/, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe	
 				}
 			}
 		}
@@ -726,9 +729,9 @@ int Game::MousePicking()
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
 		//Unproject the points on the near and far plane, with respect to the matrix we just created.
-		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, cam1.m_view, local);
+		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, arcBallCam.getViewMatrix()/*cam1.m_view*/, local);
 
-		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, cam1.m_view, local);
+		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, arcBallCam.getViewMatrix()/*cam1.m_view*/, local);
 
 		//turn the transformed points into our picking vector. 
 		XMVECTOR pickingVector = farPoint - nearPoint;

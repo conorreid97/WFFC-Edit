@@ -13,6 +13,7 @@
 #include "InputCommands.h"
 #include "CameraSpline.h"
 #include "Camera.h"
+#include "ArcballCamera.h"
 #include <vector>
 
 
@@ -82,7 +83,7 @@ private:
 
 	// Camera
 	Camera cam1;
-
+	ArcballCamera arcBallCam;
 	//functionality
 	float								m_movespeed;
 

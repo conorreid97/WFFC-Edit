@@ -213,7 +213,7 @@ void ToolMain::onActionSave()
 	sqlCommand = "DELETE FROM Objects";	 //will delete the whole object table.   Slightly risky but hey.
 	rc = sqlite3_prepare_v2(m_databaseConnection, sqlCommand, -1, &pResults, 0);
 	sqlite3_step(pResults);
-
+	
 	//Populate with our new objects
 	std::wstring sqlCommand2;
 	int numObjects = m_sceneGraph.size();	//Loop thru the scengraph.
@@ -316,6 +316,20 @@ void ToolMain::Tick(MSG *msg)
 	else if (posVectorY.back() == posVectorY[posVectorY.size() - 2]) {
 		bDragging = false;
 	}
+
+
+	// set the right mouse button up if mouse moves off of screen
+	if (posVectorX.back() > m_width || posVectorX.back() < 0) {
+		m_toolInputCommands.mouse_RB_Down = false;
+		//bDragging = false;
+	}
+	else if (posVectorY.back() > m_height || posVectorY.back() < 0)
+	{
+		m_toolInputCommands.mouse_RB_Down = false;
+
+	}
+
+
 
 	if (m_toolInputCommands.mouse_LB_Down)
 	{

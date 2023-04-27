@@ -107,13 +107,13 @@ void Game::SetGridState(bool state)
 
 #pragma region Frame Update
 // Executes the basic game loop.
-void Game::Tick(InputCommands *Input)
+void Game::Tick(InputCommands *Input, std::vector<SceneObject>* SceneGraph)
 {
 	//copy over the input commands so we have a local version to use elsewhere.
 	m_InputCommands = *Input;
     m_timer.Tick([&]()
     {
-        Update(m_timer);
+        Update(m_timer, SceneGraph);
     });
 
 #ifdef DXTK_AUDIO
@@ -131,7 +131,7 @@ void Game::Tick(InputCommands *Input)
 }
 
 // Updates the world.
-void Game::Update(DX::StepTimer const& timer)
+void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGraph)
 {
 	if (cameraType == 1) {
 		camView = cam1.GetViewMatrix();
@@ -146,6 +146,29 @@ void Game::Update(DX::StepTimer const& timer)
 	}*/
 
 	
+	//IEffectFog* effect;
+	//effect = 
+	//effect->SetFogEnabled(true);
+	//if (bFog) {
+		int numObjects = SceneGraph->size();
+		for (int i = 0; i < numObjects; i++)
+		{
+			m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+				{
+					auto fog = dynamic_cast<IEffectFog*>(effect);
+			if (fog)
+			{
+				fog->SetFogEnabled(1.0);
+				fog->SetFogStart(50.0f);
+				fog->SetFogColor(DirectX::Colors::WhiteSmoke);
+			}
+				});
+		}
+
+		m_displayChunk.m_terrainEffect->SetFogEnabled(1.0);
+		m_displayChunk.m_terrainEffect->SetFogStart(50.0f);
+		m_displayChunk.m_terrainEffect->SetFogColor(DirectX::Colors::WhiteSmoke);
+	//}
 	
 
    // m_batchEffect->SetView(cam1.m_view);
@@ -251,13 +274,19 @@ void Game::Render()
 			}
 		}
 		// multiple selection
-		if (m_InputCommands.multiSelect) {
+		else if (m_InputCommands.multiSelect) {
 
 			for (int j = 0; j < selectedID_List.size(); j++) {
 				if (i == selectedID_List[j]) {
 					m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe	
+					
 				}
 			}
+			m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+
+		}
+		else {
+			m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, false);	//last variable in draw,  make TRUE for wireframe
 		}
 		m_deviceResources->PIXEndEvent();
 	}
@@ -422,7 +451,17 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 				lights->SetTexture(newDisplayObject.m_texture_diffuse);			
 			}
 		});
-
+		// enable fog
+		//newDisplayObject.m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+		//{
+		//	auto fog = dynamic_cast<IEffectFog*>(effect);
+		//	if (fog)
+		//	{
+		//		fog->SetFogEnabled(1.0);
+		//		fog->SetFogStart(100.0f);
+		//		fog->SetFogColor(DirectX::Colors::White);
+		//	}
+		//});
 		//set position
 		newDisplayObject.m_position.x = SceneGraph->at(i).posX;
 		newDisplayObject.m_position.y = SceneGraph->at(i).posY;

@@ -1,1 +1,21 @@
-﻿  Win32SimpleSample.vcxproj -> D:\conor\Github\CMP405_Tools\WOFFCEdit\x64\Debug\WoFEdit.exe
+﻿  Game.cpp
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(28,20): warning C4305: '=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(153,38): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(253,45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(263,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(262,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(261,98): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(241,10): warning C4101: 'Buffer': unreferenced local variable
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(424,37): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(665,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(665,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(666,81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(666,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(677,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(676,147): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(676,98): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(683,111): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(683,85): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(685,109): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\Game.cpp(685,83): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+  Win32SimpleSample.vcxproj -> D:\conor\Github\CMP405_Tools\WOFFCEdit\x64\Debug\WoFEdit.exe

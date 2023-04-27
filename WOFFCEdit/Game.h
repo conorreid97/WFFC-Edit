@@ -31,7 +31,7 @@ public:
 	void SetGridState(bool state);
 
 	// Basic game loop
-	void Tick(InputCommands * Input);
+	void Tick(InputCommands * Input, std::vector<SceneObject>* SceneGraph);
 	void Render();
 
 	// Rendering helpers
@@ -69,7 +69,7 @@ public:
 
 private:
 
-	void Update(DX::StepTimer const& timer);
+	void Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGraph);
 
 	void CreateDeviceDependentResources();
 	void CreateWindowSizeDependentResources();

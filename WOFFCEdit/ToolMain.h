@@ -21,12 +21,21 @@ public: //methods
 	void	onActionInitialise(HWND handle, int width, int height);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
 	void	onActionFocusCamera();
 	void    onActivateCamSpline();
+	void	onActivateScaling();
+	void	onActivateMove();
+	void	onActivateRotate();
 	void	onActionLoad();													//load the current chunk
 	afx_msg	void	onActionSave();											//save the current chunk
 	afx_msg void	onActionSaveTerrain();									//save chunk geometry
 
 	void	Tick(MSG *msg);
 	void	UpdateInput(MSG *msg);
+
+	void MouseUpdate();
+	void CamSplineUpdate();
+	void ObjectUpdate();
+
+	void setCamType(int _cam) { camType = _cam; }
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
@@ -59,5 +68,11 @@ private:	//variables
 	// drag 
 	bool bDragging;
 
+	// camera types
+	int camType;
 
+	// Object Manipulation
+	bool bScaleManip;
+	bool bMoveManip;
+	bool bRotManip;
 };

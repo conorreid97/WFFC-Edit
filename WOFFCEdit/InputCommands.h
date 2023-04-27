@@ -16,4 +16,11 @@ struct InputCommands
 	bool mouse_RB_Down;
 	bool multiSelect;
 	bool drag;
+	bool upArrow;
+	bool downArrow;
+	bool leftArrow;
+	bool rightArrow;
+	bool enter;
+	bool backspace;
+
 };

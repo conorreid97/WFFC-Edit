@@ -1,5 +1,1 @@
-﻿  ArcballCamera.cpp
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ArcballCamera.cpp(5,34): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ArcballCamera.cpp(6,36): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ArcballCamera.cpp(52,31): warning C4305: 'argument': truncation from 'double' to 'float'
-  Win32SimpleSample.vcxproj -> D:\conor\Github\CMP405_Tools\WOFFCEdit\x64\Debug\WoFEdit.exe
+﻿  Win32SimpleSample.vcxproj -> D:\conor\Github\CMP405_Tools\WOFFCEdit\x64\Debug\WoFEdit.exe

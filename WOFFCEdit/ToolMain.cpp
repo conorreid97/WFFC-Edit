@@ -23,7 +23,9 @@ ToolMain::ToolMain()
 		posVectorX.push_back(0);
 		posVectorY.push_back(0);
 	}
-	
+
+	camType = 1;
+	bScaleManip = false;
 }
 
 
@@ -66,6 +68,7 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 
 void ToolMain::onActionFocusCamera()
 {
+
 }
 
 void ToolMain::onActivateCamSpline()
@@ -73,6 +76,36 @@ void ToolMain::onActivateCamSpline()
 	
 	//pos1 = camSpline.p0;
 	m_d3dRenderer.CamSplineTool();
+}
+
+void ToolMain::onActivateScaling()
+{
+	if (!bScaleManip) {
+		bScaleManip = true;
+	}
+	else {
+		bScaleManip = false;
+	}
+}
+
+void ToolMain::onActivateMove()
+{
+	if (!bMoveManip) {
+		bMoveManip = true;
+	}
+	else {
+		bMoveManip = false;
+	}
+}
+
+void ToolMain::onActivateRotate()
+{
+	if (!bRotManip) {
+		bRotManip = true;
+	}
+	else {
+		bRotManip = false;
+	}
 }
 
 void ToolMain::onActionLoad()
@@ -303,82 +336,23 @@ void ToolMain::Tick(MSG *msg)
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
 	
-	if (bDragging) {
-		m_toolInputCommands.drag = true;
+
+
+	if (camType == 1) {
+		m_d3dRenderer.setCamType(1);
 	}
-	else if (!bDragging) {
-		m_toolInputCommands.drag = false;
-	}
-	// set the dragging to false if mouse isnt currently moving 
-	if (posVectorX.back() == posVectorX[posVectorX.size() - 2]) {
-		bDragging = false;
-	}
-	else if (posVectorY.back() == posVectorY[posVectorY.size() - 2]) {
-		bDragging = false;
+	else if (camType == 2) {
+		m_d3dRenderer.setCamType(2);
 	}
 
+	ObjectUpdate();
 
-	// set the right mouse button up if mouse moves off of screen
-	if (posVectorX.back() > m_width || posVectorX.back() < 0) {
-		m_toolInputCommands.mouse_RB_Down = false;
-		//bDragging = false;
-	}
-	else if (posVectorY.back() > m_height || posVectorY.back() < 0)
-	{
-		m_toolInputCommands.mouse_RB_Down = false;
+	MouseUpdate();
 
-	}
-
-
-
-	if (m_toolInputCommands.mouse_LB_Down)
-	{
-		if (bDragging) {
-
-			if (posVectorX.back() > posVectorX[posVectorX.size() - 2]) {
-				m_sceneGraph[m_selectedObject].posX += 1.0;
-			}
-			else if (posVectorX.back() < posVectorX[posVectorX.size() - 2]) {
-				m_sceneGraph[m_selectedObject].posX -= 1.0;
-				//m_d3dRenderer.MoveObject();
-			}
-			//m_sceneGraph
-		}
-
-		m_selectedObject = m_d3dRenderer.MousePicking();
-	
-		m_toolInputCommands.mouse_LB_Down = false;
-
-	}
+	CamSplineUpdate();
 
 	
 
-	//m_sceneGraph[m_selectedObject].posX
-	
-	if (m_d3dRenderer.bCamPath) {
-		m_sceneGraph[3].posX = camSpline.p0.x;
-		m_sceneGraph[3].posY = camSpline.p0.y;
-		m_sceneGraph[3].posZ = camSpline.p0.z;
-
-		m_sceneGraph[4].posX = camSpline.p1.x;
-		m_sceneGraph[4].posY = camSpline.p1.y;
-		m_sceneGraph[4].posZ = camSpline.p1.z;
-
-		m_sceneGraph[5].posX = camSpline.p2.x;
-		m_sceneGraph[5].posY = camSpline.p2.y;
-		m_sceneGraph[5].posZ = camSpline.p2.z;
-
-		m_sceneGraph[6].posX = camSpline.p3.x;
-		m_sceneGraph[6].posY = camSpline.p3.y;
-		m_sceneGraph[6].posZ = camSpline.p3.z;
-
-		XMFLOAT3 camPos = XMFLOAT3(m_sceneGraph[8].posX, m_sceneGraph[8].posY, m_sceneGraph[8].posZ);
-		camPos = camSpline.update();
-
-		m_sceneGraph[8].posX = camPos.x;
-		m_sceneGraph[8].posY = camPos.y;
-		m_sceneGraph[8].posZ = camPos.z;
-	}
 	
 
 	//Renderer Update Call
@@ -401,18 +375,8 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_keyArray[msg->wParam] = false;
 		break;
 
-	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
-		//set some flag for the mouse button in inputcommands
-		m_toolInputCommands.mouse_LB_Down = true;
-		break;
 	case WM_MOUSEMOVE:
 		bDragging = true;
-		/*if (m_toolInputCommands.mouse_LB_Down) {
-			bDragging = true;
-		}
-		else if (!m_toolInputCommands.mouse_LB_Down) {
-			bDragging = false;
-		}*/
 
 		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
 		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
@@ -425,6 +389,10 @@ void ToolMain::UpdateInput(MSG * msg)
 
 		break;
 
+	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
+		//set some flag for the mouse button in inputcommands
+		m_toolInputCommands.mouse_LB_Down = true;
+		break;
 	case WM_LBUTTONUP:
 		m_toolInputCommands.mouse_LB_Down = false;
 		break;
@@ -434,6 +402,7 @@ void ToolMain::UpdateInput(MSG * msg)
 	case WM_RBUTTONUP:
 		m_toolInputCommands.mouse_RB_Down = false;
 		break;
+		
 	}
 
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
@@ -475,5 +444,154 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.multiSelect = true;
 	}
 	else m_toolInputCommands.multiSelect = false;
+	if (m_keyArray[38]) {	// 38 is the number for the up button
+		m_toolInputCommands.upArrow = true;
+	}
+	else m_toolInputCommands.upArrow = false;
+	if (m_keyArray[40]) {	// 40 is the number for the down button
+		m_toolInputCommands.downArrow = true;
+	}
+	else m_toolInputCommands.downArrow = false;
+	if (m_keyArray[37]) {	// 40 is the number for the down button
+		m_toolInputCommands.leftArrow = true;
+	}
+	else m_toolInputCommands.leftArrow = false;
+	if (m_keyArray[39]) {	// 40 is the number for the down button
+		m_toolInputCommands.rightArrow = true;
+	}
+	else m_toolInputCommands.rightArrow = false;
+	if (m_keyArray[13]) {	// 40 is the number for the down button
+		m_toolInputCommands.enter = true;
+	}
+	else m_toolInputCommands.enter = false;
+	if (m_keyArray[8]) {	// 40 is the number for the down button
+		m_toolInputCommands.backspace = true;
+	}
+	else m_toolInputCommands.backspace = false;
 	//WASD
+}
+
+void ToolMain::MouseUpdate()
+{
+	if (bDragging) {
+		m_toolInputCommands.drag = true;
+	}
+	else if (!bDragging) {
+		m_toolInputCommands.drag = false;
+	}
+	// set the dragging to false if mouse isnt currently moving 
+	if (posVectorX.back() == posVectorX[posVectorX.size() - 5]) {
+		bDragging = false;
+	}
+	else if (posVectorY.back() == posVectorY[posVectorY.size() - 5]) {
+		bDragging = false;
+	}
+
+	// set the right mouse button up if mouse moves off of screen
+	if (posVectorX.back() > m_width || posVectorX.back() < 0) {
+		m_toolInputCommands.mouse_RB_Down = false;
+		//bDragging = false;
+	}
+	else if (posVectorY.back() > m_height || posVectorY.back() < 0)
+	{
+		m_toolInputCommands.mouse_RB_Down = false;
+
+	}
+
+	if (m_toolInputCommands.mouse_LB_Down)
+	{
+
+		m_selectedObject = m_d3dRenderer.MousePicking();
+
+		m_toolInputCommands.mouse_LB_Down = false;
+
+	}
+}
+
+void ToolMain::CamSplineUpdate()
+{
+
+	if (m_d3dRenderer.bCamPath) {
+		m_sceneGraph[3].posX = camSpline.p0.x;
+		m_sceneGraph[3].posY = camSpline.p0.y;
+		m_sceneGraph[3].posZ = camSpline.p0.z;
+
+		m_sceneGraph[4].posX = camSpline.p1.x;
+		m_sceneGraph[4].posY = camSpline.p1.y;
+		m_sceneGraph[4].posZ = camSpline.p1.z;
+
+		m_sceneGraph[5].posX = camSpline.p2.x;
+		m_sceneGraph[5].posY = camSpline.p2.y;
+		m_sceneGraph[5].posZ = camSpline.p2.z;
+
+		m_sceneGraph[6].posX = camSpline.p3.x;
+		m_sceneGraph[6].posY = camSpline.p3.y;
+		m_sceneGraph[6].posZ = camSpline.p3.z;
+
+		XMFLOAT3 camPos = XMFLOAT3(m_sceneGraph[8].posX, m_sceneGraph[8].posY, m_sceneGraph[8].posZ);
+		camPos = camSpline.update();
+
+		m_sceneGraph[8].posX = camPos.x;
+		m_sceneGraph[8].posY = camPos.y;
+		m_sceneGraph[8].posZ = camPos.z;
+	}
+}
+
+void ToolMain::ObjectUpdate()
+{
+	if (bScaleManip) {
+
+		if (m_toolInputCommands.upArrow) {
+			m_sceneGraph[m_selectedObject].scaX += 0.2;
+			m_sceneGraph[m_selectedObject].scaY += 0.2;
+			m_sceneGraph[m_selectedObject].scaZ += 0.2;
+		}
+		if (m_toolInputCommands.downArrow) {
+			m_sceneGraph[m_selectedObject].scaX -= 0.2;
+			m_sceneGraph[m_selectedObject].scaY -= 0.2;
+			m_sceneGraph[m_selectedObject].scaZ -= 0.2;
+			//m_d3dRenderer.MoveObject();
+		}
+	}
+
+	if (bMoveManip) {
+		if (!m_toolInputCommands.multiSelect) {	// multiSelect is the ctrl button
+			if (m_toolInputCommands.upArrow) {
+				m_sceneGraph[m_selectedObject].posX += 0.2;
+			}
+			if (m_toolInputCommands.downArrow) {
+				m_sceneGraph[m_selectedObject].posX -= 0.2;
+			}
+			if (m_toolInputCommands.leftArrow) {
+				m_sceneGraph[m_selectedObject].posY -= 0.2;
+			}
+			if (m_toolInputCommands.rightArrow) {
+				m_sceneGraph[m_selectedObject].posY += 0.2;
+			}
+		}
+		
+		if (m_toolInputCommands.multiSelect) {	// multiSelect is the ctrl button
+			if (m_toolInputCommands.upArrow) {
+				m_sceneGraph[m_selectedObject].posZ += 0.2;
+			}
+			if (m_toolInputCommands.downArrow) {
+				m_sceneGraph[m_selectedObject].posZ -= 0.2;
+			}
+		}
+	
+	}
+
+	if (bRotManip) {
+		if (m_toolInputCommands.upArrow) {
+			m_sceneGraph[m_selectedObject].rotX += 0.2;
+			m_sceneGraph[m_selectedObject].rotY += 0.2;
+			m_sceneGraph[m_selectedObject].rotZ += 0.2;
+		}
+		if (m_toolInputCommands.downArrow) {
+			m_sceneGraph[m_selectedObject].rotX -= 0.2;
+			m_sceneGraph[m_selectedObject].rotY -= 0.2;
+			m_sceneGraph[m_selectedObject].rotZ -= 0.2;
+			//m_d3dRenderer.MoveObject();
+		}
+	}
 }

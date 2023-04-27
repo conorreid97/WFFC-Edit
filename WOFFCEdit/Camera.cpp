@@ -61,18 +61,12 @@ void Camera::update(InputCommands* m_InputCommands)
 			m_camOrientation.y += m_camRotRate;
 		}
 		else if (m_InputCommands->mouse_Y > m_InputCommands->prev_mouse_Y) {
-			m_camOrientation.x -= m_camRotRate;
+			m_camOrientation.x -= m_camRotRate * 2;
 		}
 		else if (m_InputCommands->mouse_Y < m_InputCommands->prev_mouse_Y) {
-			m_camOrientation.x += m_camRotRate;
+			m_camOrientation.x += m_camRotRate *2;
 		}
 	}
-
-	//if (m_InputCommands.drag) {
-	//	if (m_InputCommands.mouse_X < m_InputCommands.prev_mouse_X) {
-	//		m_camOrientation.y -= m_camRotRate;
-	//	}
-	//}
 
 	// lock the camera when reaches the bottom and top
 	if (m_camOrientation.x <= -90) {

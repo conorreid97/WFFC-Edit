@@ -1,6 +1,7 @@
 #include "MFCMain.h"
 #include "resource.h"
 
+HINSTANCE hInst;
 
 BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_FILE_QUIT,	&MFCMain::MenuFileQuit)
@@ -10,6 +11,9 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	// add on command for button 2
 	ON_COMMAND(ID_Button40006, &MFCMain::ToolBarButton2)
 	ON_COMMAND(ID_BUTTON40007, &MFCMain::ToolBarButton3)
+	ON_COMMAND(ID_BUTTON40008, &MFCMain::ToolBarButton4)
+	ON_COMMAND(ID_BUTTON40009, &MFCMain::ToolBarButton5)
+	ON_COMMAND(ID_BUTTON40010, &MFCMain::ToolBarButton6)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
 
@@ -120,8 +124,28 @@ void MFCMain::ToolBarButton2()
 
 void MFCMain::ToolBarButton3()
 {
-
+	m_ToolSystem.setCamType(2);
+	
 }
+
+void MFCMain::ToolBarButton4()
+{
+	m_ToolSystem.onActivateScaling();
+	//DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG2), hWnd, m_ToolSystem.onActivateManipulation);
+	//m_ToolSelectDialogue.ShowWindow(SW_SHOW);	//show modeless
+}
+
+void MFCMain::ToolBarButton5()
+{
+	m_ToolSystem.onActivateMove();
+}
+
+void MFCMain::ToolBarButton6()
+{
+	m_ToolSystem.onActivateRotate();
+}
+
+
 
 
 MFCMain::MFCMain()

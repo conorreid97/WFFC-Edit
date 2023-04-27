@@ -86,6 +86,9 @@ private:
 	ArcballCamera arcBallCam;
 	//functionality
 	float								m_movespeed;
+	// Dynamic cameras
+	int cameraType;
+	XMMATRIX camView;
 
 	////camera
 	//DirectX::SimpleMath::Vector3		m_camPosition;
@@ -163,7 +166,10 @@ public:
 	// Spline
 	CameraSpline camSpline;
 	bool bCamPath;
+	int getCamType() { return cameraType; }
+	void setCamType(int _cam) { cameraType = _cam; }
 
+	// Object Manipulation
 };
 
 std::wstring StringToWCHART(std::string s);

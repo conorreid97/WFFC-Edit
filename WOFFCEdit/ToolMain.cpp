@@ -50,6 +50,7 @@ ToolMain::ToolMain()
 	pY = XMVectorGetY(p);
 	pZ = XMVectorGetZ(p);
 
+	bFocus = false;
 }
 
 
@@ -92,7 +93,8 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 
 void ToolMain::onActionFocusCamera()
 {
-
+	m_d3dRenderer.setCamType(2);
+	m_d3dRenderer.FocusTool();
 }
 
 void ToolMain::onActivateCamSpline()
@@ -645,22 +647,15 @@ void ToolMain::ObjectUpdate()
 		if (!m_toolInputCommands.multiSelect) {
 			if (m_toolInputCommands.upArrow) {
 				m_sceneGraph[m_selectedObject].rotX += 0.5;
-				/*m_sceneGraph[m_selectedObject].rotY += 0.2;
-				m_sceneGraph[m_selectedObject].rotZ += 0.2;*/
 			}
 			if (m_toolInputCommands.downArrow) {
 				m_sceneGraph[m_selectedObject].rotX -= 0.5;
-				/*m_sceneGraph[m_selectedObject].rotY -= 0.2;
-				m_sceneGraph[m_selectedObject].rotZ -= 0.2;*/
-				//m_d3dRenderer.MoveObject();
 			}
 			if (m_toolInputCommands.leftArrow) {
 				m_sceneGraph[m_selectedObject].rotZ -= 0.5;
-
 			}
 			if (m_toolInputCommands.rightArrow) {
 				m_sceneGraph[m_selectedObject].rotZ += 0.5;
-
 			}
 		}
 		if (m_toolInputCommands.multiSelect) {	// multiSelect is the ctrl button

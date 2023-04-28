@@ -58,6 +58,7 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 
 	void CamSplineTool();
+	void FocusTool();
 	void ClearDisplayList();
 
 

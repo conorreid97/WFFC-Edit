@@ -25,7 +25,7 @@ void ArcballCamera::Update(InputCommands* m_InputCommands)
 	float sinTheta = sinf(m_camOrientationX);
 	float cosTheta = cosf(m_camOrientationX);
 	
-	if (m_InputCommands->mouse_RB_Down && m_InputCommands->drag) {
+	//if (m_InputCommands->mouse_RB_Down && m_InputCommands->drag) {
 		if (m_InputCommands->mouse_X < m_InputCommands->prev_mouse_X) {
 			m_camOrientationX -= 0.05f;//m_InputCommands->mouse_X /*deltaX*/ * 0.0001f;
 			m_camOrientationY = clamp(m_camOrientationY, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
@@ -44,11 +44,11 @@ void ArcballCamera::Update(InputCommands* m_InputCommands)
 
 		}
 		
-	}
+	//}
 	// Clamp the rotation angles to prevent camera flipping
 	//m_camOrientationY = clamp(m_camOrientationY, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
 
-
+	
 	XMFLOAT3 eye;
 	eye = XMFLOAT3(0.0, 3.7, -3.5);
 	XMFLOAT3 target = XMFLOAT3(0.0, 0.0, 0.0);
@@ -58,6 +58,8 @@ void ArcballCamera::Update(InputCommands* m_InputCommands)
 	eye.z = m_target.z + m_radius * sinPhi * sinTheta;
 
 	m_eye = eye;
+
+
 }
 
 XMMATRIX ArcballCamera::getViewMatrix()

@@ -555,6 +555,14 @@ void Game::CamSplineTool()
 	}
 }
 
+void Game::FocusTool()
+{
+	// switch to arcball
+	cameraType = 2;
+
+	arcBallCam.setCameraParams(XMFLOAT3(0.0, 3.7, -3.5), m_displayList[selectedID].m_position, XMFLOAT3(0.0, 1.0, 0.0));
+}
+
 #ifdef DXTK_AUDIO
 void Game::NewAudioDevice()
 {

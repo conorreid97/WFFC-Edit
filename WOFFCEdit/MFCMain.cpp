@@ -15,6 +15,8 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_BUTTON40009, &MFCMain::ToolBarButton5)
 	ON_COMMAND(ID_BUTTON40010, &MFCMain::ToolBarButton6)
 	ON_COMMAND(ID_BUTTON40011, &MFCMain::ToolBarButton7)
+	ON_COMMAND(ID_BUTTON40012, &MFCMain::ToolBarButton8)
+
 
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
@@ -126,7 +128,19 @@ void MFCMain::ToolBarButton2()
 
 void MFCMain::ToolBarButton3()
 {
-	m_ToolSystem.setCamType(2);
+	if (!m_ToolSystem.bFocus)
+	{
+		m_ToolSystem.bFocus = true;
+		m_ToolSystem.setCamType(2);
+		m_ToolSystem.onActionFocusCamera();
+	}
+	else {
+		m_ToolSystem.bFocus = false;
+		m_ToolSystem.setCamType(1);
+
+	}
+
+	
 	
 }
 
@@ -150,6 +164,14 @@ void MFCMain::ToolBarButton6()
 void MFCMain::ToolBarButton7()
 {
 	m_ToolSystem.onActivateFog();
+}
+
+void MFCMain::ToolBarButton8()
+{
+	
+	m_ToolSystem.setCamType(2);
+
+	
 }
 
 

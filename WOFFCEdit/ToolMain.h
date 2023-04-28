@@ -49,6 +49,10 @@ public:	//variables
 	ChunkObject					m_chunk;		//our landscape chunk
 	int m_selectedObject;						//ID of current Selection
 
+	// Focus
+	bool bFocus;
+
+
 private:	//methods
 	void	onContentAdded();
 

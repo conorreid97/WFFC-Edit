@@ -179,14 +179,17 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 			if (fog)
 			{
 				fog->SetFogEnabled(1.0);
-				fog->SetFogStart(50.0f);
+				fog->SetFogStart(10.0f);
+				fog->SetFogEnd(20.0f);
 				fog->SetFogColor(DirectX::Colors::WhiteSmoke);
 			}
 				});
 		}
 
 		m_displayChunk.m_terrainEffect->SetFogEnabled(1.0);
-		m_displayChunk.m_terrainEffect->SetFogStart(50.0f);
+		m_displayChunk.m_terrainEffect->SetFogStart(10.0f);
+		m_displayChunk.m_terrainEffect->SetFogEnd(20.0f);
+
 		m_displayChunk.m_terrainEffect->SetFogColor(DirectX::Colors::WhiteSmoke);
 	}
 	else if (!bFog) {

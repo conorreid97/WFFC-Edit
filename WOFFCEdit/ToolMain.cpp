@@ -99,6 +99,7 @@ void ToolMain::onActivateCamSpline()
 {
 	
 	//pos1 = camSpline.p0;
+
 	m_d3dRenderer.CamSplineTool();
 }
 
@@ -106,6 +107,8 @@ void ToolMain::onActivateScaling()
 {
 	if (!bScaleManip) {
 		bScaleManip = true;
+		bMoveManip = false;
+		bRotManip = false;
 	}
 	else {
 		bScaleManip = false;
@@ -116,6 +119,8 @@ void ToolMain::onActivateMove()
 {
 	if (!bMoveManip) {
 		bMoveManip = true;
+		bScaleManip = false;
+		bRotManip = false;
 	}
 	else {
 		bMoveManip = false;
@@ -618,35 +623,54 @@ void ToolMain::ObjectUpdate()
 				m_sceneGraph[m_selectedObject].posX -= 0.2;
 			}
 			if (m_toolInputCommands.leftArrow) {
-				m_sceneGraph[m_selectedObject].posY -= 0.2;
+				m_sceneGraph[m_selectedObject].posZ -= 0.2;
 			}
 			if (m_toolInputCommands.rightArrow) {
-				m_sceneGraph[m_selectedObject].posY += 0.2;
+				m_sceneGraph[m_selectedObject].posZ += 0.2;
 			}
 		}
 		
 		if (m_toolInputCommands.multiSelect) {	// multiSelect is the ctrl button
 			if (m_toolInputCommands.upArrow) {
-				m_sceneGraph[m_selectedObject].posZ += 0.2;
+				m_sceneGraph[m_selectedObject].posY += 0.2;
 			}
 			if (m_toolInputCommands.downArrow) {
-				m_sceneGraph[m_selectedObject].posZ -= 0.2;
+				m_sceneGraph[m_selectedObject].posY -= 0.2;
 			}
 		}
 	
 	}
 
 	if (bRotManip) {
-		if (m_toolInputCommands.upArrow) {
-			m_sceneGraph[m_selectedObject].rotX += 0.2;
-			m_sceneGraph[m_selectedObject].rotY += 0.2;
-			m_sceneGraph[m_selectedObject].rotZ += 0.2;
+		if (!m_toolInputCommands.multiSelect) {
+			if (m_toolInputCommands.upArrow) {
+				m_sceneGraph[m_selectedObject].rotX += 0.5;
+				/*m_sceneGraph[m_selectedObject].rotY += 0.2;
+				m_sceneGraph[m_selectedObject].rotZ += 0.2;*/
+			}
+			if (m_toolInputCommands.downArrow) {
+				m_sceneGraph[m_selectedObject].rotX -= 0.5;
+				/*m_sceneGraph[m_selectedObject].rotY -= 0.2;
+				m_sceneGraph[m_selectedObject].rotZ -= 0.2;*/
+				//m_d3dRenderer.MoveObject();
+			}
+			if (m_toolInputCommands.leftArrow) {
+				m_sceneGraph[m_selectedObject].rotZ -= 0.5;
+
+			}
+			if (m_toolInputCommands.rightArrow) {
+				m_sceneGraph[m_selectedObject].rotZ += 0.5;
+
+			}
 		}
-		if (m_toolInputCommands.downArrow) {
-			m_sceneGraph[m_selectedObject].rotX -= 0.2;
-			m_sceneGraph[m_selectedObject].rotY -= 0.2;
-			m_sceneGraph[m_selectedObject].rotZ -= 0.2;
-			//m_d3dRenderer.MoveObject();
+		if (m_toolInputCommands.multiSelect) {	// multiSelect is the ctrl button
+			if (m_toolInputCommands.rightArrow) {
+				m_sceneGraph[m_selectedObject].rotY += 0.2;
+			}
+			if (m_toolInputCommands.leftArrow) {
+				m_sceneGraph[m_selectedObject].rotY -= 0.2;
+			}
 		}
+
 	}
 }

@@ -176,13 +176,13 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 			m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
 				{
 					auto fog = dynamic_cast<IEffectFog*>(effect);
-			if (fog)
-			{
-				fog->SetFogEnabled(1.0);
-				fog->SetFogStart(10.0f);
-				fog->SetFogEnd(20.0f);
-				fog->SetFogColor(DirectX::Colors::WhiteSmoke);
-			}
+					if (fog)
+					{
+						fog->SetFogEnabled(1.0);
+						fog->SetFogStart(10.0f);
+						fog->SetFogEnd(20.0f);
+						fog->SetFogColor(DirectX::Colors::WhiteSmoke);
+					}
 				});
 		}
 
@@ -199,12 +199,11 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 			m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
 				{
 					auto fog = dynamic_cast<IEffectFog*>(effect);
-			if (fog)
-			{
-				fog->SetFogEnabled(0.0);
-				fog->SetFogEnd(1.0);
-				//fog->SetFogColor(DirectX::Colors::WhiteSmoke);
-			}
+					if (fog)
+					{
+						fog->SetFogEnabled(0.0);
+						fog->SetFogEnd(1.0);
+					}
 				});
 		}
 

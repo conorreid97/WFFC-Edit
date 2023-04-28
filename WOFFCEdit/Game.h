@@ -170,6 +170,9 @@ public:
 	void setCamType(int _cam) { cameraType = _cam; }
 
 	// Object Manipulation
+
+	// Fog
+	bool bFog;
 };
 
 std::wstring StringToWCHART(std::string s);

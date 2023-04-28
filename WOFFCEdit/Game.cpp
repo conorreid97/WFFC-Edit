@@ -13,6 +13,13 @@ using namespace DirectX::SimpleMath;
 
 using Microsoft::WRL::ComPtr;
 
+XMVECTOR controlPoints[] = {
+	XMVectorSet(-1.0f, 0.0f, 0.0f, 1.0f),
+	XMVectorSet(-0.5f, 0.5f, 0.0f, 1.0f),
+	XMVectorSet(0.5f, -0.5f, 0.0f, 1.0f),
+	XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f)
+};
+
 Game::Game()
 
 {
@@ -30,6 +37,8 @@ Game::Game()
 	cameraType = 2;
 	bCamPath = false;
 	camView = cam1.GetViewMatrix();
+
+	bFog = true;
 	
 }
 
@@ -145,11 +154,22 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 	
 	}*/
 
+	int numSegments = 10;
+	std::vector<XMVECTOR> intermediatePoints;
+
+	for (int i = 1; i < 4; i++) {
+		for (int j = 0; j < numSegments; j++) {
+			float t = (float)j / (float)numSegments;
+			XMVECTOR p = XMVectorCatmullRom(controlPoints[i - 1], controlPoints[i], controlPoints[i + 1], controlPoints[i + 2], t);
+
+			intermediatePoints.push_back(p);
+		}
+	}
 	
 	//IEffectFog* effect;
 	//effect = 
 	//effect->SetFogEnabled(true);
-	//if (bFog) {
+	if (bFog) {
 		int numObjects = SceneGraph->size();
 		for (int i = 0; i < numObjects; i++)
 		{
@@ -168,7 +188,27 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 		m_displayChunk.m_terrainEffect->SetFogEnabled(1.0);
 		m_displayChunk.m_terrainEffect->SetFogStart(50.0f);
 		m_displayChunk.m_terrainEffect->SetFogColor(DirectX::Colors::WhiteSmoke);
-	//}
+	}
+	else if (!bFog) {
+		int numObjects = SceneGraph->size();
+		for (int i = 0; i < numObjects; i++)
+		{
+			m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+				{
+					auto fog = dynamic_cast<IEffectFog*>(effect);
+			if (fog)
+			{
+				fog->SetFogEnabled(0.0);
+				fog->SetFogEnd(1.0);
+				//fog->SetFogColor(DirectX::Colors::WhiteSmoke);
+			}
+				});
+		}
+
+		m_displayChunk.m_terrainEffect->SetFogEnabled(0.0);
+		m_displayChunk.m_terrainEffect->SetFogEnd(1.0);
+
+	}
 	
 
    // m_batchEffect->SetView(cam1.m_view);
@@ -283,7 +323,7 @@ void Game::Render()
 				}
 			}
 			m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, false);	//last variable in draw,  make TRUE for wireframe
-
+			
 		}
 		else {
 			m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, false);	//last variable in draw,  make TRUE for wireframe
@@ -451,17 +491,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 				lights->SetTexture(newDisplayObject.m_texture_diffuse);			
 			}
 		});
-		// enable fog
-		//newDisplayObject.m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
-		//{
-		//	auto fog = dynamic_cast<IEffectFog*>(effect);
-		//	if (fog)
-		//	{
-		//		fog->SetFogEnabled(1.0);
-		//		fog->SetFogStart(100.0f);
-		//		fog->SetFogColor(DirectX::Colors::White);
-		//	}
-		//});
+		
 		//set position
 		newDisplayObject.m_position.x = SceneGraph->at(i).posX;
 		newDisplayObject.m_position.y = SceneGraph->at(i).posY;
@@ -494,7 +524,6 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		newDisplayObject.m_light_quadratic	= SceneGraph->at(i).light_quadratic;
 		
 		m_displayList.push_back(newDisplayObject);
-		
 	}	
 }
 
@@ -691,8 +720,6 @@ int Game::MousePicking()
 		//loop through mesh list for object
 		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
 		{
-			
-
 			//checking for ray intersection
 			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, selectedDistance))
 			{
@@ -709,7 +736,7 @@ int Game::MousePicking()
 				if (SelectedVector.z < prevPos.z) {
 					selectedID = i;
 				}
-
+				
 				// closest pick ui ///////////////////////////////////////////////////
 				XMFLOAT3 modelPos = XMFLOAT3(m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z);
 				

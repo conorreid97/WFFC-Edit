@@ -9,6 +9,12 @@
 #include "InputCommands.h"
 #include <vector>
 
+//XMVECTOR AIControlPoints[] = {
+//	XMVectorSet(-1.0f, 0.0f, 0.0f, 1.0f),
+//	XMVectorSet(-0.5f, 0.5f, 0.0f, 1.0f),
+//	XMVectorSet(0.5f, -0.5f, 0.0f, 1.0f),
+//	XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f)
+//};
 
 class ToolMain
 {
@@ -24,6 +30,7 @@ public: //methods
 	void	onActivateScaling();
 	void	onActivateMove();
 	void	onActivateRotate();
+	void	onActivateFog();
 	void	onActionLoad();													//load the current chunk
 	afx_msg	void	onActionSave();											//save the current chunk
 	afx_msg void	onActionSaveTerrain();									//save chunk geometry
@@ -75,4 +82,20 @@ private:	//variables
 	bool bScaleManip;
 	bool bMoveManip;
 	bool bRotManip;
+
+	// ai spline
+	int numSegments = 10;
+	std::vector<XMVECTOR> intermediatePoints;
+	XMVECTOR p;
+
+	XMFLOAT3 p0;
+	XMFLOAT3 p1;
+	XMFLOAT3 p2;
+	XMFLOAT3 p3;
+
+	XMVECTOR controlPoints[4];
+
+	float pX;
+	float pY;
+	float pZ;
 };

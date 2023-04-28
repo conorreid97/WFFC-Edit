@@ -14,6 +14,8 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_BUTTON40008, &MFCMain::ToolBarButton4)
 	ON_COMMAND(ID_BUTTON40009, &MFCMain::ToolBarButton5)
 	ON_COMMAND(ID_BUTTON40010, &MFCMain::ToolBarButton6)
+	ON_COMMAND(ID_BUTTON40011, &MFCMain::ToolBarButton7)
+
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
 
@@ -143,6 +145,11 @@ void MFCMain::ToolBarButton5()
 void MFCMain::ToolBarButton6()
 {
 	m_ToolSystem.onActivateRotate();
+}
+
+void MFCMain::ToolBarButton7()
+{
+	m_ToolSystem.onActivateFog();
 }
 
 

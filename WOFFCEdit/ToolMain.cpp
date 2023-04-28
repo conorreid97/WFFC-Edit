@@ -3,6 +3,13 @@
 #include <vector>
 #include <sstream>
 
+//XMVECTOR controlPoints[] = {
+//	XMVectorSet(-1.0f, 0.0f, 0.0f, 1.0f),
+//	XMVectorSet(-0.5f, 0.5f, 0.0f, 1.0f),
+//	XMVectorSet(0.5f, -0.5f, 0.0f, 1.0f),
+//	XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f)
+//};
+
 //
 //ToolMain Class
 ToolMain::ToolMain()
@@ -26,6 +33,23 @@ ToolMain::ToolMain()
 
 	camType = 1;
 	bScaleManip = false;
+
+	p0 = XMFLOAT3(-10.0f, 0.0f, 0.0f);
+	p1 = XMFLOAT3(-5.0f, 5.0f, 0.0f);
+	p2 = XMFLOAT3(5.0f, -5.0f, 0.0f);
+	p3 = XMFLOAT3(10.0f, 0.0f, 0.0f);
+
+	controlPoints[0] = XMVectorSet(p0.x, p0.y, p0.z, 1.0f);
+	controlPoints[1] = XMVectorSet(p1.x, p1.y, p1.z, 1.0f);
+	controlPoints[2] = XMVectorSet(p2.x, p2.y, p2.z, 1.0f);
+	controlPoints[3] = XMVectorSet(p3.x, p3.y, p3.z, 1.0f);
+	
+	p = XMVectorSet(p0.x, p0.y, p0.z, 1.0);
+
+	pX = XMVectorGetX(p);
+	pY = XMVectorGetY(p);
+	pZ = XMVectorGetZ(p);
+
 }
 
 
@@ -105,6 +129,16 @@ void ToolMain::onActivateRotate()
 	}
 	else {
 		bRotManip = false;
+	}
+}
+
+void ToolMain::onActivateFog()
+{
+	if (m_d3dRenderer.bFog) {
+		m_d3dRenderer.bFog = false;
+	}
+	else if (!m_d3dRenderer.bFog) {
+		m_d3dRenderer.bFog = true;
 	}
 }
 
@@ -353,7 +387,28 @@ void ToolMain::Tick(MSG *msg)
 
 	
 
-	
+	for (int i = 1; i < 4; i++) {
+		for (int j = 0; j < numSegments; j++) {
+			float t = (float)j / (float)numSegments;
+			//p = XMVectorCatmullRom(controlPoints[i - 1], controlPoints[i], controlPoints[i + 1], controlPoints[i + 2], t);
+			p = XMVectorCatmullRom(
+				XMVectorSet(p0.x, p0.y, p0.z, 1.0f),
+				XMVectorSet(p1.x, p1.y, p1.z, 1.0f),
+				XMVectorSet(p2.x, p2.y, p2.z, 1.0f),
+				XMVectorSet(p3.x, p3.y, p3.z, 1.0f),
+				t
+			);
+			intermediatePoints.push_back(p);
+		}
+	}
+
+	pX = XMVectorGetX(p);
+	pY = XMVectorGetY(p);
+	pZ = XMVectorGetZ(p);
+
+	m_sceneGraph[9].posX = pX;
+	m_sceneGraph[9].posY = pY;
+	m_sceneGraph[9].posZ = pZ;
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands, &m_sceneGraph);

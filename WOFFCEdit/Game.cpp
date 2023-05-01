@@ -105,8 +105,7 @@ void Game::Initialize(HWND window, int width, int height)
 		selectedID_List.push_back(-1);
 		vectorVictor.push_back(XMFLOAT3(0.0,0.0,0.0));
 	}
-	selectedDistance = 1000.0f;
-	closestPick = 1000.0f;
+
 }
 
 void Game::SetGridState(bool state)
@@ -169,48 +168,48 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 	//IEffectFog* effect;
 	//effect = 
 	//effect->SetFogEnabled(true);
-	if (bFog) {
-		int numObjects = SceneGraph->size();
-		for (int i = 0; i < numObjects; i++)
-		{
-			m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
-				{
-					auto fog = dynamic_cast<IEffectFog*>(effect);
-					if (fog)
-					{
-						fog->SetFogEnabled(1.0);
-						fog->SetFogStart(10.0f);
-						fog->SetFogEnd(20.0f);
-						fog->SetFogColor(DirectX::Colors::WhiteSmoke);
-					}
-				});
-		}
+	//if (bFog) {
+	//	int numObjects = SceneGraph->size();
+	//	for (int i = 0; i < numObjects; i++)
+	//	{
+	//		m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+	//			{
+	//				auto fog = dynamic_cast<IEffectFog*>(effect);
+	//				if (fog)
+	//				{
+	//					fog->SetFogEnabled(1.0);
+	//					fog->SetFogStart(0.5);
+	//					fog->SetFogEnd(40.0);
+	//					fog->SetFogColor(DirectX::Colors::WhiteSmoke);
+	//				}
+	//			});
+	//	}
 
-		m_displayChunk.m_terrainEffect->SetFogEnabled(1.0);
-		m_displayChunk.m_terrainEffect->SetFogStart(10.0f);
-		m_displayChunk.m_terrainEffect->SetFogEnd(20.0f);
+	//	m_displayChunk.m_terrainEffect->SetFogEnabled(1.0);
+	//	m_displayChunk.m_terrainEffect->SetFogStart(0.5);
+	//	m_displayChunk.m_terrainEffect->SetFogEnd(40.0);
 
-		m_displayChunk.m_terrainEffect->SetFogColor(DirectX::Colors::WhiteSmoke);
-	}
-	else if (!bFog) {
-		int numObjects = SceneGraph->size();
-		for (int i = 0; i < numObjects; i++)
-		{
-			m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
-				{
-					auto fog = dynamic_cast<IEffectFog*>(effect);
-					if (fog)
-					{
-						fog->SetFogEnabled(0.0);
-						fog->SetFogEnd(1.0);
-					}
-				});
-		}
+	//	m_displayChunk.m_terrainEffect->SetFogColor(DirectX::Colors::WhiteSmoke);
+	//}
+	//else if (!bFog) {
+	//	int numObjects = SceneGraph->size();
+	//	for (int i = 0; i < numObjects; i++)
+	//	{
+	//		m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+	//			{
+	//				auto fog = dynamic_cast<IEffectFog*>(effect);
+	//				if (fog)
+	//				{
+	//					fog->SetFogEnabled(0.0);
+	//					fog->SetFogEnd(1.0);
+	//				}
+	//			});
+	//	}
 
-		m_displayChunk.m_terrainEffect->SetFogEnabled(0.0);
-		m_displayChunk.m_terrainEffect->SetFogEnd(1.0);
+	//	m_displayChunk.m_terrainEffect->SetFogEnabled(0.0);
+	//	m_displayChunk.m_terrainEffect->SetFogEnd(1.0);
 
-	}
+	//}
 	
 
    // m_batchEffect->SetView(cam1.m_view);
@@ -287,8 +286,6 @@ void Game::Render()
 	std::wstring varRot = L"Cam X Rot: " + std::to_wstring(cam1.m_camOrientation.x) + L"Cam Y Rot: " + std::to_wstring(cam1.m_camOrientation.y) + L"Cam Z Rot: " + std::to_wstring(cam1.m_camOrientation.z);
 	m_font->DrawString(m_sprites.get(), varRot.c_str(), XMFLOAT2(100, 50), Colors::Yellow);
 
-	std::wstring varSelected = L"Closest Pick Distance: " + std::to_wstring(closestPick) + L"Current Pick Distance: " + std::to_wstring(selectedDistance);
-	m_font->DrawString(m_sprites.get(), varSelected.c_str(), XMFLOAT2(100, 90), Colors::Yellow);
 	m_sprites->End();
 
 	//RENDER OBJECTS FROM SCENEGRAPH
@@ -305,31 +302,9 @@ void Game::Render()
 			m_displayList[i].m_orientation.z * 3.1415 / 180);
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
-	
-		// normal selecting
-		if (!m_InputCommands.multiSelect) {
-			if (i == selectedID) {
-				m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe
-			}
-			else if (i != selectedID) {
-				m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, false);	//last variable in draw,  make TRUE for wireframe
-			}
-		}
-		// multiple selection
-		else if (m_InputCommands.multiSelect) {
 
-			for (int j = 0; j < selectedID_List.size(); j++) {
-				if (i == selectedID_List[j]) {
-					m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, bSelected);	//last variable in draw,  make TRUE for wireframe	
-					
-				}
-			}
-			m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, false);	//last variable in draw,  make TRUE for wireframe
-			
-		}
-		else {
-			m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, false);	//last variable in draw,  make TRUE for wireframe
-		}
+		m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, m_displayList[i].m_wireframe);	//last variable in draw,  make TRUE for wireframe
+
 		m_deviceResources->PIXEndEvent();
 	}
 	m_deviceResources->PIXEndEvent();
@@ -493,6 +468,8 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 				lights->SetTexture(newDisplayObject.m_texture_diffuse);			
 			}
 		});
+
+		newDisplayObject.m_ID = SceneGraph->at(i).ID;
 		
 		//set position
 		newDisplayObject.m_position.x = SceneGraph->at(i).posX;
@@ -526,7 +503,30 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		newDisplayObject.m_light_quadratic	= SceneGraph->at(i).light_quadratic;
 		
 		m_displayList.push_back(newDisplayObject);
+
+		// highlight selected object
+		if (SceneGraph->at(i).ID == selectedID) {
+			DisplayObject  selectedHighlight = newDisplayObject;
+
+			selectedHighlight.m_ID = -1;
+			selectedHighlight.m_wireframe = true;
+
+			// highlight object
+			selectedHighlight.m_model->UpdateEffects([&](IEffect* effect)
+				{
+					auto fog = dynamic_cast<IEffectFog*>(effect);
+						if (fog)
+						{
+							fog->SetFogEnabled(true);
+							fog->SetFogStart(0);
+							fog->SetFogEnd(0);
+							fog->SetFogColor(Colors::DarkCyan);
+						}
+				});
+			m_displayList.push_back(selectedHighlight);
+		}
 	}	
+	//m_rebuildDisplayList = false;
 }
 
 void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
@@ -697,7 +697,8 @@ int Game::MousePicking()
 {
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
-	
+	float selectedDistance = INFINITY;
+	float closestPick = INFINITY;
 
 	//setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
 		//they may look the same but note, the difference in Z
@@ -723,54 +724,18 @@ int Game::MousePicking()
 
 		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, camView, local);
 
-		//turn the transformed points into our picking vector. 
 		XMVECTOR pickingVector = farPoint - nearPoint;
 		pickingVector = XMVector3Normalize(pickingVector);
 
-		//loop through mesh list for object
-		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
-		{
-			//checking for ray intersection
-			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, selectedDistance))
+		for (size_t j = 0; j < m_displayList[i].m_model.get()->meshes.size(); j++) {
+			if (m_displayList[i].m_model.get()->meshes[j]->boundingBox.Intersects(nearPoint, pickingVector, selectedDistance) && m_displayList[i].m_ID != -1)
 			{
-				// depth check
-				// Story position of object that is currently selected
-				currentPos = m_displayList[i].m_position;
-				// Get the distance to the camera
-				SelectedVector = currentPos - cam1.m_camPosition;
-				// push that to a vector
-				vectorVictor.push_back(SelectedVector);
-				// Get previous position
-				prevPos = vectorVictor[vectorVictor.size() - 2];
-				// compare distance to get closest one to the camera
-				if (SelectedVector.z < prevPos.z) {
-					selectedID = i;
-				}
-				
-				// closest pick ui ///////////////////////////////////////////////////
-				XMFLOAT3 modelPos = XMFLOAT3(m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z);
-				
-				// get the distance from selection
-				float distance = float(sqrtf((modelPos.x - cam1.m_camPosition.x) * (modelPos.x - cam1.m_camPosition.x) +
-											(modelPos.y - cam1.m_camPosition.y) * (modelPos.y - cam1.m_camPosition.y) +
-											(modelPos.z - cam1.m_camPosition.z) * (modelPos.z - cam1.m_camPosition.z)));
-				// update the closest pick
-				selectedDistance = distance;
-				if (selectedDistance < closestPick) {
+				if (selectedDistance < closestPick)
+					selectedID = m_displayList[i].m_ID;
 					closestPick = selectedDistance;
-				}
-
-				////////////////////////////////////////////////////////
-
-				// selecting and multi-selecting
-				//selectedID = i;
-				if (m_InputCommands.multiSelect) {
-					selectedID_List.push_back(i);
-				}
-				bSelected = true;
 			}
-		}
 		
+		}
 	}
 
 	//if we got a hit.  return it.  

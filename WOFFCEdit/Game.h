@@ -150,10 +150,6 @@ private:
 	bool bSelected;
 	int selectedID;
 
-	//picking distance
-	float selectedDistance;
-	float closestPick;
-
 	std::vector<int>selectedID_List;
 	//depth check
 	XMFLOAT3 currentPos;

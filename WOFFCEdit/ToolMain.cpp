@@ -1,5 +1,6 @@
 #include "ToolMain.h"
 #include "resource.h"
+#include "MFCFrame.h"
 #include <vector>
 #include <sstream>
 
@@ -71,7 +72,12 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 	//window size, handle etc for directX
 	m_width		= width;
 	m_height	= height;
+	m_toolHandle = handle;
 	
+	CMyFrame* window = (CMyFrame*)CWnd::FromHandle(m_toolHandle);
+	CRect viewRect;
+	window->GetWindowRect(viewRect);
+
 	m_d3dRenderer.Initialize(handle, m_width, m_height);
 
 	//database connection establish
@@ -377,7 +383,11 @@ void ToolMain::Tick(MSG *msg)
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
 	
+	CWnd* window = CWnd::FromHandle(m_toolHandle);
+	CRect viewRect;
+	window->GetWindowRect(viewRect);
 
+	//m_d3dRenderer.setScreenDim(viewRect);
 
 	if (camType == 1) {
 		m_d3dRenderer.setCamType(1);
@@ -438,6 +448,7 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 	case WM_MOUSEMOVE:
+		
 		bDragging = true;
 
 		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);

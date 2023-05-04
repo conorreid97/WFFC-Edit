@@ -165,11 +165,16 @@ public:
 	bool bCamPath;
 	int getCamType() { return cameraType; }
 	void setCamType(int _cam) { cameraType = _cam; }
-
+	void SetScreenDim(RECT in);
 	// Object Manipulation
 
 	// Fog
 	bool bFog;
+
+	// switch to arcball
+	bool switchCam;
+	XMVECTOR currentCamPos;
+	XMVECTOR targetPos;
 };
 
 std::wstring StringToWCHART(std::string s);

@@ -16,6 +16,8 @@ public:
 
 	XMMATRIX getViewMatrix();
 
+	XMVECTOR getEye() { return XMVectorSet(m_eye.x, m_eye.y, m_eye.z, 1.0); }
+
 	template <typename T>
 	const T& clamp(const T& value, const T& minValue, const T& maxValue)
 	{

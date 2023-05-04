@@ -16,6 +16,8 @@ public:
 	DirectX::SimpleMath::Vector3 GetOrientation() { return m_camOrientation; }
 	DirectX::SimpleMath::Matrix GetViewMatrix() { return m_view; }
 
+	
+
 	DirectX::SimpleMath::Matrix        m_view;
 
 	//camera
@@ -26,4 +28,6 @@ public:
 	DirectX::SimpleMath::Vector3		m_camRight;
 	float m_camRotRate;
 	float m_movespeed;
+
+	XMVECTOR getCamPos(){ return XMVectorSet(m_camPosition.x, m_camPosition.y, m_camPosition.z, 1.0f); }
 };

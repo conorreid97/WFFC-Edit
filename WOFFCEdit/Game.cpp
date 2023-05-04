@@ -5,6 +5,7 @@
 #include "pch.h"
 #include "Game.h"
 #include "DisplayObject.h"
+#include <cmath>
 #include <string>
 
 
@@ -40,6 +41,9 @@ Game::Game()
 
 	bFog = true;
 	
+	switchCam = false;
+	currentCamPos = XMVectorSet(0.0, 0.0, 0.0, 1.0);
+	targetPos = XMVectorSet(0.0, 0.0, 0.0, 1.0);
 }
 
 Game::~Game()
@@ -152,6 +156,11 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 	/*else if (cameraType == 3) {
 	
 	}*/
+
+	if (switchCam) {
+		
+		XMVectorLerp(currentCamPos, targetPos, 50.5);
+	}
 
 	int numSegments = 10;
 	std::vector<XMVECTOR> intermediatePoints;
@@ -391,6 +400,10 @@ void XM_CALLCONV Game::DrawGrid(FXMVECTOR xAxis, FXMVECTOR yAxis, FXMVECTOR orig
 
     m_deviceResources->PIXEndEvent();
 }
+void Game::SetScreenDim(RECT in)
+{
+	m_ScreenDimensions = in;
+}
 #pragma endregion
 
 #pragma region Message Handlers
@@ -560,7 +573,14 @@ void Game::FocusTool()
 	// switch to arcball
 	cameraType = 2;
 
-	arcBallCam.setCameraParams(XMFLOAT3(0.0, 3.7, -3.5), m_displayList[selectedID].m_position, XMFLOAT3(0.0, 1.0, 0.0));
+	currentCamPos = cam1.getCamPos();
+	targetPos = m_displayList[selectedID].m_position;
+
+	switchCam = true;
+
+	
+	
+	//arcBallCam.setCameraParams(XMFLOAT3(0.0, 3.7, -3.5), m_displayList[selectedID].m_position, XMFLOAT3(0.0, 1.0, 0.0));
 }
 
 #ifdef DXTK_AUDIO

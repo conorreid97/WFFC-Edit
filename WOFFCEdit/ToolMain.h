@@ -32,6 +32,7 @@ public: //methods
 	void	onActivateRotate();
 	void	onActivateFog();
 	void	onActionLoad();													//load the current chunk
+	void	onActionDuplicate();
 	afx_msg	void	onActionSave();											//save the current chunk
 	afx_msg void	onActionSaveTerrain();									//save chunk geometry
 

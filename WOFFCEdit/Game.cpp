@@ -157,10 +157,10 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 	
 	}*/
 
-	if (switchCam) {
+	/*if (switchCam) {
 		
 		XMVectorLerp(currentCamPos, targetPos, 50.5);
-	}
+	}*/
 
 	int numSegments = 10;
 	std::vector<XMVECTOR> intermediatePoints;
@@ -578,9 +578,9 @@ void Game::FocusTool()
 
 	switchCam = true;
 
+	Vector3 targetOffset = Vector3(m_displayList[selectedID].m_position.x, m_displayList[selectedID].m_position.y, m_displayList[selectedID].m_position.z + 10);
 	
-	
-	//arcBallCam.setCameraParams(XMFLOAT3(0.0, 3.7, -3.5), m_displayList[selectedID].m_position, XMFLOAT3(0.0, 1.0, 0.0));
+	arcBallCam.setCameraParams(XMFLOAT3(0.0, 3.7, -3.5), m_displayList[selectedID].m_position, XMFLOAT3(0.0, 1.0, 0.0));
 }
 
 #ifdef DXTK_AUDIO

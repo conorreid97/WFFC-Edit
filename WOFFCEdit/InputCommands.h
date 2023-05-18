@@ -22,5 +22,5 @@ struct InputCommands
 	bool rightArrow;
 	bool enter;
 	bool backspace;
-
+	bool duplicate;
 };

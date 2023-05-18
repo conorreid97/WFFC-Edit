@@ -1,4 +1,6 @@
 #include "ArcballCamera.h"
+using namespace DirectX;
+using namespace SimpleMath;
 
 ArcballCamera::ArcballCamera()
 {
@@ -34,21 +36,24 @@ void ArcballCamera::Update(InputCommands* m_InputCommands)
 			m_camOrientationX += 0.05f;//m_InputCommands->mouse_X /*deltaX*/ * 0.0001f;
 			m_camOrientationY = clamp(m_camOrientationY, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
 		}
-		if (m_InputCommands->mouse_Y < m_InputCommands->prev_mouse_Y) {
-			m_camOrientationY -= 0.05f;//m_InputCommands->mouse_Y /*deltaY * */ * 0.0001f;
-			m_camOrientationX = clamp(m_camOrientationX, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
-		}
-		else if (m_InputCommands->mouse_Y > m_InputCommands->prev_mouse_Y) {
-			m_camOrientationY += 0.05f;// m_InputCommands->mouse_Y /*deltaY * */ * 0.0001f;
-			m_camOrientationX = clamp(m_camOrientationX, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
+		//if (m_InputCommands->mouse_Y < m_InputCommands->prev_mouse_Y) {
+		//	m_camOrientationY -= 0.05f;//m_InputCommands->mouse_Y /*deltaY * */ * 0.0001f;
+		//	m_camOrientationX = clamp(m_camOrientationX, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
+		//}
+		//else if (m_InputCommands->mouse_Y > m_InputCommands->prev_mouse_Y) {
+		//	m_camOrientationY += 0.05f;// m_InputCommands->mouse_Y /*deltaY * */ * 0.0001f;
+		//	m_camOrientationX = clamp(m_camOrientationX, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
 
-		}
+		//}
 		
 	//}
 	// Clamp the rotation angles to prevent camera flipping
 	//m_camOrientationY = clamp(m_camOrientationY, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
 
-	
+		//float sinPhi = sinf(m_camOrientationY);
+		//float cosPhi = cosf(m_camOrientationY);
+		//float sinTheta = sinf(m_camOrientationX);
+		//float cosTheta = cosf(m_camOrientationX);
 	XMFLOAT3 eye;
 	eye = XMFLOAT3(0.0, 3.7, -3.5);
 	XMFLOAT3 target = XMFLOAT3(0.0, 0.0, 0.0);
@@ -59,7 +64,7 @@ void ArcballCamera::Update(InputCommands* m_InputCommands)
 
 	m_eye = eye;
 
-
+	//m_radius += 0.01;
 }
 
 XMMATRIX ArcballCamera::getViewMatrix()
@@ -69,7 +74,7 @@ XMMATRIX ArcballCamera::getViewMatrix()
 	XMVECTOR upDir = XMLoadFloat3(&m_up);
 
 
-	m_view = DirectX::SimpleMath::Matrix::CreateLookAt(eyePos, targetPos, upDir);
+	m_view = DirectX::SimpleMath::Matrix::CreateLookAt(eyePos, targetPos, Vector3::UnitY);
 	return m_view;/*XMMatrixLookAtLH(eyePos, targetPos, upDir)*/
 
 }

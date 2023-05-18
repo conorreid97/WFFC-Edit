@@ -279,6 +279,26 @@ void ToolMain::onActionLoad()
 
 }
 
+void ToolMain::onActionDuplicate()
+{
+	SceneObject dupObject;
+	int dupID = 0;
+	int targElement = 0;
+
+	for (int i = 0; i < m_sceneGraph.size(); i++) {
+		if (m_sceneGraph.at(i).ID == m_selectedObject) {
+			targElement = i;
+		}
+		dupID = max(dupID, m_sceneGraph[i].ID);
+	}
+	dupObject = m_sceneGraph.at(targElement);
+	dupObject.ID = dupID + 1;
+	dupObject.posY += 2;
+	m_sceneGraph.push_back(dupObject);
+
+	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
+}
+
 void ToolMain::onActionSave()
 {
 	//SQL
@@ -513,6 +533,16 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.rotLeft = true;
 	}
 	else m_toolInputCommands.rotLeft = false;
+	// Duplicating
+	if (m_keyArray['C'])
+	{
+		if (!m_toolInputCommands.duplicate) {
+			// function call to duplicate
+			onActionDuplicate();
+		}
+		m_toolInputCommands.duplicate = true;
+	}
+	else m_toolInputCommands.duplicate = false;
 	if (m_keyArray[17]) {	// 17 is the number for the ctrl button
 		m_toolInputCommands.multiSelect = true;
 	}
@@ -568,22 +598,18 @@ void ToolMain::MouseUpdate()
 	else if (posVectorY.back() > m_height || posVectorY.back() < 0)
 	{
 		m_toolInputCommands.mouse_RB_Down = false;
-
 	}
 
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
-
 		m_selectedObject = m_d3dRenderer.MousePicking();
 
 		m_toolInputCommands.mouse_LB_Down = false;
-
 	}
 }
 
 void ToolMain::CamSplineUpdate()
 {
-
 	if (m_d3dRenderer.bCamPath) {
 		m_sceneGraph[3].posX = camSpline.p0.x;
 		m_sceneGraph[3].posY = camSpline.p0.y;
@@ -613,12 +639,12 @@ void ToolMain::CamSplineUpdate()
 void ToolMain::ObjectUpdate()
 {
 	if (bScaleManip) {
-
+			
 		if (m_toolInputCommands.upArrow) {
 			m_sceneGraph[m_selectedObject].scaX += 0.2;
 			m_sceneGraph[m_selectedObject].scaY += 0.2;
 			m_sceneGraph[m_selectedObject].scaZ += 0.2;
-		}
+		}	
 		if (m_toolInputCommands.downArrow) {
 			m_sceneGraph[m_selectedObject].scaX -= 0.2;
 			m_sceneGraph[m_selectedObject].scaY -= 0.2;

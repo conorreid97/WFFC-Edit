@@ -107,6 +107,8 @@ void Camera::update(InputCommands* m_InputCommands)
 	//update lookat point
 	m_camLookAt = m_camPosition + m_camLookDirection;
 
+	//m_camPosition.x = m_camLookAt.x + 5.0f;
+
 	//apply camera vectors
 	m_view = Matrix::CreateLookAt(m_camPosition, m_camLookAt, Vector3::UnitY);
 

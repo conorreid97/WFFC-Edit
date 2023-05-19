@@ -1,7 +1,22 @@
 #pragma once
 
+enum MouseState {
+	Pressed,
+	Released,
+	Held
+};
+
+enum ToolState {
+	Picking,
+	TerrainEdit
+};
+
 struct InputCommands
 {
+	MouseState mouseState_LB;
+	MouseState mouseState_RB;
+	ToolState tool;
+
 	bool forward;
 	bool back;
 	bool right;
@@ -23,4 +38,7 @@ struct InputCommands
 	bool enter;
 	bool backspace;
 	bool duplicate;
+	int terrainDir;
+	bool endTerrainEdit;
+
 };

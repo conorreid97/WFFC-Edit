@@ -53,15 +53,24 @@ public:
 	void OnWindowSizeChanged(int width, int height);
 
 	//tool specific
+	int GetSelectedID() { return selectedID; }
+	void SetRebuildDisplayList(bool b) { m_rebuildDisplayList = b; }
+	bool GetRebuildDisplayList() { return m_rebuildDisplayList; }
 	void BuildDisplayList(std::vector<SceneObject> * SceneGraph); //note vector passed by reference 
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 
 	void CamSplineTool();
 	void FocusTool();
+	void TerrainHighlight();
 	void ClearDisplayList();
 
-
+	// terrain editor
+	void StartTerrainEdit();
+	void EditTerrain();
+	void EndTerrainEdit();
+	float m_ChunkY[TERRAINRESOLUTION][TERRAINRESOLUTION];	// create a 2d array the same size as the chunk
+	std::vector<std::pair<int, int>> m_pointVec;	// adds edited points to a vector for undo / redo
 	RECT		m_ScreenDimensions;
 
 #ifdef DXTK_AUDIO
@@ -81,12 +90,13 @@ private:
 	std::vector<DisplayObject>			m_displayList;
 	DisplayChunk						m_displayChunk;
 	InputCommands						m_InputCommands;
-
+	
 	// Camera
 	Camera cam1;
 	ArcballCamera arcBallCam;
 	//functionality
 	float								m_movespeed;
+	bool m_rebuildDisplayList;
 	// Dynamic cameras
 	int cameraType;
 	XMMATRIX camView;

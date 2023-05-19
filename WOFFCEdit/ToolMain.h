@@ -33,15 +33,19 @@ public: //methods
 	void	onActivateFog();
 	void	onActionLoad();													//load the current chunk
 	void	onActionDuplicate();
+	int		getID(int ID);
 	afx_msg	void	onActionSave();											//save the current chunk
 	afx_msg void	onActionSaveTerrain();									//save chunk geometry
 
 	void	Tick(MSG *msg);
 	void	UpdateInput(MSG *msg);
 
+	void DeleteObject();
+
 	void MouseUpdate();
 	void CamSplineUpdate();
 	void ObjectUpdate();
+	void TerrainUpdate();
 
 	void setCamType(int _cam) { camType = _cam; }
 
@@ -89,6 +93,7 @@ private:	//variables
 	bool bRotManip;
 
 	// ai spline
+	bool bCamSpline;
 	int numSegments = 10;
 	std::vector<XMVECTOR> intermediatePoints;
 	XMVECTOR p;

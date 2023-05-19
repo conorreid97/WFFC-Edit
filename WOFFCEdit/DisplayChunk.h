@@ -18,15 +18,19 @@ public:
 	void SaveHeightMap();			//saves the heigtmap back to file.
 	void UpdateTerrain();			//updates the geometry based on the heigtmap
 	void GenerateHeightmap();		//creates or alters the heightmap
+	void CalculateTerrainNormal(int i, int j);
 	std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionNormalTexture>>  m_batch;
 	std::unique_ptr<DirectX::BasicEffect>       m_terrainEffect;
+	std::unique_ptr<DirectX::BasicEffect>       m_highlightEffect;
+
 
 	ID3D11ShaderResourceView *					m_texture_diffuse;				//diffuse texture
 	Microsoft::WRL::ComPtr<ID3D11InputLayout>   m_terrainInputLayout;
-
+	// for terrain editor
+	DirectX::VertexPositionNormalTexture m_terrainGeometry[TERRAINRESOLUTION][TERRAINRESOLUTION];
+	bool m_bHighlight[TERRAINRESOLUTION][TERRAINRESOLUTION];
 private:
 	
-	DirectX::VertexPositionNormalTexture m_terrainGeometry[TERRAINRESOLUTION][TERRAINRESOLUTION];
 	BYTE m_heightMap[TERRAINRESOLUTION*TERRAINRESOLUTION];
 	void CalculateTerrainNormals();
 

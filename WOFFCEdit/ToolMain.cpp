@@ -17,7 +17,7 @@ ToolMain::ToolMain()
 {
 
 	m_currentChunk = 0;		//default value
-	m_selectedObject = 0;	//initial selection ID
+	m_selectedObject = -1;	//initial selection ID
 	m_sceneGraph.clear();	//clear the vector for the scenegraph
 	m_databaseConnection = NULL;
 
@@ -26,6 +26,10 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back		= false;
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
+	m_toolInputCommands.mouseState_LB = Released;
+	m_toolInputCommands.mouseState_LB = Released;
+	m_toolInputCommands.terrainDir = 1;
+	m_toolInputCommands.tool = Picking;
 	
 	for (int i = 0; i < 5; i++) {
 		posVectorX.push_back(0);
@@ -52,6 +56,7 @@ ToolMain::ToolMain()
 	pZ = XMVectorGetZ(p);
 
 	bFocus = false;
+	bCamSpline = false;
 }
 
 
@@ -105,10 +110,16 @@ void ToolMain::onActionFocusCamera()
 
 void ToolMain::onActivateCamSpline()
 {
-	
+	if (!bCamSpline) {
+		bCamSpline = true;
+		m_d3dRenderer.CamSplineTool();
+	}
+	else {
+		bCamSpline = false;
+	}
 	//pos1 = camSpline.p0;
 
-	m_d3dRenderer.CamSplineTool();
+	
 }
 
 void ToolMain::onActivateScaling()
@@ -153,6 +164,7 @@ void ToolMain::onActivateFog()
 	else if (!m_d3dRenderer.bFog) {
 		m_d3dRenderer.bFog = true;
 	}
+	m_toolInputCommands.tool = TerrainEdit;
 }
 
 void ToolMain::onActionLoad()
@@ -291,12 +303,28 @@ void ToolMain::onActionDuplicate()
 		}
 		dupID = max(dupID, m_sceneGraph[i].ID);
 	}
+	// Set new object to the same as selected object
+	// Give new object a valid ID
+	// Increase position of new object
+	// Add new object to scenegraph
 	dupObject = m_sceneGraph.at(targElement);
 	dupObject.ID = dupID + 1;
 	dupObject.posY += 2;
 	m_sceneGraph.push_back(dupObject);
 
 	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
+}
+
+
+
+int ToolMain::getID(int ID)
+{
+	for (size_t i = 0; i < m_sceneGraph.size(); i++) {
+		if (m_sceneGraph[i].ID == ID) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 void ToolMain::onActionSave()
@@ -395,20 +423,12 @@ void ToolMain::onActionSaveTerrain()
 
 void ToolMain::Tick(MSG *msg)
 {
-	//do we have a selection
-	//do we have a mode
-	//are we clicking / dragging /releasing
-	//has something changed
-		//update Scenegraph
-		//add to scenegraph
-		//resend scenegraph to Direct X renderer
-	
+	// get the window from MFC	
 	CWnd* window = CWnd::FromHandle(m_toolHandle);
 	CRect viewRect;
 	window->GetWindowRect(viewRect);
 
-	//m_d3dRenderer.setScreenDim(viewRect);
-
+	// Update camera
 	if (camType == 1) {
 		m_d3dRenderer.setCamType(1);
 	}
@@ -416,13 +436,18 @@ void ToolMain::Tick(MSG *msg)
 		m_d3dRenderer.setCamType(2);
 	}
 
+	TerrainUpdate();
+
 	ObjectUpdate();
 
 	MouseUpdate();
 
 	CamSplineUpdate();
 
-	
+	// update the display list if manipilation is active
+	if (bScaleManip || bMoveManip || bRotManip || bCamSpline) {
+		m_d3dRenderer.SetRebuildDisplayList(true);
+	}
 
 	for (int i = 1; i < 4; i++) {
 		for (int j = 0; j < numSegments; j++) {
@@ -449,8 +474,11 @@ void ToolMain::Tick(MSG *msg)
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands, &m_sceneGraph);
-	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
-
+	if (m_d3dRenderer.GetRebuildDisplayList()) {
+		m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
+	}
+	
+	//m_selectedObject = m_d3dRenderer.GetSelectedID();
 }
 
 void ToolMain::UpdateInput(MSG * msg)
@@ -485,9 +513,14 @@ void ToolMain::UpdateInput(MSG * msg)
 	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
 		m_toolInputCommands.mouse_LB_Down = true;
+		m_toolInputCommands.mouseState_LB = Pressed;
 		break;
 	case WM_LBUTTONUP:
 		m_toolInputCommands.mouse_LB_Down = false;
+		m_toolInputCommands.mouseState_LB = Released;
+		if (m_toolInputCommands.tool == TerrainEdit) {
+			m_toolInputCommands.endTerrainEdit = true;
+		}
 		break;
 	case WM_RBUTTONDOWN:
 		m_toolInputCommands.mouse_RB_Down = true;
@@ -571,9 +604,32 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.backspace = true;
 	}
 	else m_toolInputCommands.backspace = false;
+	// Object Deletion
+	if (m_keyArray[VK_DELETE]) {
+		DeleteObject();
+	}
 	//WASD
 }
+void ToolMain::DeleteObject()
+{
+	if (m_selectedObject != -1){
+		// create new scenegraph 
+		std::vector<SceneObject> newSceneGraph;
+		// fill new scenegraph with everything apart from object
+		for (int i = 0; i < m_sceneGraph.size(); i++){
+			if (m_sceneGraph.at(i).ID != m_selectedObject){
+				newSceneGraph.push_back(m_sceneGraph.at(i));
+			}
+		}
+		// update scene graph
+		m_sceneGraph.clear();
+		m_sceneGraph = newSceneGraph;
 
+		m_selectedObject = -1;
+
+		m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
+	}
+}
 void ToolMain::MouseUpdate()
 {
 	if (bDragging) {
@@ -641,14 +697,15 @@ void ToolMain::ObjectUpdate()
 	if (bScaleManip) {
 			
 		if (m_toolInputCommands.upArrow) {
-			m_sceneGraph[m_selectedObject].scaX += 0.2;
-			m_sceneGraph[m_selectedObject].scaY += 0.2;
-			m_sceneGraph[m_selectedObject].scaZ += 0.2;
+			m_sceneGraph[m_selectedObject - 1].scaX += 0.2;
+			m_sceneGraph[m_selectedObject - 1].scaY += 0.2;
+			m_sceneGraph[m_selectedObject - 1].scaZ += 0.2;
+			
 		}	
 		if (m_toolInputCommands.downArrow) {
-			m_sceneGraph[m_selectedObject].scaX -= 0.2;
-			m_sceneGraph[m_selectedObject].scaY -= 0.2;
-			m_sceneGraph[m_selectedObject].scaZ -= 0.2;
+			m_sceneGraph[m_selectedObject - 1].scaX -= 0.2;
+			m_sceneGraph[m_selectedObject - 1].scaY -= 0.2;
+			m_sceneGraph[m_selectedObject - 1].scaZ -= 0.2;
 			//m_d3dRenderer.MoveObject();
 		}
 	}
@@ -656,25 +713,25 @@ void ToolMain::ObjectUpdate()
 	if (bMoveManip) {
 		if (!m_toolInputCommands.multiSelect) {	// multiSelect is the ctrl button
 			if (m_toolInputCommands.upArrow) {
-				m_sceneGraph[m_selectedObject].posX += 0.2;
+				m_sceneGraph[m_selectedObject - 1].posX += 0.2;
 			}
 			if (m_toolInputCommands.downArrow) {
-				m_sceneGraph[m_selectedObject].posX -= 0.2;
+				m_sceneGraph[m_selectedObject - 1].posX -= 0.2;
 			}
 			if (m_toolInputCommands.leftArrow) {
-				m_sceneGraph[m_selectedObject].posZ -= 0.2;
+				m_sceneGraph[m_selectedObject - 1].posZ -= 0.2;
 			}
 			if (m_toolInputCommands.rightArrow) {
-				m_sceneGraph[m_selectedObject].posZ += 0.2;
+				m_sceneGraph[m_selectedObject - 1].posZ += 0.2;
 			}
 		}
 		
 		if (m_toolInputCommands.multiSelect) {	// multiSelect is the ctrl button
 			if (m_toolInputCommands.upArrow) {
-				m_sceneGraph[m_selectedObject].posY += 0.2;
+				m_sceneGraph[m_selectedObject - 1].posY += 0.2;
 			}
 			if (m_toolInputCommands.downArrow) {
-				m_sceneGraph[m_selectedObject].posY -= 0.2;
+				m_sceneGraph[m_selectedObject - 1].posY -= 0.2;
 			}
 		}
 	
@@ -683,26 +740,44 @@ void ToolMain::ObjectUpdate()
 	if (bRotManip) {
 		if (!m_toolInputCommands.multiSelect) {
 			if (m_toolInputCommands.upArrow) {
-				m_sceneGraph[m_selectedObject].rotX += 0.5;
+				m_sceneGraph[m_selectedObject - 1].rotX += 0.5;
 			}
 			if (m_toolInputCommands.downArrow) {
-				m_sceneGraph[m_selectedObject].rotX -= 0.5;
+				m_sceneGraph[m_selectedObject - 1].rotX -= 0.5;
 			}
 			if (m_toolInputCommands.leftArrow) {
-				m_sceneGraph[m_selectedObject].rotZ -= 0.5;
+				m_sceneGraph[m_selectedObject - 1].rotZ -= 0.5;
 			}
 			if (m_toolInputCommands.rightArrow) {
-				m_sceneGraph[m_selectedObject].rotZ += 0.5;
+				m_sceneGraph[m_selectedObject - 1].rotZ += 0.5;
 			}
 		}
 		if (m_toolInputCommands.multiSelect) {	// multiSelect is the ctrl button
 			if (m_toolInputCommands.rightArrow) {
-				m_sceneGraph[m_selectedObject].rotY += 0.2;
+				m_sceneGraph[m_selectedObject - 1].rotY += 0.2;
 			}
 			if (m_toolInputCommands.leftArrow) {
-				m_sceneGraph[m_selectedObject].rotY -= 0.2;
+				m_sceneGraph[m_selectedObject - 1].rotY -= 0.2;
 			}
 		}
 
+	}
+}
+
+void ToolMain::TerrainUpdate()
+{
+	if (m_toolInputCommands.tool == TerrainEdit) {
+		if (m_toolInputCommands.mouseState_LB == Pressed)
+		{
+			m_d3dRenderer.StartTerrainEdit();
+			m_toolInputCommands.mouseState_LB = Held;
+		}
+		if (m_toolInputCommands.mouseState_LB == Held) {
+			m_d3dRenderer.EditTerrain();
+		}
+		if (m_toolInputCommands.endTerrainEdit) {
+			m_d3dRenderer.EndTerrainEdit();
+			m_toolInputCommands.endTerrainEdit = false;
+		}
 	}
 }

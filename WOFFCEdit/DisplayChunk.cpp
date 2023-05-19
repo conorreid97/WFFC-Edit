@@ -54,10 +54,30 @@ void DisplayChunk::RenderBatch(std::shared_ptr<DX::DeviceResources>  DevResource
 	{
 		for (size_t j = 0; j < TERRAINRESOLUTION-1; j++)//same as above
 		{
+			// dont apply if the position is in highlighted area
+			if (m_bHighlight[i][j] && m_bHighlight[i][j + 1] && m_bHighlight[i + 1][j + 1] && m_bHighlight[i + 1][j]) {
+				continue; 
+			}
 			m_batch->DrawQuad(m_terrainGeometry[i][j], m_terrainGeometry[i][j+1], m_terrainGeometry[i+1][j+1], m_terrainGeometry[i+1][j]); //bottom left bottom right, top right top left.
 		}
 	}
 	m_batch->End();
+
+	m_highlightEffect->Apply(context);
+	m_batch->Begin();
+	for (size_t i = 0; i < TERRAINRESOLUTION - 1; i++)	//looping through QUADS.  so we subtrack one from the terrain array or it will try to draw a quad starting with the last vertex in each row. Which wont work
+	{
+		for (size_t j = 0; j < TERRAINRESOLUTION - 1; j++)//same as above
+		{
+			if (!m_bHighlight[i][j] || !m_bHighlight[i][j + 1] || !m_bHighlight[i + 1][j + 1] || !m_bHighlight[i + 1][j]) {
+				continue;
+			}
+			m_batch->DrawQuad(m_terrainGeometry[i][j], m_terrainGeometry[i][j + 1], m_terrainGeometry[i + 1][j + 1], m_terrainGeometry[i + 1][j]); //bottom left bottom right, top right top left.
+
+		}
+	}
+	m_batch->End();
+
 }
 
 void DisplayChunk::InitialiseBatch()
@@ -120,11 +140,23 @@ void DisplayChunk::LoadHeightMap(std::shared_ptr<DX::DeviceResources>  DevResour
 	m_terrainEffect->SetTextureEnabled(true);
 	m_terrainEffect->SetTexture(m_texture_diffuse);
 
+	// terrain editor highlighting
+	m_highlightEffect = std::make_unique<BasicEffect>(device);
+	m_highlightEffect->EnableDefaultLighting();
+	m_highlightEffect->SetLightingEnabled(true);
+	m_highlightEffect->SetTextureEnabled(true);
+	m_highlightEffect->SetTexture(m_texture_diffuse);
+	m_highlightEffect->SetFogStart(0.0f);
+	m_highlightEffect->SetFogEnd(0.0f);
+	m_highlightEffect->SetFogColor(Colors::Blue);
+	m_highlightEffect->SetFogEnabled(true);
+
 	void const* shaderByteCode;
 	size_t byteCodeLength;
 
 	m_terrainEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
-
+	m_highlightEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
+	
 	//setup batch
 	DX::ThrowIfFailed(
 		device->CreateInputLayout(VertexPositionNormalTexture::InputElements,
@@ -136,7 +168,11 @@ void DisplayChunk::LoadHeightMap(std::shared_ptr<DX::DeviceResources>  DevResour
 
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionNormalTexture>>(devicecontext);
 
-	
+	for (size_t i = 0; i < TERRAINRESOLUTION; i++) {
+		for (size_t j = 0; j < TERRAINRESOLUTION; j++) {
+			m_bHighlight[i][j] = false;
+		}
+	}
 }
 
 void DisplayChunk::SaveHeightMap()
@@ -182,6 +218,25 @@ void DisplayChunk::UpdateTerrain()
 void DisplayChunk::GenerateHeightmap()
 {
 	//insert how YOU want to update the heigtmap here! :D
+}
+
+void DisplayChunk::CalculateTerrainNormal(int i, int j)
+{
+	DirectX::SimpleMath::Vector3 upDownVector, leftRightVector, normalVector;
+
+	upDownVector.x = (m_terrainGeometry[i + 1][j].position.x - m_terrainGeometry[i - 1][j].position.x);
+	upDownVector.y = (m_terrainGeometry[i + 1][j].position.y - m_terrainGeometry[i - 1][j].position.y);
+	upDownVector.z = (m_terrainGeometry[i + 1][j].position.z - m_terrainGeometry[i - 1][j].position.z);
+
+	leftRightVector.x = (m_terrainGeometry[i][j - 1].position.x - m_terrainGeometry[i][j + 1].position.x);
+	leftRightVector.y = (m_terrainGeometry[i][j - 1].position.y - m_terrainGeometry[i][j + 1].position.y);
+	leftRightVector.z = (m_terrainGeometry[i][j - 1].position.z - m_terrainGeometry[i][j + 1].position.z);
+
+
+	leftRightVector.Cross(upDownVector, normalVector);	//get cross product
+	normalVector.Normalize();			//normalise it.
+
+	m_terrainGeometry[i][j].normal = normalVector;	//set the normal for this point based on our result
 }
 
 void DisplayChunk::CalculateTerrainNormals()

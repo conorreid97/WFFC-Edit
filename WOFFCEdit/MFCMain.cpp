@@ -27,10 +27,15 @@ BOOL MFCMain::InitInstance()
 	m_frame = new CMyFrame();
 	m_pMainWnd = m_frame;
 
+	RECT screenSize;
+	const HWND window = GetDesktopWindow();
+	GetWindowRect(window, &screenSize);
+
+
 	m_frame->Create(	NULL,
 					_T("World Of Flim-Flam Craft Editor"),
 					WS_OVERLAPPEDWINDOW,
-					CRect(100, 100, 1024, 768),
+					CRect(0, 0, screenSize.right, screenSize.bottom),
 					NULL,
 					NULL,
 					0,

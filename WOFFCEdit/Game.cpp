@@ -46,6 +46,7 @@ Game::Game()
 	targetPos = XMVectorSet(0.0, 0.0, 0.0, 1.0);
 
 	bWireframe = false;
+	m_prevSelected = -1;
 }
 
 Game::~Game()
@@ -942,6 +943,9 @@ int Game::MousePicking()
 	float selectedDistance = INFINITY;
 	float closestPick = INFINITY;
 
+	m_prevSelected = selectedID;
+	selectedID = -1;
+
 	//setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
 		//they may look the same but note, the difference in Z
 	const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
@@ -973,12 +977,30 @@ int Game::MousePicking()
 			if (m_displayList[i].m_model.get()->meshes[j]->boundingBox.Intersects(nearPoint, pickingVector, selectedDistance) && m_displayList[i].m_ID != -1)
 			{
 				if (selectedDistance < closestPick)
+				{
 					selectedID = m_displayList[i].m_ID;
 					closestPick = selectedDistance;
+				}
 			}
 		
 		}
 	}
+
+	if (selectedID < 0 && m_prevSelected >= 0) {
+		DisplayObject objectHighlight = m_displayList[m_prevSelected];
+
+		objectHighlight.m_wireframe = false;
+		objectHighlight.m_model->UpdateEffects([&](IEffect* effect) 
+			{
+				auto fog = dynamic_cast<IEffectFog*>(effect);
+
+				if (fog) {
+					fog->SetFogEnabled(false);
+
+				}
+			});
+	}
+
 	m_rebuildDisplayList = true;
 	//if we got a hit.  return it.  
 	return selectedID;

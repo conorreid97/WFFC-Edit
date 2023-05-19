@@ -435,6 +435,8 @@ void ToolMain::Tick(MSG *msg)
 	else if (camType == 2) {
 		m_d3dRenderer.setCamType(2);
 	}
+
+	// update the wireframe mode
 	m_d3dRenderer.bWireframe = bWireframe;
 
 	TerrainUpdate();
@@ -704,6 +706,9 @@ void ToolMain::CamSplineUpdate()
 
 void ToolMain::ObjectUpdate()
 {
+	if (m_selectedObject == -1) {
+		return;
+	}
 	if (bScaleManip) {
 			
 		if (m_toolInputCommands.upArrow) {

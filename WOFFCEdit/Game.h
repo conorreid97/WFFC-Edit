@@ -99,8 +99,9 @@ private:
 	Camera cam1;
 	ArcballCamera arcBallCam;
 	//functionality
-	float								m_movespeed;
+	float m_movespeed;
 	bool m_rebuildDisplayList;
+	int m_prevSelected;
 	// Dynamic cameras
 	int cameraType;
 	XMMATRIX camView;

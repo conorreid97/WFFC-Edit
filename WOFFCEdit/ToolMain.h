@@ -30,7 +30,7 @@ public: //methods
 	void	onActivateScaling();
 	void	onActivateMove();
 	void	onActivateRotate();
-	void	onActivateFog();
+	void	onActivateTerrainEdit();
 	void	onActionLoad();													//load the current chunk
 	void	onActionDuplicate();
 	int		getID(int ID);
@@ -48,6 +48,7 @@ public: //methods
 	void TerrainUpdate();
 
 	void setCamType(int _cam) { camType = _cam; }
+	int getCamType() { return camType; }
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
@@ -78,6 +79,7 @@ private:	//variables
 	std::vector<int>posVectorX;
 	std::vector<int>posVectorY;
 
+	ObjectManipDialogue* objectManip;
 	// Splines
 	CameraSpline camSpline;
 	

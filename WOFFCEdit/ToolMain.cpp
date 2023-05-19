@@ -1,6 +1,7 @@
 #include "ToolMain.h"
 #include "resource.h"
 #include "MFCFrame.h"
+#include "ObjectManipDialogue.h"
 #include <vector>
 #include <sstream>
 
@@ -58,6 +59,8 @@ ToolMain::ToolMain()
 
 	bFocus = false;
 	bCamSpline = false;
+
+	
 }
 
 
@@ -101,6 +104,8 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 	}
 
 	onActionLoad();
+
+	
 }
 
 void ToolMain::onActionFocusCamera()
@@ -157,14 +162,8 @@ void ToolMain::onActivateRotate()
 	}
 }
 
-void ToolMain::onActivateFog()
+void ToolMain::onActivateTerrainEdit()
 {
-	if (m_d3dRenderer.bFog) {
-		m_d3dRenderer.bFog = false;
-	}
-	else if (!m_d3dRenderer.bFog) {
-		m_d3dRenderer.bFog = true;
-	}
 	m_toolInputCommands.tool = TerrainEdit;
 }
 
@@ -668,7 +667,8 @@ void ToolMain::MouseUpdate()
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
 		m_selectedObject = m_d3dRenderer.MousePicking();
-
+		
+		objectManip.SetObjectData(&m_sceneGraph, &m_selectedObject, &m_toolInputCommands);
 		m_toolInputCommands.mouse_LB_Down = false;
 	}
 }

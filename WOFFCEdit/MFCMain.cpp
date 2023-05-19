@@ -183,13 +183,17 @@ void MFCMain::ToolBarButton6()
 
 void MFCMain::ToolBarButton7()
 {
-	m_ToolSystem.onActivateFog();
+	m_ToolSystem.onActivateTerrainEdit();
 }
 
 void MFCMain::ToolBarButton8()
 {
-	
-	m_ToolSystem.setCamType(2);
+	if (m_ToolSystem.getCamType() == 1) {
+		m_ToolSystem.setCamType(2);
+	}
+	else {
+		m_ToolSystem.setCamType(1);
+	}
 
 	
 }

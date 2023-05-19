@@ -65,6 +65,7 @@ void ObjectManipDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, in
 		m_ScaleY = SceneGraph->at(*Selection - 1).scaY;
 		m_ScaleZ = SceneGraph->at(*Selection - 1).scaZ;
 
+		SceneGraph->at(*Selection - 1).editor_pivot_vis = true;
 	}
 }
 

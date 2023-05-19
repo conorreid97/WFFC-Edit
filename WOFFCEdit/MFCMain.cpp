@@ -7,6 +7,7 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_FILE_QUIT,	&MFCMain::MenuFileQuit)
 	ON_COMMAND(ID_FILE_SAVETERRAIN, &MFCMain::MenuFileSaveTerrain)
 	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::MenuEditSelect)
+	ON_COMMAND(ID_EDIT_OBJECTMANIPULATION, &MFCMain::MenuObjectManip)
 	ON_COMMAND(ID_BUTTON40001,	&MFCMain::ToolBarButton1)
 	// add on command for button 2
 	ON_COMMAND(ID_Button40006, &MFCMain::ToolBarButton2)
@@ -117,6 +118,20 @@ void MFCMain::MenuEditSelect()
 	m_ToolSelectDialogue.Create(IDD_DIALOG1);	//Start up modeless
 	m_ToolSelectDialogue.ShowWindow(SW_SHOW);	//show modeless
 	m_ToolSelectDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject);
+}
+
+void MFCMain::MenuObjectManip()
+{
+	if (m_ToolSystem.m_selectedObject > -1) {
+		m_ToolObjectManipDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject, &m_ToolSystem.m_toolInputCommands);
+		m_ToolObjectManipDialogue.Create(IDD_DIALOG2);	//Start up modeless
+		m_ToolObjectManipDialogue.ShowWindow(SW_SHOW);	//show modeless
+		
+	}
+	else {
+		MessageBox(m_toolHandle, L"Make sure to select an object before opening the inspector.", L"Error", MB_OK);
+	}
+
 }
 
 void MFCMain::ToolBarButton1()

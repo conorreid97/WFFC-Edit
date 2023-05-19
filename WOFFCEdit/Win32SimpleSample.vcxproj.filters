@@ -59,9 +59,18 @@
     <ClCompile Include="SelectDialogue.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
-    <ClCompile Include="CameraSpline.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ArcballCamera.cpp" />
+    <ClCompile Include="ObjectManipDialogue.cpp">
+      <Filter>MFC</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcballCamera.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSpline.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceResources.h">
@@ -111,9 +120,18 @@
     <ClInclude Include="SelectDialogue.h">
       <Filter>MFC</Filter>
     </ClInclude>
-    <ClInclude Include="CameraSpline.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="ArcballCamera.h" />
+    <ClInclude Include="ObjectManipDialogue.h">
+      <Filter>MFC</Filter>
+    </ClInclude>
+    <ClInclude Include="ArcballCamera.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSpline.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

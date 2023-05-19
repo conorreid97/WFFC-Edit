@@ -26,6 +26,7 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back		= false;
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
+	m_toolInputCommands.updateObject = false;
 	m_toolInputCommands.mouseState_LB = Released;
 	m_toolInputCommands.mouseState_LB = Released;
 	m_toolInputCommands.terrainDir = 1;
@@ -444,6 +445,14 @@ void ToolMain::Tick(MSG *msg)
 
 	CamSplineUpdate();
 
+	// update object manipulation dialogue
+	if (m_toolInputCommands.updateObject) {
+		m_d3dRenderer.UpdateObjectData(&m_sceneGraph.at(m_selectedObject), m_selectedObject);
+		m_toolInputCommands.updateObject = false;
+		m_d3dRenderer.SetRebuildDisplayList(true);
+	}
+
+
 	// update the display list if manipilation is active
 	if (bScaleManip || bMoveManip || bRotManip || bCamSpline) {
 		m_d3dRenderer.SetRebuildDisplayList(true);
@@ -467,7 +476,7 @@ void ToolMain::Tick(MSG *msg)
 	pX = XMVectorGetX(p);
 	pY = XMVectorGetY(p);
 	pZ = XMVectorGetZ(p);
-
+	// move ai object
 	m_sceneGraph[9].posX = pX;
 	m_sceneGraph[9].posY = pY;
 	m_sceneGraph[9].posZ = pZ;

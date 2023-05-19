@@ -41,4 +41,6 @@ struct InputCommands
 	int terrainDir;
 	bool endTerrainEdit;
 
+	// object manip dialog
+	bool updateObject;
 };

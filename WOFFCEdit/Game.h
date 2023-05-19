@@ -65,6 +65,7 @@ public:
 	void TerrainHighlight();
 	void ClearDisplayList();
 
+	void UpdateObjectData(SceneObject* scene, int i);
 	// terrain editor
 	void StartTerrainEdit();
 	void EditTerrain();

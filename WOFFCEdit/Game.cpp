@@ -45,7 +45,7 @@ Game::Game()
 	currentCamPos = XMVectorSet(0.0, 0.0, 0.0, 1.0);
 	targetPos = XMVectorSet(0.0, 0.0, 0.0, 1.0);
 
-	
+	bWireframe = false;
 }
 
 Game::~Game()
@@ -318,8 +318,14 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, m_displayList[i].m_wireframe);	//last variable in draw,  make TRUE for wireframe
+		if (bWireframe) {
+			m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, true);	//last variable in draw,  make TRUE for wireframe
 
+		}
+		else {
+			m_displayList[i].m_model->Draw(context, *m_states, local, camView, m_projection, m_displayList[i].m_wireframe);	//last variable in draw,  make TRUE for wireframe
+
+		}
 		m_deviceResources->PIXEndEvent();
 	}
 	m_deviceResources->PIXEndEvent();
@@ -328,8 +334,10 @@ void Game::Render()
 	context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	context->RSSetState(m_states->CullNone());
-	//context->RSSetState(m_states->Wireframe());		//uncomment for wireframe
-
+	
+	if (bWireframe) {
+		context->RSSetState(m_states->Wireframe());		
+	}
 	//Render the batch,  This is handled in the Display chunk becuase it has the potential to get complex
 	m_displayChunk.RenderBatch(m_deviceResources);
 

@@ -17,6 +17,7 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_BUTTON40010, &MFCMain::ToolBarButton6)
 	ON_COMMAND(ID_BUTTON40011, &MFCMain::ToolBarButton7)
 	ON_COMMAND(ID_BUTTON40012, &MFCMain::ToolBarButton8)
+	ON_COMMAND(ID_BUTTON40013, &MFCMain::ToolBarButton9)
 
 
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
@@ -196,6 +197,16 @@ void MFCMain::ToolBarButton8()
 	}
 
 	
+}
+
+void MFCMain::ToolBarButton9()
+{
+	if (!m_ToolSystem.bWireframe) {
+		m_ToolSystem.bWireframe = true;
+	}
+	else {
+		m_ToolSystem.bWireframe = false;
+	}
 }
 
 

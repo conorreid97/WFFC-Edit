@@ -57,6 +57,8 @@ public:	//variables
 
 	// Focus
 	bool bFocus;
+	//wireframe
+	bool bWireframe;
 
 	InputCommands m_toolInputCommands;		//input commands that we want to use and possibly pass over to the renderer
 private:	//methods
@@ -79,7 +81,7 @@ private:	//variables
 	std::vector<int>posVectorX;
 	std::vector<int>posVectorY;
 
-	ObjectManipDialogue* objectManip;
+	//ObjectManipDialogue* objectManip;
 	// Splines
 	CameraSpline camSpline;
 	
@@ -94,6 +96,7 @@ private:	//variables
 	bool bMoveManip;
 	bool bRotManip;
 
+	
 	// ai spline
 	bool bCamSpline;
 	int numSegments = 10;

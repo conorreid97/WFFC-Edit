@@ -78,6 +78,9 @@ public:
 	void NewAudioDevice();
 #endif
 
+	// wireframe mode
+	bool bWireframe;
+
 private:
 
 	void Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGraph);
@@ -102,13 +105,9 @@ private:
 	int cameraType;
 	XMMATRIX camView;
 
-	////camera
-	//DirectX::SimpleMath::Vector3		m_camPosition;
-	//DirectX::SimpleMath::Vector3		m_camOrientation;
-	//DirectX::SimpleMath::Vector3		m_camLookAt;
-	//DirectX::SimpleMath::Vector3		m_camLookDirection;
-	//DirectX::SimpleMath::Vector3		m_camRight;
-	//float m_camRotRate;
+
+	
+
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

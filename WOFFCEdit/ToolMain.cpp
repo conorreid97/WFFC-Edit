@@ -59,7 +59,7 @@ ToolMain::ToolMain()
 
 	bFocus = false;
 	bCamSpline = false;
-
+	bWireframe = false;
 	
 }
 
@@ -435,6 +435,7 @@ void ToolMain::Tick(MSG *msg)
 	else if (camType == 2) {
 		m_d3dRenderer.setCamType(2);
 	}
+	m_d3dRenderer.bWireframe = bWireframe;
 
 	TerrainUpdate();
 
@@ -668,7 +669,7 @@ void ToolMain::MouseUpdate()
 	{
 		m_selectedObject = m_d3dRenderer.MousePicking();
 		
-		objectManip.SetObjectData(&m_sceneGraph, &m_selectedObject, &m_toolInputCommands);
+		//objectManip.SetObjectData(&m_sceneGraph, &m_selectedObject, &m_toolInputCommands);
 		m_toolInputCommands.mouse_LB_Down = false;
 	}
 }

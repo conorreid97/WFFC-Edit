@@ -943,8 +943,8 @@ int Game::MousePicking()
 	float selectedDistance = INFINITY;
 	float closestPick = INFINITY;
 
-	m_prevSelected = selectedID;
-	selectedID = -1;
+	//m_prevSelected = selectedID;
+	//selectedID = -1;
 
 	//setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
 		//they may look the same but note, the difference in Z
@@ -982,11 +982,14 @@ int Game::MousePicking()
 					closestPick = selectedDistance;
 				}
 			}
+			else if (m_displayList[i].m_model.get()->meshes[j]->boundingBox.Intersects(nearPoint, pickingVector, selectedDistance) && m_displayList[i].m_ID == -1){
+				selectedID = -1;
+			}
 		
 		}
 	}
 
-	if (selectedID < 0 && m_prevSelected >= 0) {
+	/*if (selectedID < 0 && m_prevSelected >= 0) {
 		DisplayObject objectHighlight = m_displayList[m_prevSelected];
 
 		objectHighlight.m_wireframe = false;
@@ -999,7 +1002,7 @@ int Game::MousePicking()
 
 				}
 			});
-	}
+	}*/
 
 	m_rebuildDisplayList = true;
 	//if we got a hit.  return it.  

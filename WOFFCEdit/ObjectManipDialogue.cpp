@@ -12,6 +12,7 @@ BEGIN_MESSAGE_MAP(ObjectManipDialogue, CDialogEx)
 	ON_BN_CLICKED(IDCANCEL, &ObjectManipDialogue::OnEnd)
 
 	//ON_EN_CHANGE(IDC_EDIT4, &ObjectManip::OnEnChangeEdit4)
+	ON_BN_CLICKED(IDC_CHECK1, &ObjectManipDialogue::OnBnClickedCheck1)
 END_MESSAGE_MAP()
 
 
@@ -153,3 +154,14 @@ void ObjectManipDialogue::OnEnd()
 }
 
 
+
+
+void ObjectManipDialogue::OnBnClickedCheck1()
+{
+	// TODO: Add your control notification handler code here
+	m_sceneGraph->at(m_Current).AINode = true;
+
+	//m_Inputcommands->updateObject = true;
+
+	
+}

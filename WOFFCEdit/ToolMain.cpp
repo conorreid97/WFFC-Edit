@@ -447,41 +447,58 @@ void ToolMain::Tick(MSG *msg)
 
 	CamSplineUpdate();
 
+	// AISpline
+	//for (int i = 1; i < 4; i++) {
+	//	for (int j = 0; j < numSegments; j++) {
+	//		float t = (float)j / (float)numSegments;
+	//		//p = XMVectorCatmullRom(controlPoints[i - 1], controlPoints[i], controlPoints[i + 1], controlPoints[i + 2], t);
+	//		p = XMVectorCatmullRom(
+	//			XMVectorSet(p0.x, p0.y, p0.z, 1.0f),
+	//			XMVectorSet(p1.x, p1.y, p1.z, 1.0f),
+	//			XMVectorSet(p2.x, p2.y, p2.z, 1.0f),
+	//			XMVectorSet(p3.x, p3.y, p3.z, 1.0f),
+	//			t
+	//		);
+	//		intermediatePoints.push_back(p);
+	//	}
+	//}
+
+	//pX = XMVectorGetX(p);
+	//pY = XMVectorGetY(p);
+	//pZ = XMVectorGetZ(p);
+
 	// update object manipulation dialogue
 	if (m_toolInputCommands.updateObject) {
 		m_d3dRenderer.UpdateObjectData(&m_sceneGraph.at(m_selectedObject), m_selectedObject);
+		
+		
 		m_toolInputCommands.updateObject = false;
 		m_d3dRenderer.SetRebuildDisplayList(true);
 	}
-
-
+	if (m_selectedObject != -1) {
+		if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
+			//MessageBox(m_toolHandle, L"AINode Set.", L"AI Mode", MB_OK);
+		/*	m_sceneGraph.at(m_selectedObject - 1).posX = pX;
+			m_sceneGraph.at(m_selectedObject - 1).posY = pY;
+			m_sceneGraph.at(m_selectedObject - 1).posZ = pZ;*/
+		}
+	}
+	
 	// update the display list if manipilation is active
 	if (bScaleManip || bMoveManip || bRotManip || bCamSpline) {
 		m_d3dRenderer.SetRebuildDisplayList(true);
 	}
 
-	for (int i = 1; i < 4; i++) {
-		for (int j = 0; j < numSegments; j++) {
-			float t = (float)j / (float)numSegments;
-			//p = XMVectorCatmullRom(controlPoints[i - 1], controlPoints[i], controlPoints[i + 1], controlPoints[i + 2], t);
-			p = XMVectorCatmullRom(
-				XMVectorSet(p0.x, p0.y, p0.z, 1.0f),
-				XMVectorSet(p1.x, p1.y, p1.z, 1.0f),
-				XMVectorSet(p2.x, p2.y, p2.z, 1.0f),
-				XMVectorSet(p3.x, p3.y, p3.z, 1.0f),
-				t
-			);
-			intermediatePoints.push_back(p);
+	
+	// move ai object
+	if (m_selectedObject != -1 ) {
+		if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
+
 		}
 	}
-
-	pX = XMVectorGetX(p);
-	pY = XMVectorGetY(p);
-	pZ = XMVectorGetZ(p);
-	// move ai object
-	m_sceneGraph[9].posX = pX;
+	/*m_sceneGraph[9].posX = pX;
 	m_sceneGraph[9].posY = pY;
-	m_sceneGraph[9].posZ = pZ;
+	m_sceneGraph[9].posZ = pZ;*/
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands, &m_sceneGraph);
@@ -698,9 +715,17 @@ void ToolMain::CamSplineUpdate()
 		XMFLOAT3 camPos = XMFLOAT3(m_sceneGraph[8].posX, m_sceneGraph[8].posY, m_sceneGraph[8].posZ);
 		camPos = camSpline.update();
 
-		m_sceneGraph[8].posX = camPos.x;
+		/*m_sceneGraph[8].posX = camPos.x;
 		m_sceneGraph[8].posY = camPos.y;
-		m_sceneGraph[8].posZ = camPos.z;
+		m_sceneGraph[8].posZ = camPos.z;*/
+		if (m_selectedObject != -1) {
+			if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
+				m_sceneGraph[m_selectedObject - 1].posX = camPos.x;
+				m_sceneGraph[m_selectedObject - 1].posY = camPos.y;
+				m_sceneGraph[m_selectedObject - 1].posZ = camPos.z;
+			}
+		}
+		
 	}
 }
 

@@ -56,6 +56,7 @@ public:
 
 	int m_Current = 0;
 	bool m_IsSelected;
+	afx_msg void OnBnClickedCheck1();
 };
 
 INT_PTR CALLBACK SelectProc(HWND   hwndDlg, UINT   uMsg, WPARAM wParam, LPARAM lParam);

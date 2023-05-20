@@ -29,11 +29,11 @@ void ArcballCamera::Update(InputCommands* m_InputCommands)
 	
 	//if (m_InputCommands->mouse_RB_Down && m_InputCommands->drag) {
 		if (m_InputCommands->mouse_X < m_InputCommands->prev_mouse_X) {
-			m_camOrientationX -= 0.05f;//m_InputCommands->mouse_X /*deltaX*/ * 0.0001f;
+			m_camOrientationX -= 0.03f;//m_InputCommands->mouse_X /*deltaX*/ * 0.0001f;
 			m_camOrientationY = clamp(m_camOrientationY, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
 		}
 		else if (m_InputCommands->mouse_X > m_InputCommands->prev_mouse_X) {
-			m_camOrientationX += 0.05f;//m_InputCommands->mouse_X /*deltaX*/ * 0.0001f;
+			m_camOrientationX += 0.03f;//m_InputCommands->mouse_X /*deltaX*/ * 0.0001f;
 			m_camOrientationY = clamp(m_camOrientationY, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
 		}
 		//if (m_InputCommands->mouse_Y < m_InputCommands->prev_mouse_Y) {

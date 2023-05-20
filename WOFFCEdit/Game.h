@@ -59,7 +59,7 @@ public:
 	void BuildDisplayList(std::vector<SceneObject> * SceneGraph); //note vector passed by reference 
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
-
+	void Lerp(DX::StepTimer const& t);
 	// ai spline
 	void ColourControlPoint(int);
 
@@ -101,6 +101,9 @@ private:
 	// Camera
 	Camera cam1;
 	ArcballCamera arcBallCam;
+	float m_LerpRemain;
+	float m_ArcBallLerp;
+	XMFLOAT3 arcballpos;
 	//functionality
 	float m_movespeed;
 	bool m_rebuildDisplayList;

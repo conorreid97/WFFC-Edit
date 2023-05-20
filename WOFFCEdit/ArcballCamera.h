@@ -16,6 +16,10 @@ public:
 
 	XMMATRIX getViewMatrix();
 
+	void setEye(XMVECTOR pos) { 
+		XMVECTOR m_pos = XMLoadFloat3(&m_eye); 
+		m_pos = pos;
+	}
 	XMVECTOR getEye() { return XMVectorSet(m_eye.x, m_eye.y, m_eye.z, 1.0); }
 
 	template <typename T>

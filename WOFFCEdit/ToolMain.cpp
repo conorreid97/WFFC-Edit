@@ -843,6 +843,7 @@ void ToolMain::TerrainUpdate()
 			m_toolInputCommands.mouseState_LB = Held;
 		}
 		if (m_toolInputCommands.mouseState_LB == Held) {
+			// if ctrl is held switch the terrain direction to negative
 			if (m_toolInputCommands.multiSelect) {
 				m_toolInputCommands.terrainDir = -1;
 			}

@@ -47,6 +47,10 @@ Game::Game()
 
 	bWireframe = false;
 	m_prevSelected = -1;
+	// arcball lerp
+	m_LerpRemain = 0.5;
+	m_ArcBallLerp = 0.5;
+	arcballpos = XMFLOAT3(0.0, 0.0, 0.0);
 }
 
 Game::~Game()
@@ -155,6 +159,8 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 	else if (cameraType == 2) {
 		camView = arcBallCam.getViewMatrix();
 		arcBallCam.Update(&m_InputCommands);
+		if (m_LerpRemain > 0)
+			Lerp(timer);
 	}
 
 	if (m_InputCommands.tool == TerrainEdit) {
@@ -572,6 +578,14 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 	m_displayChunk.SaveHeightMap();			//save heightmap to file.
 }
 
+void Game::Lerp(DX::StepTimer const& t)
+{
+	XMVECTOR dest = m_displayList.at(selectedID).m_position;
+	m_LerpRemain -= t.GetElapsedSeconds();
+	float lerp = (m_ArcBallLerp - m_LerpRemain) / m_LerpRemain;
+	XMVectorLerp(XMVectorSet(0.0,0.0,0.0,1.0), dest, lerp);
+}
+
 void Game::ColourControlPoint(int id)
 {
 	DisplayObject newDisplayObject;
@@ -610,6 +624,8 @@ void Game::FocusTool()
 {
 	// switch to arcball
 	cameraType = 2;
+	m_LerpRemain = 0.5;
+	m_ArcBallLerp = 0.5;
 
 	currentCamPos = cam1.getCamPos();
 	targetPos = m_displayList[selectedID].m_position;
@@ -618,7 +634,12 @@ void Game::FocusTool()
 
 	Vector3 targetOffset = Vector3(m_displayList[selectedID].m_position.x, m_displayList[selectedID].m_position.y, m_displayList[selectedID].m_position.z + 10);
 	
+	
+	XMStoreFloat3(&arcballpos, arcBallCam.getEye());
+	
 	arcBallCam.setCameraParams(XMFLOAT3(0.0, 3.7, -3.5), m_displayList[selectedID].m_position, XMFLOAT3(0.0, 1.0, 0.0));
+
+	
 }
 
 void Game::TerrainHighlight()

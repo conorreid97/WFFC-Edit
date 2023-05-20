@@ -16,7 +16,7 @@ public:
 	ObjectManipDialogue(CWnd* pParent = NULL);
 	virtual ~ObjectManipDialogue();
 
-	void SetObjectData(std::vector<SceneObject>* SceneGraph, int* Selection, InputCommands* input);	//passing in pointers to the data the class will operate on.
+	void SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<SceneObject>* SceneAINodes, int* Selection, InputCommands* input);	//passing in pointers to the data the class will operate on.
 
 	// Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -29,9 +29,11 @@ protected:
 	afx_msg void Select();	//Item has been selected
 
 	std::vector<SceneObject>* m_sceneGraph;
+	std::vector<SceneObject>* m_sceneAINodes;
 	int* m_currentSelection;
 	InputCommands* m_Inputcommands;
-
+	ToolMain m_ToolSystem;
+	bool triggerAINode;
 	DECLARE_MESSAGE_MAP()
 
 public:

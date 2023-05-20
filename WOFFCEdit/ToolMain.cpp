@@ -1,7 +1,7 @@
 #include "ToolMain.h"
 #include "resource.h"
 #include "MFCFrame.h"
-#include "ObjectManipDialogue.h"
+
 #include <vector>
 #include <sstream>
 
@@ -20,6 +20,7 @@ ToolMain::ToolMain()
 	m_currentChunk = 0;		//default value
 	m_selectedObject = -1;	//initial selection ID
 	m_sceneGraph.clear();	//clear the vector for the scenegraph
+	m_sceneAINodes.clear();
 	m_databaseConnection = NULL;
 
 	//zero input commands
@@ -56,7 +57,9 @@ ToolMain::ToolMain()
 	pX = XMVectorGetX(p);
 	pY = XMVectorGetY(p);
 	pZ = XMVectorGetZ(p);
-
+	/*for (int i = 0; i < 5; i++) {
+		m_sceneAINodes.push_back()
+	}*/
 	bFocus = false;
 	bCamSpline = false;
 	bWireframe = false;
@@ -315,7 +318,12 @@ void ToolMain::onActionDuplicate()
 	m_d3dRenderer.BuildDisplayList(&m_sceneGraph);
 }
 
+void::ToolMain::onActionAINode() {
+	if (m_sceneGraph.size() > 0) {
+		m_sceneAINodes.push_back(m_sceneGraph.at(m_selectedObject - 1));
 
+	}
+}
 
 int ToolMain::getID(int ID)
 {
@@ -696,21 +704,21 @@ void ToolMain::MouseUpdate()
 void ToolMain::CamSplineUpdate()
 {
 	if (m_d3dRenderer.bCamPath) {
-		m_sceneGraph[3].posX = camSpline.p0.x;
-		m_sceneGraph[3].posY = camSpline.p0.y;
-		m_sceneGraph[3].posZ = camSpline.p0.z;
+		camSpline.p0.x = m_sceneGraph[3].posX;
+		camSpline.p0.y = m_sceneGraph[3].posY;
+		camSpline.p0.z = m_sceneGraph[3].posZ;
 
-		m_sceneGraph[4].posX = camSpline.p1.x;
-		m_sceneGraph[4].posY = camSpline.p1.y;
-		m_sceneGraph[4].posZ = camSpline.p1.z;
+		camSpline.p0.x = m_sceneGraph[4].posX;
+		camSpline.p0.y = m_sceneGraph[4].posY;
+		camSpline.p0.z = m_sceneGraph[4].posZ;
 
-		m_sceneGraph[5].posX = camSpline.p2.x;
-		m_sceneGraph[5].posY = camSpline.p2.y;
-		m_sceneGraph[5].posZ = camSpline.p2.z;
+		camSpline.p0.x = m_sceneGraph[5].posX;
+		camSpline.p0.y = m_sceneGraph[5].posY;
+		camSpline.p0.z = m_sceneGraph[5].posZ;
 
-		m_sceneGraph[6].posX = camSpline.p3.x;
-		m_sceneGraph[6].posY = camSpline.p3.y;
-		m_sceneGraph[6].posZ = camSpline.p3.z;
+		camSpline.p0.x = m_sceneGraph[6].posX;
+		camSpline.p0.y = m_sceneGraph[6].posY;
+		camSpline.p0.z = m_sceneGraph[6].posZ;
 
 		XMFLOAT3 camPos = XMFLOAT3(m_sceneGraph[8].posX, m_sceneGraph[8].posY, m_sceneGraph[8].posZ);
 		camPos = camSpline.update();
@@ -718,12 +726,24 @@ void ToolMain::CamSplineUpdate()
 		/*m_sceneGraph[8].posX = camPos.x;
 		m_sceneGraph[8].posY = camPos.y;
 		m_sceneGraph[8].posZ = camPos.z;*/
+		
+		//SceneObject sceneObjectVec
+
+		// create vector of sceneobject
+		// add to vector when ai node is clicked 
+		// loop through vector here
+		// update the position
 		if (m_selectedObject != -1) {
-			if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
+			for (int i = 0; i < m_sceneAINodes.size(); i++) {
+				m_sceneAINodes[i].posX = camPos.x;
+				m_sceneAINodes[i].posY = camPos.y;
+				m_sceneAINodes[i].posZ = camPos.z;
+			}
+		/*	if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
 				m_sceneGraph[m_selectedObject - 1].posX = camPos.x;
 				m_sceneGraph[m_selectedObject - 1].posY = camPos.y;
 				m_sceneGraph[m_selectedObject - 1].posZ = camPos.z;
-			}
+			}*/
 		}
 		
 	}

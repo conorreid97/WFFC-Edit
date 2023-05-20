@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "ToolMain.h"
 #include "ObjectManipDialogue.h"
 
 
@@ -18,6 +19,7 @@ END_MESSAGE_MAP()
 
 ObjectManipDialogue::ObjectManipDialogue(CWnd* pParent, std::vector<SceneObject>* SceneGraph)	:	CDialogEx(IDD_DIALOG2, pParent)
 {
+
 	m_sceneGraph = SceneGraph;
 }
 
@@ -37,17 +39,21 @@ ObjectManipDialogue::ObjectManipDialogue(CWnd* pParent)	:	CDialogEx(IDD_DIALOG2,
 
 	m_Current = 0;
 	m_IsSelected = false;
+
+	triggerAINode = false;
 }
 
 ObjectManipDialogue::~ObjectManipDialogue()
 {
 }
 
-void ObjectManipDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, int* Selection, InputCommands* input)
+void ObjectManipDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<SceneObject>* SceneAINodes, int* Selection, InputCommands* input)
 {
 	m_sceneGraph = SceneGraph;
 	m_currentSelection = Selection - 1;
 	m_Inputcommands = input;
+
+	m_sceneAINodes = SceneAINodes;
 
 	m_Current = *Selection - 1;
 	//roll through all the objects in the scene graph and put an entry for each in the listbox
@@ -160,7 +166,10 @@ void ObjectManipDialogue::OnBnClickedCheck1()
 {
 	// TODO: Add your control notification handler code here
 	m_sceneGraph->at(m_Current).AINode = true;
-
+	// need to loop through and find duplicates
+	m_sceneAINodes->push_back(m_sceneGraph->at(m_Current));
+	m_ToolSystem.onActionAINode();
+	triggerAINode = true;
 	//m_Inputcommands->updateObject = true;
 
 	

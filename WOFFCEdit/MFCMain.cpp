@@ -124,9 +124,10 @@ void MFCMain::MenuEditSelect()
 void MFCMain::MenuObjectManip()
 {
 	if (m_ToolSystem.m_selectedObject > -1) {
-		m_ToolObjectManipDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject, &m_ToolSystem.m_toolInputCommands);
+		m_ToolObjectManipDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_sceneAINodes, &m_ToolSystem.m_selectedObject, &m_ToolSystem.m_toolInputCommands);
 		m_ToolObjectManipDialogue.Create(IDD_DIALOG2);	//Start up modeless
 		m_ToolObjectManipDialogue.ShowWindow(SW_SHOW);	//show modeless
+		
 		
 	}
 	else {

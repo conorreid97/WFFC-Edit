@@ -33,6 +33,7 @@ public: //methods
 	void	onActivateTerrainEdit();
 	void	onActionLoad();													//load the current chunk
 	void	onActionDuplicate();
+	void	onActionAINode();
 	int		getID(int ID);
 	afx_msg	void	onActionSave();											//save the current chunk
 	afx_msg void	onActionSaveTerrain();									//save chunk geometry
@@ -52,6 +53,7 @@ public: //methods
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
+	std::vector<SceneObject>	m_sceneAINodes;
 	ChunkObject					m_chunk;		//our landscape chunk
 	int m_selectedObject;						//ID of current Selection
 
@@ -113,4 +115,5 @@ private:	//variables
 	float pX;
 	float pY;
 	float pZ;
+	
 };

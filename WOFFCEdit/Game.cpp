@@ -169,7 +169,7 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 		XMVectorLerp(currentCamPos, targetPos, 50.5);
 	}*/
 
-	int numSegments = 10;
+	/*int numSegments = 10;
 	std::vector<XMVECTOR> intermediatePoints;
 
 	for (int i = 1; i < 4; i++) {
@@ -179,7 +179,7 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 
 			intermediatePoints.push_back(p);
 		}
-	}
+	}*/
 	
 	//IEffectFog* effect;
 	//effect = 
@@ -570,6 +570,29 @@ void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
 void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 {
 	m_displayChunk.SaveHeightMap();			//save heightmap to file.
+}
+
+void Game::ColourControlPoint(int id)
+{
+	DisplayObject newDisplayObject;
+	newDisplayObject = m_displayList.at(id);
+	DisplayObject  selectedHighlight = newDisplayObject;
+
+	selectedHighlight.m_ID = -1;
+	selectedHighlight.m_wireframe = true;
+
+	// highlight object
+	selectedHighlight.m_model->UpdateEffects([&](IEffect* effect)
+		{
+			auto fog = dynamic_cast<IEffectFog*>(effect);
+			if (fog)
+			{
+				fog->SetFogEnabled(true);
+				fog->SetFogStart(0);
+				fog->SetFogEnd(0);
+				fog->SetFogColor(Colors::IndianRed);
+			}
+		});
 }
 
 void Game::CamSplineTool()

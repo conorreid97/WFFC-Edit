@@ -27,7 +27,7 @@ private:
 	int iSegment;
 	float tParam;
 
-	XMFLOAT3 splineCamPos;
+	XMVECTOR splineCamPos;
 
 
 public:
@@ -38,7 +38,7 @@ public:
 
 	XMFLOAT3 update();
 
-	//XMVECTOR p0, p1, p2, p3;
-	XMFLOAT3 p0, p1, p2, p3;
+	XMVECTOR p0, p1, p2, p3;
+	//XMFLOAT3 p0, p1, p2, p3;
 };
 

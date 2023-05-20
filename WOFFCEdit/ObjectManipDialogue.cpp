@@ -14,6 +14,11 @@ BEGIN_MESSAGE_MAP(ObjectManipDialogue, CDialogEx)
 
 	//ON_EN_CHANGE(IDC_EDIT4, &ObjectManip::OnEnChangeEdit4)
 	ON_BN_CLICKED(IDC_CHECK1, &ObjectManipDialogue::OnBnClickedCheck1)
+	ON_BN_CLICKED(IDC_AINode, &ObjectManipDialogue::OnBnClickedAinode)
+	ON_BN_CLICKED(IDC_PathStart, &ObjectManipDialogue::OnBnClickedPathstart)
+	ON_BN_CLICKED(IDC_PathNode, &ObjectManipDialogue::OnBnClickedPathnode)
+	ON_BN_CLICKED(IDC_PathEnd, &ObjectManipDialogue::OnBnClickedPathend)
+	ON_BN_CLICKED(IDC_PathNode2, &ObjectManipDialogue::OnBnClickedPathnode2)
 END_MESSAGE_MAP()
 
 
@@ -47,13 +52,14 @@ ObjectManipDialogue::~ObjectManipDialogue()
 {
 }
 
-void ObjectManipDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<SceneObject>* SceneAINodes, int* Selection, InputCommands* input)
+void ObjectManipDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int>* SceneAINodes, std::vector<int>* ScenePathNodes, int* Selection, InputCommands* input)
 {
 	m_sceneGraph = SceneGraph;
 	m_currentSelection = Selection - 1;
 	m_Inputcommands = input;
 
 	m_sceneAINodes = SceneAINodes;
+	m_scenePathNodes = ScenePathNodes;
 
 	m_Current = *Selection - 1;
 	//roll through all the objects in the scene graph and put an entry for each in the listbox
@@ -163,14 +169,48 @@ void ObjectManipDialogue::OnEnd()
 
 
 void ObjectManipDialogue::OnBnClickedCheck1()
+{	
+}
+
+
+void ObjectManipDialogue::OnBnClickedAinode()
 {
 	// TODO: Add your control notification handler code here
 	m_sceneGraph->at(m_Current).AINode = true;
-	// need to loop through and find duplicates
-	m_sceneAINodes->push_back(m_sceneGraph->at(m_Current));
-	m_ToolSystem.onActionAINode();
-	triggerAINode = true;
-	//m_Inputcommands->updateObject = true;
-
+	m_sceneAINodes->push_back(m_Current);
 	
+}
+
+
+void ObjectManipDialogue::OnBnClickedPathstart()
+{
+	m_sceneGraph->at(m_Current).path_node_start = true;
+	// TODO: Add your control notification handler code here
+}
+
+
+void ObjectManipDialogue::OnBnClickedPathnode()
+{
+	// TODO: Add your control notification handler code here
+	m_sceneGraph->at(m_Current).path_node = true;
+	if (m_scenePathNodes->size() > 2) {
+		m_scenePathNodes->pop_back();
+	}
+	m_scenePathNodes->push_back(m_Current);
+	//m_ToolSystem.onActionPathNode(m_Current);
+}
+
+
+void ObjectManipDialogue::OnBnClickedPathend()
+{
+	// TODO: Add your control notification handler code here
+	m_sceneGraph->at(m_Current).path_node_end = true;
+}
+
+
+void ObjectManipDialogue::OnBnClickedPathnode2()
+{
+	// TODO: Add your control notification handler code here
+	//m_sceneGraph->at(m_Current).path_node = true;
+
 }

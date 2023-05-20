@@ -20,7 +20,7 @@ ToolMain::ToolMain()
 	m_currentChunk = 0;		//default value
 	m_selectedObject = -1;	//initial selection ID
 	m_sceneGraph.clear();	//clear the vector for the scenegraph
-	m_sceneAINodes.clear();
+	//m_sceneAINodes.clear();
 	m_databaseConnection = NULL;
 
 	//zero input commands
@@ -320,9 +320,13 @@ void ToolMain::onActionDuplicate()
 
 void::ToolMain::onActionAINode() {
 	if (m_sceneGraph.size() > 0) {
-		m_sceneAINodes.push_back(m_sceneGraph.at(m_selectedObject - 1));
+		m_sceneAINodes.push_back(m_sceneGraph.at(m_selectedObject - 1).ID);
 
 	}
+}
+
+void::ToolMain::onActionPathNode(int id) {
+	m_d3dRenderer.ColourControlPoint(id);
 }
 
 int ToolMain::getID(int ID)
@@ -483,14 +487,14 @@ void ToolMain::Tick(MSG *msg)
 		m_toolInputCommands.updateObject = false;
 		m_d3dRenderer.SetRebuildDisplayList(true);
 	}
-	if (m_selectedObject != -1) {
-		if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
-			//MessageBox(m_toolHandle, L"AINode Set.", L"AI Mode", MB_OK);
-		/*	m_sceneGraph.at(m_selectedObject - 1).posX = pX;
-			m_sceneGraph.at(m_selectedObject - 1).posY = pY;
-			m_sceneGraph.at(m_selectedObject - 1).posZ = pZ;*/
-		}
-	}
+	//if (m_selectedObject != -1) {
+	//	if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
+	//		//MessageBox(m_toolHandle, L"AINode Set.", L"AI Mode", MB_OK);
+	//	/*	m_sceneGraph.at(m_selectedObject - 1).posX = pX;
+	//		m_sceneGraph.at(m_selectedObject - 1).posY = pY;
+	//		m_sceneGraph.at(m_selectedObject - 1).posZ = pZ;*/
+	//	}
+	//}
 	
 	// update the display list if manipilation is active
 	if (bScaleManip || bMoveManip || bRotManip || bCamSpline) {
@@ -498,12 +502,12 @@ void ToolMain::Tick(MSG *msg)
 	}
 
 	
-	// move ai object
-	if (m_selectedObject != -1 ) {
-		if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
+	//// move ai object
+	//if (m_selectedObject != -1 ) {
+	//	if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
 
-		}
-	}
+	//	}
+	//}
 	/*m_sceneGraph[9].posX = pX;
 	m_sceneGraph[9].posY = pY;
 	m_sceneGraph[9].posZ = pZ;*/
@@ -704,23 +708,29 @@ void ToolMain::MouseUpdate()
 void ToolMain::CamSplineUpdate()
 {
 	if (m_d3dRenderer.bCamPath) {
-		camSpline.p0.x = m_sceneGraph[3].posX;
-		camSpline.p0.y = m_sceneGraph[3].posY;
-		camSpline.p0.z = m_sceneGraph[3].posZ;
 
-		camSpline.p0.x = m_sceneGraph[4].posX;
-		camSpline.p0.y = m_sceneGraph[4].posY;
-		camSpline.p0.z = m_sceneGraph[4].posZ;
-
-		camSpline.p0.x = m_sceneGraph[5].posX;
-		camSpline.p0.y = m_sceneGraph[5].posY;
-		camSpline.p0.z = m_sceneGraph[5].posZ;
-
-		camSpline.p0.x = m_sceneGraph[6].posX;
-		camSpline.p0.y = m_sceneGraph[6].posY;
-		camSpline.p0.z = m_sceneGraph[6].posZ;
-
-		XMFLOAT3 camPos = XMFLOAT3(m_sceneGraph[8].posX, m_sceneGraph[8].posY, m_sceneGraph[8].posZ);
+		for (int i = 0; i < m_sceneGraph.size(); i++) {
+			if (m_sceneGraph.at(i).path_node_start) {
+				camSpline.p1 = XMVectorSet(m_sceneGraph[i].posX, m_sceneGraph[i].posY, m_sceneGraph[i].posZ, 1.0f); // 5
+				onActionPathNode(i);
+			}
+			
+			if (m_sceneGraph.at(i).path_node_end) {
+				camSpline.p2 = XMVectorSet(m_sceneGraph[i].posX, m_sceneGraph[i].posY, m_sceneGraph[i].posZ, 1.0f); // 6
+				onActionPathNode(i);
+			}
+		}
+		// control points
+		camSpline.p0 = XMVectorSet(m_sceneGraph[m_scenePathNodes[0]].posX, m_sceneGraph[m_scenePathNodes[0]].posY, m_sceneGraph[m_scenePathNodes[0]].posZ, 1.0f);
+		//onActionPathNode(m_scenePathNodes[0] - 1);
+		camSpline.p3 = XMVectorSet(m_sceneGraph[m_scenePathNodes[1]].posX, m_sceneGraph[m_scenePathNodes[1]].posY, m_sceneGraph[m_scenePathNodes[1]].posZ, 1.0f);
+		//onActionPathNode(m_scenePathNodes[1] - 1);
+		
+		m_sceneGraph.at(5).editor_pivot_vis = true;
+		m_sceneGraph.at(5).pivotX = 5.0f;
+		
+		XMFLOAT3 camPos = XMFLOAT3(0.0, 0.0, 0.0);
+		//XMVECTOR camPos = XMVectorSet(0.0, 0.0, 0.0, 1.0);
 		camPos = camSpline.update();
 
 		/*m_sceneGraph[8].posX = camPos.x;
@@ -735,9 +745,9 @@ void ToolMain::CamSplineUpdate()
 		// update the position
 		if (m_selectedObject != -1) {
 			for (int i = 0; i < m_sceneAINodes.size(); i++) {
-				m_sceneAINodes[i].posX = camPos.x;
-				m_sceneAINodes[i].posY = camPos.y;
-				m_sceneAINodes[i].posZ = camPos.z;
+				m_sceneGraph[m_sceneAINodes[i]].posX = camPos.x;
+				m_sceneGraph[m_sceneAINodes[i]].posY = camPos.y;
+				m_sceneGraph[m_sceneAINodes[i]].posZ = camPos.z;
 			}
 		/*	if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
 				m_sceneGraph[m_selectedObject - 1].posX = camPos.x;
@@ -833,6 +843,12 @@ void ToolMain::TerrainUpdate()
 			m_toolInputCommands.mouseState_LB = Held;
 		}
 		if (m_toolInputCommands.mouseState_LB == Held) {
+			if (m_toolInputCommands.multiSelect) {
+				m_toolInputCommands.terrainDir = -1;
+			}
+			else {
+				m_toolInputCommands.terrainDir = 1;
+			}
 			m_d3dRenderer.EditTerrain();
 		}
 		if (m_toolInputCommands.endTerrainEdit) {

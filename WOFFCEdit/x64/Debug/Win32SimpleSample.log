@@ -1,10 +1,4 @@
-﻿  ObjectManipDialogue.cpp
-  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ObjectManipDialogue.cpp(60,22): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ObjectManipDialogue.cpp(96,33): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ObjectManipDialogue.cpp(97,33): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ObjectManipDialogue.cpp(98,33): warning C4305: 'argument': truncation from 'double' to 'float'
-  ToolMain.cpp
+﻿  ToolMain.cpp
   _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
 D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(202,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(203,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
@@ -33,21 +27,20 @@ D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(251,59): warning C4244: '=':
 D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(252,56): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(253,54): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(254,57): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(332,11): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(355,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(760,50): warning C4305: '+=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(761,50): warning C4305: '+=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(762,50): warning C4305: '+=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(766,50): warning C4305: '-=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(767,50): warning C4305: '-=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(768,50): warning C4305: '-=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(776,51): warning C4305: '+=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(779,51): warning C4305: '-=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(782,51): warning C4305: '-=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(785,51): warning C4305: '+=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(791,51): warning C4305: '+=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(794,51): warning C4305: '-=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(817,51): warning C4305: '+=': truncation from 'double' to 'float'
-D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(820,51): warning C4305: '-=': truncation from 'double' to 'float'
-  Generating Code...
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(336,11): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(359,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(770,50): warning C4305: '+=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(771,50): warning C4305: '+=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(772,50): warning C4305: '+=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(776,50): warning C4305: '-=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(777,50): warning C4305: '-=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(778,50): warning C4305: '-=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(786,51): warning C4305: '+=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(789,51): warning C4305: '-=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(792,51): warning C4305: '-=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(795,51): warning C4305: '+=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(801,51): warning C4305: '+=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(804,51): warning C4305: '-=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(827,51): warning C4305: '+=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\ToolMain.cpp(830,51): warning C4305: '-=': truncation from 'double' to 'float'
   Win32SimpleSample.vcxproj -> D:\conor\Github\CMP405_Tools\WOFFCEdit\x64\Debug\WoFEdit.exe

@@ -60,6 +60,9 @@ public:
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 
+	// ai spline
+	void ColourControlPoint(int);
+
 	void CamSplineTool();
 	void FocusTool();
 	void TerrainHighlight();

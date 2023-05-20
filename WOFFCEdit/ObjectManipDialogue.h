@@ -16,7 +16,7 @@ public:
 	ObjectManipDialogue(CWnd* pParent = NULL);
 	virtual ~ObjectManipDialogue();
 
-	void SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<SceneObject>* SceneAINodes, int* Selection, InputCommands* input);	//passing in pointers to the data the class will operate on.
+	void SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int>* SceneAINodes, std::vector<int>* ScenePathNodes, int* Selection, InputCommands* input);	//passing in pointers to the data the class will operate on.
 
 	// Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -29,7 +29,8 @@ protected:
 	afx_msg void Select();	//Item has been selected
 
 	std::vector<SceneObject>* m_sceneGraph;
-	std::vector<SceneObject>* m_sceneAINodes;
+	std::vector<int>* m_sceneAINodes;
+	std::vector<int>* m_scenePathNodes;
 	int* m_currentSelection;
 	InputCommands* m_Inputcommands;
 	ToolMain m_ToolSystem;
@@ -59,6 +60,11 @@ public:
 	int m_Current = 0;
 	bool m_IsSelected;
 	afx_msg void OnBnClickedCheck1();
+	afx_msg void OnBnClickedAinode();
+	afx_msg void OnBnClickedPathstart();
+	afx_msg void OnBnClickedPathnode();
+	afx_msg void OnBnClickedPathend();
+	afx_msg void OnBnClickedPathnode2();
 };
 
 INT_PTR CALLBACK SelectProc(HWND   hwndDlg, UINT   uMsg, WPARAM wParam, LPARAM lParam);

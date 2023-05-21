@@ -138,18 +138,11 @@ void Camera::Lerp(DX::StepTimer const& t)
 
 void Camera::Focus(XMFLOAT3 pos, XMFLOAT3 scale, int id, HWND toolHandle)
 {
-	if (id != -1) {
-		m_LerpRemain = 0.5;
-		m_Lerp = 0.5;
-		m_camOrientation = Vector3(-30, 0, 0);
-		m_Dest = pos - (XMFLOAT3(2.5, -2, 0) * scale);
-		m_Origin = m_camPosition;
-	}
-	else {
-		MessageBox(toolHandle, L"Make sure to select an object before opening the inspector.", L"Error", MB_OK);
-
-	}
-
+	m_LerpRemain = 0.5;
+	m_Lerp = 0.5;
+	m_camOrientation = Vector3(-30, 0, 0);
+	m_Dest = pos - (XMFLOAT3(2.5, -2, 0) * scale);
+	m_Origin = m_camPosition;
 }
 
 

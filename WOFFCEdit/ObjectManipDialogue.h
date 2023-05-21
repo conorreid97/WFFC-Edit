@@ -35,6 +35,7 @@ protected:
 	InputCommands* m_Inputcommands;
 	ToolMain m_ToolSystem;
 	bool triggerAINode;
+	int prevAINodeID;
 	DECLARE_MESSAGE_MAP()
 
 public:
@@ -56,6 +57,12 @@ public:
 	float m_ScaleX;
 	float m_ScaleY;
 	float m_ScaleZ;
+
+	int m_AINodeCheck;
+	int m_PathStartCheck;
+	int m_PathNodeCheck;
+	int m_PathNode1Check;
+	int m_PathEndCheck;
 
 	int m_Current = 0;
 	bool m_IsSelected;

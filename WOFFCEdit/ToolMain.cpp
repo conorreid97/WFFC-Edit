@@ -136,7 +136,13 @@ void ToolMain::onActivateCamSpline()
 {
 	if (!bCamSpline) {
 		bCamSpline = true;
-		m_d3dRenderer.CamSplineTool();
+		// only start the spline when all aspects have been set
+		if (m_toolInputCommands.AINode && m_toolInputCommands.PathStart && m_toolInputCommands.PathNode1 && m_toolInputCommands.PathEnd) {
+			m_d3dRenderer.CamSplineTool();
+		}
+		else {
+			MessageBox(m_toolHandle, L"Make sure to set an AI Node, Path Start, 2 Path Nodes and a Path End before starting AI Spline. This can be done through object manipulation window", L"Error", MB_OK);
+		}
 	}
 	else {
 		bCamSpline = false;
@@ -635,14 +641,6 @@ void ToolMain::UpdateInput(MSG * msg)
 		DeleteObject();
 	}
 	//WASD
-
-	if (m_toolInputCommands.focus) {
-		//XMFLOAT3 pos = XMFLOAT3(m_sceneGraph[m_selectedObject].posX, m_sceneGraph[m_selectedObject].posY, m_sceneGraph[m_selectedObject].posZ);
-		//XMFLOAT3 sca = XMFLOAT3(m_sceneGraph[m_selectedObject].scaX, m_sceneGraph[m_selectedObject].scaY, m_sceneGraph[m_selectedObject].scaZ);
-		
-		
-		
-	}
 }
 void ToolMain::DeleteObject()
 {

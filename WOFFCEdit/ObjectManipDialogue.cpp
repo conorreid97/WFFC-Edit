@@ -78,7 +78,15 @@ void ObjectManipDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, st
 		m_ScaleY = SceneGraph->at(*Selection - 1).scaY;
 		m_ScaleZ = SceneGraph->at(*Selection - 1).scaZ;
 
-		SceneGraph->at(*Selection - 1).editor_pivot_vis = true;
+		m_AINodeCheck = SceneGraph->at(*Selection - 1).AINode;
+		m_PathStartCheck = SceneGraph->at(*Selection - 1).path_node_start;
+		m_PathNodeCheck = SceneGraph->at(*Selection - 1).path_node;
+		m_PathEndCheck = SceneGraph->at(*Selection - 1).path_node_end;
+
+		//// ATTENTION
+		if (m_sceneAINodes->size() > 1) {
+			m_sceneAINodes->pop_back();
+		}
 	}
 }
 
@@ -103,6 +111,10 @@ void ObjectManipDialogue::DoDataExchange(CDataExchange* pDX)
 	DDV_MinMaxFloat(pDX, m_ScaleY, 0.1, 10);
 	DDV_MinMaxFloat(pDX, m_ScaleZ, 0.1, 10);
 
+	DDX_Check(pDX, IDC_AINode, m_AINodeCheck);
+	DDX_Check(pDX, IDC_PathStart, m_PathStartCheck);
+	DDX_Check(pDX, IDC_PathNode, m_PathNodeCheck);
+	DDX_Check(pDX, IDC_PathEnd, m_PathEndCheck);
 
 }
 
@@ -175,17 +187,25 @@ void ObjectManipDialogue::OnBnClickedCheck1()
 
 void ObjectManipDialogue::OnBnClickedAinode()
 {
+	
+
 	// TODO: Add your control notification handler code here
 	if (!m_Inputcommands->AINode) {
 		m_sceneGraph->at(m_Current).AINode = true;
 		m_Inputcommands->AINode = true;
+		m_sceneGraph->at(prevAINodeID).AINode = false;
 		m_sceneAINodes->push_back(m_Current);
 	}
 	else {
 		m_sceneGraph->at(m_Current).AINode = false;
+		if (prevAINodeID != m_Current) {
+			m_sceneGraph->at(prevAINodeID).AINode = false;
+			m_sceneGraph->at(m_Current).AINode = true;
+		}
 		m_Inputcommands->AINode = false;
+		
 	}
-	
+	prevAINodeID = m_Current;
 	
 }
 
@@ -193,6 +213,22 @@ void ObjectManipDialogue::OnBnClickedAinode()
 void ObjectManipDialogue::OnBnClickedPathstart()
 {
 	m_sceneGraph->at(m_Current).path_node_start = true;
+
+	if (!m_Inputcommands->PathStart) {
+		m_sceneGraph->at(m_Current).path_node_start = true;
+		m_Inputcommands->PathStart = true;
+		m_sceneGraph->at(prevAINodeID).path_node_start = false;
+	}
+	else {
+		m_sceneGraph->at(m_Current).path_node_start = false;
+		if (prevAINodeID != m_Current) {
+			m_sceneGraph->at(prevAINodeID).path_node_start = false;
+			m_sceneGraph->at(m_Current).path_node_start = true;
+		}
+		m_Inputcommands->PathStart = false;
+
+	}
+	prevAINodeID = m_Current;
 	// TODO: Add your control notification handler code here
 }
 
@@ -202,7 +238,8 @@ void ObjectManipDialogue::OnBnClickedPathnode()
 	// TODO: Add your control notification handler code here
 	m_sceneGraph->at(m_Current).path_node = true;
 	
-	if (m_scenePathNodes->size() > 2) {
+	if (m_scenePathNodes->size() > 1) {
+		m_sceneGraph->at(m_scenePathNodes->back()).path_node = false;
 		m_scenePathNodes->pop_back();
 	}
 	m_scenePathNodes->push_back(m_Current);
@@ -214,6 +251,22 @@ void ObjectManipDialogue::OnBnClickedPathend()
 {
 	// TODO: Add your control notification handler code here
 	m_sceneGraph->at(m_Current).path_node_end = true;
+
+	if (!m_Inputcommands->PathEnd) {
+		m_sceneGraph->at(m_Current).path_node_end = true;
+		m_Inputcommands->PathEnd = true;
+		m_sceneGraph->at(prevAINodeID).path_node_end = false;
+	}
+	else {
+		m_sceneGraph->at(m_Current).path_node_end = false;
+		if (prevAINodeID != m_Current) {
+			m_sceneGraph->at(prevAINodeID).path_node_end = false;
+			m_sceneGraph->at(m_Current).path_node_end = true;
+		}
+		m_Inputcommands->PathEnd = false;
+
+	}
+	prevAINodeID = m_Current;
 }
 
 

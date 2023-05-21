@@ -992,27 +992,13 @@ int Game::MousePicking()
 					closestPick = selectedDistance;
 				}
 			}
+			// Deselect
 			else if (m_displayList[i].m_model.get()->meshes[j]->boundingBox.Intersects(nearPoint, pickingVector, selectedDistance) && m_displayList[i].m_ID == -1){
 				selectedID = -1;
 			}
 		
 		}
 	}
-
-	/*if (selectedID < 0 && m_prevSelected >= 0) {
-		DisplayObject objectHighlight = m_displayList[m_prevSelected];
-
-		objectHighlight.m_wireframe = false;
-		objectHighlight.m_model->UpdateEffects([&](IEffect* effect) 
-			{
-				auto fog = dynamic_cast<IEffectFog*>(effect);
-
-				if (fog) {
-					fog->SetFogEnabled(false);
-
-				}
-			});
-	}*/
 
 	m_rebuildDisplayList = true;
 	//if we got a hit.  return it.  

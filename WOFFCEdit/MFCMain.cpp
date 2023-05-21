@@ -153,7 +153,7 @@ void MFCMain::ToolBarButton3()
 	if (!m_ToolSystem.bFocus)
 	{
 		m_ToolSystem.bFocus = true;
-		m_ToolSystem.setCamType(2);
+		//m_ToolSystem.setCamType(2);
 		m_ToolSystem.onActionFocusCamera();
 	}
 	else {
@@ -190,8 +190,9 @@ void MFCMain::ToolBarButton7()
 
 void MFCMain::ToolBarButton8()
 {
+	
 	if (m_ToolSystem.getCamType() == 1) {
-		m_ToolSystem.setCamType(2);
+		m_ToolSystem.onArcBall();
 	}
 	else {
 		m_ToolSystem.setCamType(1);

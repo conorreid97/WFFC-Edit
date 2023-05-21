@@ -31,18 +31,31 @@ Camera::Camera()
 	m_camOrientation.z = 0.0f;
 
 	//bCamPath = false;
+	//m_LerpRemain = 0.0;
 }
 
 Camera::~Camera()
 {
 }
 
-void Camera::update(InputCommands* m_InputCommands)
+void Camera::update(InputCommands* m_InputCommands, DX::StepTimer const& t)
 {
 	//TODO  any more complex than this, and the camera should be abstracted out to somewhere else
 //camera motion is on a plane, so kill the 7 component of the look direction
 	Vector3 planarMotionVector = m_camLookDirection;
 	planarMotionVector.y = 0.0;
+	inputCommands = m_InputCommands;
+	if (m_LerpRemain > 0) {
+		//m_InputCommands->finishedLerp = false;
+		Lerp(t);
+	}
+	/*else {
+		m_InputCommands->finishedLerp = true;
+	}*/
+
+	if (m_camPosition.x >= m_Dest.x) {
+		m_InputCommands->finishedLerp = true;
+	}
 
 	if (m_InputCommands->rotRight)
 	{
@@ -113,3 +126,32 @@ void Camera::update(InputCommands* m_InputCommands)
 	m_view = Matrix::CreateLookAt(m_camPosition, m_camLookAt, Vector3::UnitY);
 
 }
+
+
+void Camera::Lerp(DX::StepTimer const& t)
+{
+	m_LerpRemain -= t.GetElapsedSeconds();
+	float lerpFac = (m_Lerp - m_LerpRemain) / m_Lerp;
+	m_camPosition = Vector3::Lerp(m_Origin, m_Dest, lerpFac);
+	
+}
+
+void Camera::Focus(XMFLOAT3 pos, XMFLOAT3 scale, int id, HWND toolHandle)
+{
+	if (id != -1) {
+		m_LerpRemain = 0.5;
+		m_Lerp = 0.5;
+		m_camOrientation = Vector3(-30, 0, 0);
+		m_Dest = pos - (XMFLOAT3(2.5, -2, 0) * scale);
+		m_Origin = m_camPosition;
+	}
+	else {
+		MessageBox(toolHandle, L"Make sure to select an object before opening the inspector.", L"Error", MB_OK);
+
+	}
+
+}
+
+
+
+

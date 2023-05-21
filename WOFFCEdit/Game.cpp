@@ -154,84 +154,19 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 {
 	if (cameraType == 1) {
 		camView = cam1.GetViewMatrix();
-		cam1.update(&m_InputCommands);
+		cam1.update(&m_InputCommands, timer);
 	}
 	else if (cameraType == 2) {
 		camView = arcBallCam.getViewMatrix();
 		arcBallCam.Update(&m_InputCommands);
-		if (m_LerpRemain > 0)
-			Lerp(timer);
+		/*if (m_LerpRemain > 0)
+			Lerp(timer);*/
 	}
 
 	if (m_InputCommands.tool == TerrainEdit) {
 		TerrainHighlight();
 	}
-	/*else if (cameraType == 3) {
-	
-	}*/
 
-	/*if (switchCam) {
-		
-		XMVectorLerp(currentCamPos, targetPos, 50.5);
-	}*/
-
-	/*int numSegments = 10;
-	std::vector<XMVECTOR> intermediatePoints;
-
-	for (int i = 1; i < 4; i++) {
-		for (int j = 0; j < numSegments; j++) {
-			float t = (float)j / (float)numSegments;
-			XMVECTOR p = XMVectorCatmullRom(controlPoints[i - 1], controlPoints[i], controlPoints[i + 1], controlPoints[i + 2], t);
-
-			intermediatePoints.push_back(p);
-		}
-	}*/
-	
-	//IEffectFog* effect;
-	//effect = 
-	//effect->SetFogEnabled(true);
-	//if (bFog) {
-	//	int numObjects = SceneGraph->size();
-	//	for (int i = 0; i < numObjects; i++)
-	//	{
-	//		m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
-	//			{
-	//				auto fog = dynamic_cast<IEffectFog*>(effect);
-	//				if (fog)
-	//				{
-	//					fog->SetFogEnabled(1.0);
-	//					fog->SetFogStart(0.5);
-	//					fog->SetFogEnd(40.0);
-	//					fog->SetFogColor(DirectX::Colors::WhiteSmoke);
-	//				}
-	//			});
-	//	}
-
-	//	m_displayChunk.m_terrainEffect->SetFogEnabled(1.0);
-	//	m_displayChunk.m_terrainEffect->SetFogStart(0.5);
-	//	m_displayChunk.m_terrainEffect->SetFogEnd(40.0);
-
-	//	m_displayChunk.m_terrainEffect->SetFogColor(DirectX::Colors::WhiteSmoke);
-	//}
-	//else if (!bFog) {
-	//	int numObjects = SceneGraph->size();
-	//	for (int i = 0; i < numObjects; i++)
-	//	{
-	//		m_displayList[i].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
-	//			{
-	//				auto fog = dynamic_cast<IEffectFog*>(effect);
-	//				if (fog)
-	//				{
-	//					fog->SetFogEnabled(0.0);
-	//					fog->SetFogEnd(1.0);
-	//				}
-	//			});
-	//	}
-
-	//	m_displayChunk.m_terrainEffect->SetFogEnabled(0.0);
-	//	m_displayChunk.m_terrainEffect->SetFogEnd(1.0);
-
-	//}
 	
 
    // m_batchEffect->SetView(cam1.m_view);

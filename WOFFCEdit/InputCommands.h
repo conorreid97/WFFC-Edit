@@ -51,6 +51,10 @@ struct InputCommands
 	// Duplicate
 	bool duplicate;
 
+	// Focus
+	bool focus;
+	bool finishedLerp;
+	
 	// Object manip dialog
 	bool updateObject;
 

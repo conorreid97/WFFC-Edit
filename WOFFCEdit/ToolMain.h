@@ -26,6 +26,7 @@ public: //methods
 	int		getCurrentSelectionID();										//returns the selection number of currently selected object so that It can be displayed.
 	void	onActionInitialise(HWND handle, int width, int height);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
 	void	onActionFocusCamera();
+	void onArcBall();
 	void    onActivateCamSpline();
 	void	onActivateScaling();
 	void	onActivateMove();

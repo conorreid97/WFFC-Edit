@@ -77,6 +77,8 @@ public:
 	float m_ChunkY[TERRAINRESOLUTION][TERRAINRESOLUTION];	// create a 2d array the same size as the chunk
 	std::vector<std::pair<int, int>> m_pointVec;	// adds edited points to a vector for undo / redo
 	RECT		m_ScreenDimensions;
+	Camera cam1;
+	//Camera getCam1() { return cam1; }
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
@@ -100,7 +102,7 @@ private:
 	InputCommands						m_InputCommands;
 	
 	// Camera
-	Camera cam1;
+	
 	ArcballCamera arcBallCam;
 	float m_LerpRemain;
 	float m_ArcBallLerp;

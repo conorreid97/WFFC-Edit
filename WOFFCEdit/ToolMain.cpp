@@ -113,8 +113,23 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 
 void ToolMain::onActionFocusCamera()
 {
-	m_d3dRenderer.setCamType(2);
-	m_d3dRenderer.FocusTool();
+	if (m_selectedObject != -1) {
+		m_d3dRenderer.cam1.Focus(XMFLOAT3(m_sceneGraph[m_selectedObject - 1].posX, m_sceneGraph[m_selectedObject - 1].posY, m_sceneGraph[m_selectedObject - 1].posZ),
+			XMFLOAT3(m_sceneGraph[m_selectedObject - 1].scaX, m_sceneGraph[m_selectedObject - 1].scaY, m_sceneGraph[m_selectedObject - 1].scaZ), m_selectedObject, m_toolHandle);
+	}
+}
+
+void ToolMain::onArcBall() {
+	// If an object is selected change to arcball
+	if (m_selectedObject != -1) {
+		setCamType(2);
+		m_d3dRenderer.FocusTool();
+	}
+	else {
+		MessageBox(m_toolHandle, L"Make sure to select an object before opening the inspector.", L"Error", MB_OK);
+
+	}
+	
 }
 
 void ToolMain::onActivateCamSpline()
@@ -448,6 +463,7 @@ void ToolMain::Tick(MSG *msg)
 		m_d3dRenderer.setCamType(2);
 	}
 
+
 	// update the wireframe mode
 	m_d3dRenderer.bWireframe = bWireframe;
 
@@ -459,25 +475,6 @@ void ToolMain::Tick(MSG *msg)
 
 	CamSplineUpdate();
 
-	// AISpline
-	//for (int i = 1; i < 4; i++) {
-	//	for (int j = 0; j < numSegments; j++) {
-	//		float t = (float)j / (float)numSegments;
-	//		//p = XMVectorCatmullRom(controlPoints[i - 1], controlPoints[i], controlPoints[i + 1], controlPoints[i + 2], t);
-	//		p = XMVectorCatmullRom(
-	//			XMVectorSet(p0.x, p0.y, p0.z, 1.0f),
-	//			XMVectorSet(p1.x, p1.y, p1.z, 1.0f),
-	//			XMVectorSet(p2.x, p2.y, p2.z, 1.0f),
-	//			XMVectorSet(p3.x, p3.y, p3.z, 1.0f),
-	//			t
-	//		);
-	//		intermediatePoints.push_back(p);
-	//	}
-	//}
-
-	//pX = XMVectorGetX(p);
-	//pY = XMVectorGetY(p);
-	//pZ = XMVectorGetZ(p);
 
 	// update object manipulation dialogue
 	if (m_toolInputCommands.updateObject) {
@@ -487,30 +484,14 @@ void ToolMain::Tick(MSG *msg)
 		m_toolInputCommands.updateObject = false;
 		m_d3dRenderer.SetRebuildDisplayList(true);
 	}
-	//if (m_selectedObject != -1) {
-	//	if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
-	//		//MessageBox(m_toolHandle, L"AINode Set.", L"AI Mode", MB_OK);
-	//	/*	m_sceneGraph.at(m_selectedObject - 1).posX = pX;
-	//		m_sceneGraph.at(m_selectedObject - 1).posY = pY;
-	//		m_sceneGraph.at(m_selectedObject - 1).posZ = pZ;*/
-	//	}
-	//}
+
 	
 	// update the display list if manipilation is active
 	if (bScaleManip || bMoveManip || bRotManip || bCamSpline) {
 		m_d3dRenderer.SetRebuildDisplayList(true);
 	}
 
-	
-	//// move ai object
-	//if (m_selectedObject != -1 ) {
-	//	if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
 
-	//	}
-	//}
-	/*m_sceneGraph[9].posX = pX;
-	m_sceneGraph[9].posY = pY;
-	m_sceneGraph[9].posZ = pZ;*/
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands, &m_sceneGraph);
@@ -616,6 +597,11 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.duplicate = true;
 	}
 	else m_toolInputCommands.duplicate = false;
+	// Focus Camera
+	if (m_keyArray['F']) {
+		onActionFocusCamera();
+	}
+	else m_toolInputCommands.focus = false;
 	if (m_keyArray[17]) {	// 17 is the number for the ctrl button
 		m_toolInputCommands.multiSelect = true;
 	}
@@ -649,6 +635,14 @@ void ToolMain::UpdateInput(MSG * msg)
 		DeleteObject();
 	}
 	//WASD
+
+	if (m_toolInputCommands.focus) {
+		//XMFLOAT3 pos = XMFLOAT3(m_sceneGraph[m_selectedObject].posX, m_sceneGraph[m_selectedObject].posY, m_sceneGraph[m_selectedObject].posZ);
+		//XMFLOAT3 sca = XMFLOAT3(m_sceneGraph[m_selectedObject].scaX, m_sceneGraph[m_selectedObject].scaY, m_sceneGraph[m_selectedObject].scaZ);
+		
+		
+		
+	}
 }
 void ToolMain::DeleteObject()
 {

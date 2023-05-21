@@ -176,8 +176,16 @@ void ObjectManipDialogue::OnBnClickedCheck1()
 void ObjectManipDialogue::OnBnClickedAinode()
 {
 	// TODO: Add your control notification handler code here
-	m_sceneGraph->at(m_Current).AINode = true;
-	m_sceneAINodes->push_back(m_Current);
+	if (!m_Inputcommands->AINode) {
+		m_sceneGraph->at(m_Current).AINode = true;
+		m_Inputcommands->AINode = true;
+		m_sceneAINodes->push_back(m_Current);
+	}
+	else {
+		m_sceneGraph->at(m_Current).AINode = false;
+		m_Inputcommands->AINode = false;
+	}
+	
 	
 }
 
@@ -193,6 +201,7 @@ void ObjectManipDialogue::OnBnClickedPathnode()
 {
 	// TODO: Add your control notification handler code here
 	m_sceneGraph->at(m_Current).path_node = true;
+	
 	if (m_scenePathNodes->size() > 2) {
 		m_scenePathNodes->pop_back();
 	}

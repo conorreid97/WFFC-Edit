@@ -538,29 +538,49 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		
 		m_displayList.push_back(newDisplayObject);
 
-		// highlight selected object
+		
+		
+		// Colour the Start and End of the AI Path
+		if (SceneGraph->at(i).path_node_start || SceneGraph->at(i).path_node_end) {
+			DisplayObject  selectedHighlight = ColourObject(newDisplayObject, Colors::Yellow);
+		}
+		// Colour the control points for the AI Path
+		if (SceneGraph->at(i).path_node) {
+			DisplayObject  selectedHighlight = ColourObject(newDisplayObject, Colors::OrangeRed);
+		}
+		if (SceneGraph->at(i).AINode) {
+			DisplayObject  selectedHighlight = ColourObject(newDisplayObject, Colors::Coral);
+		}
+		// Colour the selected object
 		if (SceneGraph->at(i).ID == selectedID) {
-			DisplayObject  selectedHighlight = newDisplayObject;
+			
+			DisplayObject  selectedHighlight = ColourObject(newDisplayObject, Colors::DarkCyan);;
 
-			selectedHighlight.m_ID = -1;
-			selectedHighlight.m_wireframe = true;
-
-			// highlight object
-			selectedHighlight.m_model->UpdateEffects([&](IEffect* effect)
-				{
-					auto fog = dynamic_cast<IEffectFog*>(effect);
-						if (fog)
-						{
-							fog->SetFogEnabled(true);
-							fog->SetFogStart(0);
-							fog->SetFogEnd(0);
-							fog->SetFogColor(Colors::DarkCyan);
-						}
-				});
 			m_displayList.push_back(selectedHighlight);
 		}
 	}	
 	m_rebuildDisplayList = false;
+}
+
+DisplayObject Game::ColourObject(DisplayObject object, XMVECTOR colour ) {
+	DisplayObject  selectedHighlight = object;
+
+	selectedHighlight.m_ID = -1;
+	selectedHighlight.m_wireframe = true;
+
+	// highlight object
+	selectedHighlight.m_model->UpdateEffects([&](IEffect* effect)
+		{
+			auto fog = dynamic_cast<IEffectFog*>(effect);
+			if (fog)
+			{
+				fog->SetFogEnabled(true);
+				fog->SetFogStart(0);
+				fog->SetFogEnd(0);
+				fog->SetFogColor(colour);
+			}
+		});
+	return selectedHighlight;
 }
 
 void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
@@ -580,6 +600,13 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 
 void Game::Lerp(DX::StepTimer const& t)
 {
+	/////Lerp
+	// get destination of selected object
+	//decrease the lerp time remaining
+	// 
+	// ATTENTION
+	// 
+	/////////
 	XMVECTOR dest = m_displayList.at(selectedID).m_position;
 	m_LerpRemain -= t.GetElapsedSeconds();
 	float lerp = (m_ArcBallLerp - m_LerpRemain) / m_LerpRemain;
@@ -588,6 +615,10 @@ void Game::Lerp(DX::StepTimer const& t)
 
 void Game::ColourControlPoint(int id)
 {
+	/////// Colour Control Points
+	//
+	///////
+
 	DisplayObject newDisplayObject;
 	newDisplayObject = m_displayList.at(id);
 	DisplayObject  selectedHighlight = newDisplayObject;

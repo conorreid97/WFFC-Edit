@@ -17,10 +17,9 @@ struct InputCommands
 	MouseState mouseState_RB;
 	ToolState tool;
 
-	bool forward;
-	bool back;
-	bool right;
-	bool left;
+	
+
+	// Mouse
 	bool rotRight;
 	bool rotLeft;
 	int mouse_X;
@@ -29,18 +28,36 @@ struct InputCommands
 	int prev_mouse_Y;
 	bool mouse_LB_Down;
 	bool mouse_RB_Down;
-	bool multiSelect;
 	bool drag;
+
+	// Keyboard
+	bool forward;	// W
+	bool back;		// S
+	bool right;		// D
+	bool left;		// A
+
+	bool multiSelect; // control
 	bool upArrow;
 	bool downArrow;
 	bool leftArrow;
 	bool rightArrow;
 	bool enter;
 	bool backspace;
-	bool duplicate;
+
+	///// Tools
+	// Terrain
 	int terrainDir;
 	bool endTerrainEdit;
+	// Duplicate
+	bool duplicate;
 
-	// object manip dialog
+	// Object manip dialog
 	bool updateObject;
+
+	// AI Nodes
+	bool AINode;
+	bool PathNode1;
+	bool PathNode2;
+	bool PathStart;
+	bool PathEnd;
 };

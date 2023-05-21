@@ -712,12 +712,12 @@ void ToolMain::CamSplineUpdate()
 		for (int i = 0; i < m_sceneGraph.size(); i++) {
 			if (m_sceneGraph.at(i).path_node_start) {
 				camSpline.p1 = XMVectorSet(m_sceneGraph[i].posX, m_sceneGraph[i].posY, m_sceneGraph[i].posZ, 1.0f); // 5
-				onActionPathNode(i);
+				//onActionPathNode(i);
 			}
 			
 			if (m_sceneGraph.at(i).path_node_end) {
 				camSpline.p2 = XMVectorSet(m_sceneGraph[i].posX, m_sceneGraph[i].posY, m_sceneGraph[i].posZ, 1.0f); // 6
-				onActionPathNode(i);
+				///onActionPathNode(i);
 			}
 		}
 		// control points

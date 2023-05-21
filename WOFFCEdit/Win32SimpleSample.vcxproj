@@ -212,6 +212,7 @@
       <DeploymentContent>true</DeploymentContent>
       <FileType>Document</FileType>
     </Media>
+    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

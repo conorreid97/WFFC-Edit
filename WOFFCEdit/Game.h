@@ -57,6 +57,7 @@ public:
 	void SetRebuildDisplayList(bool b) { m_rebuildDisplayList = b; }
 	bool GetRebuildDisplayList() { return m_rebuildDisplayList; }
 	void BuildDisplayList(std::vector<SceneObject> * SceneGraph); //note vector passed by reference 
+	DisplayObject ColourObject(DisplayObject object, XMVECTOR colour); // Colours a given object with a given colour
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void Lerp(DX::StepTimer const& t);

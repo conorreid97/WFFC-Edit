@@ -86,6 +86,7 @@ public:
 
 	// wireframe mode
 	bool bWireframe;
+	float scale;
 
 private:
 

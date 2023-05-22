@@ -5,6 +5,7 @@ d:\conor\github\cmp405_tools\woffcedit\x64\debug\selectdialogue.obj
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\sceneobject.obj
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\mfcmain.obj
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\pch.obj
+d:\conor\github\cmp405_tools\woffcedit\x64\debug\objectmanipdialogue.obj
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\mfcrenderframe.obj
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\mfcframe.obj
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\main.obj
@@ -17,8 +18,8 @@ d:\conor\github\cmp405_tools\woffcedit\x64\debug\cameraspline.obj
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\camera.obj
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\arcballcamera.obj
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\sqlite3.obj
-d:\conor\github\cmp405_tools\woffcedit\x64\debug\wofedit.exe
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\wofedit.ilk
+d:\conor\github\cmp405_tools\woffcedit\x64\debug\wofedit.exe
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\wofedit.pdb
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\win32simplesample.res
 d:\conor\github\cmp405_tools\woffcedit\x64\debug\wofedit.tlog\cl.command.1.tlog

@@ -54,7 +54,7 @@ struct InputCommands
 	// Focus
 	bool focus;
 	bool finishedLerp;
-	
+	bool bScaleManip;
 	// Object manip dialog
 	bool updateObject;
 

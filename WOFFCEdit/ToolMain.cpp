@@ -40,7 +40,7 @@ ToolMain::ToolMain()
 	}
 
 	camType = 1;
-	bScaleManip = false;
+	//m_toolInputCommands.bScaleManip = false;
 
 	p0 = XMFLOAT3(-10.0f, 0.0f, 0.0f);
 	p1 = XMFLOAT3(-5.0f, 5.0f, 0.0f);
@@ -154,13 +154,13 @@ void ToolMain::onActivateCamSpline()
 
 void ToolMain::onActivateScaling()
 {
-	if (!bScaleManip) {
-		bScaleManip = true;
+	if (!m_toolInputCommands.bScaleManip) {
+		m_toolInputCommands.bScaleManip = true;
 		bMoveManip = false;
 		bRotManip = false;
 	}
 	else {
-		bScaleManip = false;
+		m_toolInputCommands.bScaleManip = false;
 	}
 }
 
@@ -168,7 +168,7 @@ void ToolMain::onActivateMove()
 {
 	if (!bMoveManip) {
 		bMoveManip = true;
-		bScaleManip = false;
+		m_toolInputCommands.bScaleManip = false;
 		bRotManip = false;
 	}
 	else {
@@ -180,6 +180,9 @@ void ToolMain::onActivateRotate()
 {
 	if (!bRotManip) {
 		bRotManip = true;
+		m_toolInputCommands.bScaleManip = false; 
+		bMoveManip = false;
+
 	}
 	else {
 		bRotManip = false;
@@ -188,7 +191,14 @@ void ToolMain::onActivateRotate()
 
 void ToolMain::onActivateTerrainEdit()
 {
-	m_toolInputCommands.tool = TerrainEdit;
+	if (m_toolInputCommands.tool != TerrainEdit) {
+		m_toolInputCommands.tool = TerrainEdit;
+
+	}
+	else {
+		m_toolInputCommands.tool = Picking;
+
+	}
 }
 
 void ToolMain::onActionLoad()
@@ -486,14 +496,13 @@ void ToolMain::Tick(MSG *msg)
 	if (m_toolInputCommands.updateObject) {
 		m_d3dRenderer.UpdateObjectData(&m_sceneGraph.at(m_selectedObject), m_selectedObject);
 		
-		
 		m_toolInputCommands.updateObject = false;
 		m_d3dRenderer.SetRebuildDisplayList(true);
 	}
 
 	
 	// update the display list if manipilation is active
-	if (bScaleManip || bMoveManip || bRotManip || bCamSpline) {
+	if (m_toolInputCommands.bScaleManip || bMoveManip || bRotManip || bCamSpline) {
 		m_d3dRenderer.SetRebuildDisplayList(true);
 	}
 
@@ -620,11 +629,11 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.downArrow = true;
 	}
 	else m_toolInputCommands.downArrow = false;
-	if (m_keyArray[37]) {	// 40 is the number for the down button
+	if (m_keyArray[37]) {	//37 is the number for the left button
 		m_toolInputCommands.leftArrow = true;
 	}
 	else m_toolInputCommands.leftArrow = false;
-	if (m_keyArray[39]) {	// 40 is the number for the down button
+	if (m_keyArray[39]) {	// 39 is the number for the righ button
 		m_toolInputCommands.rightArrow = true;
 	}
 	else m_toolInputCommands.rightArrow = false;
@@ -756,18 +765,19 @@ void ToolMain::ObjectUpdate()
 	if (m_selectedObject == -1) {
 		return;
 	}
-	if (bScaleManip) {
+	if (m_toolInputCommands.bScaleManip) {
 			
 		if (m_toolInputCommands.upArrow) {
 			m_sceneGraph[m_selectedObject - 1].scaX += 0.2;
 			m_sceneGraph[m_selectedObject - 1].scaY += 0.2;
 			m_sceneGraph[m_selectedObject - 1].scaZ += 0.2;
-			
+			m_d3dRenderer.scale += 0.01;
 		}	
 		if (m_toolInputCommands.downArrow) {
 			m_sceneGraph[m_selectedObject - 1].scaX -= 0.2;
 			m_sceneGraph[m_selectedObject - 1].scaY -= 0.2;
 			m_sceneGraph[m_selectedObject - 1].scaZ -= 0.2;
+			m_d3dRenderer.scale -= 0.01;
 			//m_d3dRenderer.MoveObject();
 		}
 	}

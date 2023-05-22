@@ -169,8 +169,7 @@ void MFCMain::ToolBarButton3()
 void MFCMain::ToolBarButton4()
 {
 	m_ToolSystem.onActivateScaling();
-	//DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG2), hWnd, m_ToolSystem.onActivateManipulation);
-	//m_ToolSelectDialogue.ShowWindow(SW_SHOW);	//show modeless
+
 }
 
 void MFCMain::ToolBarButton5()

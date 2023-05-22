@@ -97,7 +97,7 @@ private:	//variables
 	int camType;
 
 	// Object Manipulation
-	bool bScaleManip;
+	//bool bScaleManip;
 	bool bMoveManip;
 	bool bRotManip;
 

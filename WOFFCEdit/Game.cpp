@@ -51,6 +51,7 @@ Game::Game()
 	m_LerpRemain = 0.5;
 	m_ArcBallLerp = 0.5;
 	arcballpos = XMFLOAT3(0.0, 0.0, 0.0);
+	scale = 0.0f;
 }
 
 Game::~Game()
@@ -158,7 +159,7 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 	}
 	else if (cameraType == 2) {
 		camView = arcBallCam.getViewMatrix();
-		arcBallCam.Update(&m_InputCommands);
+		arcBallCam.Update(&m_InputCommands, scale);
 		/*if (m_LerpRemain > 0)
 			Lerp(timer);*/
 	}
@@ -781,22 +782,18 @@ void Game::EditTerrain()
 				else {
 					m_displayChunk.m_terrainGeometry[i][j].position.y += 0.25f * m_InputCommands.terrainDir * (1 - ((dist - inRadius) / 10.f));
 				}
-
+				// min the terrain can dig
 				if (m_displayChunk.m_terrainGeometry[i][j].position.y < 0) {
 					m_displayChunk.m_terrainGeometry[i][j].position.y = 0;
 				}
+				// max the terrain can go
 				else if (m_displayChunk.m_terrainGeometry[i][j].position.y > 64) {
 					m_displayChunk.m_terrainGeometry[i][j].position.y = 64;
 				}
 
 				// recalculate normals
 				m_displayChunk.CalculateTerrainNormal(i, j);
-				std::pair<int, int> point;
-
-				// store the points for undo / redo command
-				point.first = i;
-				point.second = j;
-				m_pointVec.push_back(point);
+			
 			}
 		}
 	}

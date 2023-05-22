@@ -12,7 +12,7 @@ public:
 
 	void setCameraParams(const XMFLOAT3& eye, const XMFLOAT3& target, const XMFLOAT3& up);
 
-	void Update(InputCommands* m_InputCommands);
+	void Update(InputCommands* m_InputCommands, float scale);
 
 	XMMATRIX getViewMatrix();
 

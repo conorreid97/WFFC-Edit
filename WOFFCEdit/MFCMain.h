@@ -46,6 +46,8 @@ private:
 	afx_msg	void ToolBarButton8();
 	afx_msg	void ToolBarButton9();
 
+	afx_msg void ToolBarButton10();
+
 
 
 

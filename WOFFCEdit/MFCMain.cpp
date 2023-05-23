@@ -18,7 +18,7 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_BUTTON40011, &MFCMain::ToolBarButton7)
 	ON_COMMAND(ID_BUTTON40012, &MFCMain::ToolBarButton8)
 	ON_COMMAND(ID_BUTTON40013, &MFCMain::ToolBarButton9)
-
+	ON_COMMAND(ID_BUTTON40014, &MFCMain::ToolBarButton10)
 
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
@@ -144,12 +144,25 @@ void MFCMain::ToolBarButton1()
 	//m_ToolSystem.onActivateCamSpline();
 }
 
+// spline cam button
 void MFCMain::ToolBarButton2()
 {
-	m_ToolSystem.onActivateCamSpline();
+	// this is going to switch to spline cam
+	
 }
 
+// AI Spline
 void MFCMain::ToolBarButton3()
+{
+	m_ToolSystem.onActivateCamSpline();
+
+	
+
+	
+	
+}
+// focus
+void MFCMain::ToolBarButton4()
 {
 	if (!m_ToolSystem.bFocus)
 	{
@@ -164,33 +177,38 @@ void MFCMain::ToolBarButton3()
 	}
 
 	
-	
-}
-
-void MFCMain::ToolBarButton4()
-{
-	m_ToolSystem.onActivateScaling();
 
 }
-
+// scaling
 void MFCMain::ToolBarButton5()
 {
-	m_ToolSystem.onActivateMove();
+	m_ToolSystem.onActivateScaling();
+	
 }
-
+// moving
 void MFCMain::ToolBarButton6()
 {
-	m_ToolSystem.onActivateRotate();
+	m_ToolSystem.onActivateMove();
+	
 }
-
+//rotate
 void MFCMain::ToolBarButton7()
 {
-	m_ToolSystem.onActivateTerrainEdit();
+	m_ToolSystem.onActivateRotate();
+	
 }
-
+//terrain
 void MFCMain::ToolBarButton8()
 {
+	m_ToolSystem.onActivateTerrainEdit();
+
+
+
 	
+}
+// arcball cam
+void MFCMain::ToolBarButton9()
+{
 	if (m_ToolSystem.getCamType() == 1) {
 		m_ToolSystem.onArcBall();
 	}
@@ -198,10 +216,9 @@ void MFCMain::ToolBarButton8()
 		m_ToolSystem.setCamType(1);
 	}
 
-	
 }
-
-void MFCMain::ToolBarButton9()
+// wireframe
+void MFCMain::ToolBarButton10()
 {
 	if (!m_ToolSystem.bWireframe) {
 		m_ToolSystem.bWireframe = true;
@@ -210,8 +227,6 @@ void MFCMain::ToolBarButton9()
 		m_ToolSystem.bWireframe = false;
 	}
 }
-
-
 
 
 MFCMain::MFCMain()

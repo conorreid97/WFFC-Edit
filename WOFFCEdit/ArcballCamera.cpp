@@ -54,7 +54,6 @@ void ArcballCamera::Update(InputCommands* m_InputCommands, float scale)
 		m_radius -= scale;
 	}
 
-	//m_radius += 0.01;
 }
 
 XMMATRIX ArcballCamera::getViewMatrix()

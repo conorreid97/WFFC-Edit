@@ -84,11 +84,6 @@ void ObjectManipDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, st
 		m_PathEndCheck = SceneGraph->at(*Selection - 1).path_node_end;
 
 		m_CameraCheck = SceneGraph->at(*Selection - 1).camera;
-
-		//// ATTENTION
-		if (m_sceneAINodes->size() > 1) {
-			m_sceneAINodes->pop_back();
-		}
 	}
 }
 

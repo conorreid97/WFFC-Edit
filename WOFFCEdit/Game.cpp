@@ -543,47 +543,9 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 	m_displayChunk.SaveHeightMap();			//save heightmap to file.
 }
 
-void Game::Lerp(DX::StepTimer const& t)
-{
-	/////Lerp
-	// get destination of selected object
-	//decrease the lerp time remaining
-	// 
-	// ATTENTION
-	// 
-	/////////
-	XMVECTOR dest = m_displayList.at(selectedID).m_position;
-	m_LerpRemain -= t.GetElapsedSeconds();
-	float lerp = (m_ArcBallLerp - m_LerpRemain) / m_LerpRemain;
-	XMVectorLerp(XMVectorSet(0.0,0.0,0.0,1.0), dest, lerp);
-}
 
-void Game::ColourControlPoint(int id)
-{
-	/////// Colour Control Points
-	//
-	///////
 
-	DisplayObject newDisplayObject;
-	newDisplayObject = m_displayList.at(id);
-	DisplayObject  selectedHighlight = newDisplayObject;
 
-	selectedHighlight.m_ID = -1;
-	selectedHighlight.m_wireframe = true;
-
-	// highlight object
-	selectedHighlight.m_model->UpdateEffects([&](IEffect* effect)
-		{
-			auto fog = dynamic_cast<IEffectFog*>(effect);
-			if (fog)
-			{
-				fog->SetFogEnabled(true);
-				fog->SetFogStart(0);
-				fog->SetFogEnd(0);
-				fog->SetFogColor(Colors::IndianRed);
-			}
-		});
-}
 
 void Game::CamSplineTool()
 {
@@ -599,13 +561,6 @@ void Game::CamSplineTool()
 void Game::FocusTool()
 {
 	// switch to arcball
-	cameraType = 2;
-	m_LerpRemain = 0.5;
-	m_ArcBallLerp = 0.5;
-
-	currentCamPos = cam1.getCamPos();
-	targetPos = m_displayList[selectedID].m_position;
-
 	switchCam = true;
 
 	Vector3 targetOffset = Vector3(m_displayList[selectedID].m_position.x, m_displayList[selectedID].m_position.y, m_displayList[selectedID].m_position.z + 10);
@@ -680,7 +635,6 @@ void Game::TerrainHighlight()
 					break;
 				}
 			}
-
 		}
 	}
 
@@ -713,14 +667,6 @@ void Game::UpdateObjectData(SceneObject* scene, int i)
 	m_displayList.at(i).m_scale = Vector3(scene->scaX, scene->scaY, scene->scaZ);
 }
 
-void Game::StartTerrainEdit()
-{
-	for (int i = 0; i < 128; i++) {
-		for (int j = 0; j < 128; j++) {
-			m_ChunkY[i][j] = m_displayChunk.m_terrainGeometry[i][j].position.y;
-		}
-	}
-}
 
 void Game::EditTerrain()
 {
@@ -808,19 +754,7 @@ void Game::EditTerrain()
 	}
 }
 
-void Game::EndTerrainEdit()
-{
-	//std::vector<float> oldChunkYPoint;
-	//std::vector<float> newChunkYpoint;
 
-	//for (int i = 0; i < m_pointVec.size(); i++) {
-	//	newChunkYpoint.push_back(m_displayChunk.m_terrainGeometry[m_pointVec[i].first][m_pointVec[i].second].position.y);
-	//	oldChunkYPoint.push_back(m_ChunkY[m_pointVec[i].first][m_pointVec[i].second]);
-
-	//}
-
-	//TerrainEditCommand
-}
 
 #ifdef DXTK_AUDIO
 void Game::NewAudioDevice()

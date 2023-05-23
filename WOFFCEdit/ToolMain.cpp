@@ -5,13 +5,6 @@
 #include <vector>
 #include <sstream>
 
-//XMVECTOR controlPoints[] = {
-//	XMVectorSet(-1.0f, 0.0f, 0.0f, 1.0f),
-//	XMVectorSet(-0.5f, 0.5f, 0.0f, 1.0f),
-//	XMVectorSet(0.5f, -0.5f, 0.0f, 1.0f),
-//	XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f)
-//};
-
 //
 //ToolMain Class
 ToolMain::ToolMain()
@@ -41,28 +34,9 @@ ToolMain::ToolMain()
 		posVectorX.push_back(0);
 		posVectorY.push_back(0);
 	}
-
+	// set camera
 	camType = 1;
-	//m_toolInputCommands.bScaleManip = false;
 
-	p0 = XMFLOAT3(-10.0f, 0.0f, 0.0f);
-	p1 = XMFLOAT3(-5.0f, 5.0f, 0.0f);
-	p2 = XMFLOAT3(5.0f, -5.0f, 0.0f);
-	p3 = XMFLOAT3(10.0f, 0.0f, 0.0f);
-
-	controlPoints[0] = XMVectorSet(p0.x, p0.y, p0.z, 1.0f);
-	controlPoints[1] = XMVectorSet(p1.x, p1.y, p1.z, 1.0f);
-	controlPoints[2] = XMVectorSet(p2.x, p2.y, p2.z, 1.0f);
-	controlPoints[3] = XMVectorSet(p3.x, p3.y, p3.z, 1.0f);
-	
-	p = XMVectorSet(p0.x, p0.y, p0.z, 1.0);
-
-	pX = XMVectorGetX(p);
-	pY = XMVectorGetY(p);
-	pZ = XMVectorGetZ(p);
-	/*for (int i = 0; i < 5; i++) {
-		m_sceneAINodes.push_back()
-	}*/
 	bFocus = false;
 	bCamSpline = false;
 	bWireframe = false;
@@ -161,9 +135,6 @@ void ToolMain::onActivateCamSpline()
 	else {
 		bCamSpline = false;
 	}
-	//pos1 = camSpline.p0;
-
-	
 }
 
 void ToolMain::onActivateScaling()
@@ -196,7 +167,6 @@ void ToolMain::onActivateRotate()
 		bRotManip = true;
 		m_toolInputCommands.bScaleManip = false; 
 		bMoveManip = false;
-
 	}
 	else {
 		bRotManip = false;
@@ -207,11 +177,9 @@ void ToolMain::onActivateTerrainEdit()
 {
 	if (m_toolInputCommands.tool != TerrainEdit) {
 		m_toolInputCommands.tool = TerrainEdit;
-
 	}
 	else {
 		m_toolInputCommands.tool = Picking;
-
 	}
 }
 
@@ -366,12 +334,7 @@ void ToolMain::onActionDuplicate()
 void::ToolMain::onActionAINode() {
 	if (m_sceneGraph.size() > 0) {
 		m_sceneAINodes.push_back(m_sceneGraph.at(m_selectedObject - 1).ID);
-
 	}
-}
-
-void::ToolMain::onActionPathNode(int id) {
-	m_d3dRenderer.ColourControlPoint(id);
 }
 
 int ToolMain::getID(int ID)
@@ -701,11 +664,11 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.rightArrow = true;
 	}
 	else m_toolInputCommands.rightArrow = false;
-	if (m_keyArray[13]) {	// 40 is the number for the down button
+	if (m_keyArray[13]) {	// 13 is the number for the enter button
 		m_toolInputCommands.enter = true;
 	}
 	else m_toolInputCommands.enter = false;
-	if (m_keyArray[8]) {	// 40 is the number for the down button
+	if (m_keyArray[8]) {	// 8 is the number for the backspace button
 		m_toolInputCommands.backspace = true;
 	}
 	else m_toolInputCommands.backspace = false;
@@ -754,18 +717,15 @@ void ToolMain::MouseUpdate()
 	// set the right mouse button up if mouse moves off of screen
 	if (posVectorX.back() > m_width || posVectorX.back() < 0) {
 		m_toolInputCommands.mouse_RB_Down = false;
-		//bDragging = false;
 	}
 	else if (posVectorY.back() > m_height || posVectorY.back() < 0)
 	{
 		m_toolInputCommands.mouse_RB_Down = false;
 	}
-
+	// Perform the mouse picking
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
 		m_selectedObject = m_d3dRenderer.MousePicking();
-		
-		//objectManip.SetObjectData(&m_sceneGraph, &m_selectedObject, &m_toolInputCommands);
 		m_toolInputCommands.mouse_LB_Down = false;
 	}
 }
@@ -777,37 +737,21 @@ void ToolMain::CamSplineUpdate()
 		for (int i = 0; i < m_sceneGraph.size(); i++) {
 			if (m_sceneGraph.at(i).path_node_start) {
 				camSpline.p1 = XMVectorSet(m_sceneGraph[i].posX, m_sceneGraph[i].posY, m_sceneGraph[i].posZ, 1.0f); // 5
-				//onActionPathNode(i);
 			}
 			
 			if (m_sceneGraph.at(i).path_node_end) {
 				camSpline.p2 = XMVectorSet(m_sceneGraph[i].posX, m_sceneGraph[i].posY, m_sceneGraph[i].posZ, 1.0f); // 6
-				///onActionPathNode(i);
 			}
 		}
 		// control points
 		camSpline.p0 = XMVectorSet(m_sceneGraph[m_scenePathNodes[0]].posX, m_sceneGraph[m_scenePathNodes[0]].posY, m_sceneGraph[m_scenePathNodes[0]].posZ, 1.0f);
-		//onActionPathNode(m_scenePathNodes[0] - 1);
 		camSpline.p3 = XMVectorSet(m_sceneGraph[m_scenePathNodes[1]].posX, m_sceneGraph[m_scenePathNodes[1]].posY, m_sceneGraph[m_scenePathNodes[1]].posZ, 1.0f);
-		//onActionPathNode(m_scenePathNodes[1] - 1);
-		
-	
-		
+			
 		XMFLOAT3 AIPos = XMFLOAT3(0.0, 0.0, 0.0);
 		XMFLOAT3 CamPos = XMFLOAT3(0.0, 0.0, 0.0);
-		//XMVECTOR camPos = XMVectorSet(0.0, 0.0, 0.0, 1.0);
 		AIPos = camSpline.AIUpdate();
 		CamPos = camSpline.CamUpdate();
 
-		/*m_sceneGraph[8].posX = camPos.x;
-		m_sceneGraph[8].posY = camPos.y;
-		m_sceneGraph[8].posZ = camPos.z;*/
-		
-		//SceneObject sceneObjectVec
-
-		// create vector of sceneobject
-		// add to vector when ai node is clicked 
-		// loop through vector here
 		// update the position
 		if (m_selectedObject != -1) {
 			for (int i = 0; i < m_sceneAINodes.size(); i++) {
@@ -904,7 +848,6 @@ void ToolMain::TerrainUpdate()
 	if (m_toolInputCommands.tool == TerrainEdit) {
 		if (m_toolInputCommands.mouseState_LB == Pressed)
 		{
-			m_d3dRenderer.StartTerrainEdit();
 			m_toolInputCommands.mouseState_LB = Held;
 		}
 		if (m_toolInputCommands.mouseState_LB == Held) {
@@ -918,7 +861,6 @@ void ToolMain::TerrainUpdate()
 			m_d3dRenderer.EditTerrain();
 		}
 		if (m_toolInputCommands.endTerrainEdit) {
-			m_d3dRenderer.EndTerrainEdit();
 			m_toolInputCommands.endTerrainEdit = false;
 		}
 	}

@@ -9,7 +9,6 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::MenuEditSelect)
 	ON_COMMAND(ID_EDIT_OBJECTMANIPULATION, &MFCMain::MenuObjectManip)
 	ON_COMMAND(ID_BUTTON40001,	&MFCMain::ToolBarButton1)
-	// add on command for button 2
 	ON_COMMAND(ID_Button40006, &MFCMain::ToolBarButton2)
 	ON_COMMAND(ID_BUTTON40007, &MFCMain::ToolBarButton3)
 	ON_COMMAND(ID_BUTTON40008, &MFCMain::ToolBarButton4)
@@ -127,18 +126,14 @@ void MFCMain::MenuObjectManip()
 		m_ToolObjectManipDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_sceneAINodes, &m_ToolSystem.m_scenePathNodes, &m_ToolSystem.m_selectedObject, &m_ToolSystem.m_toolInputCommands);
 		m_ToolObjectManipDialogue.Create(IDD_DIALOG2);	//Start up modeless
 		m_ToolObjectManipDialogue.ShowWindow(SW_SHOW);	//show modeless
-		
-		
 	}
 	else {
 		MessageBox(m_toolHandle, L"Make sure to select an object before opening the inspector.", L"Error", MB_OK);
 	}
-
 }
 
 void MFCMain::ToolBarButton1()
 {
-	
 	m_ToolSystem.onActionSave();
 	m_ToolSystem.onActionSaveTerrain();
 	//m_ToolSystem.onActivateCamSpline();
@@ -160,11 +155,6 @@ void MFCMain::ToolBarButton2()
 void MFCMain::ToolBarButton3()
 {
 	m_ToolSystem.onActivateCamSpline();
-
-	
-
-	
-	
 }
 // focus
 void MFCMain::ToolBarButton4()
@@ -180,9 +170,6 @@ void MFCMain::ToolBarButton4()
 		m_ToolSystem.setCamType(1);
 
 	}
-
-	
-
 }
 // scaling
 void MFCMain::ToolBarButton5()
@@ -206,10 +193,6 @@ void MFCMain::ToolBarButton7()
 void MFCMain::ToolBarButton8()
 {
 	m_ToolSystem.onActivateTerrainEdit();
-
-
-
-	
 }
 // arcball cam
 void MFCMain::ToolBarButton9()
@@ -220,7 +203,6 @@ void MFCMain::ToolBarButton9()
 	else {
 		m_ToolSystem.setCamType(1);
 	}
-
 }
 // wireframe
 void MFCMain::ToolBarButton10()

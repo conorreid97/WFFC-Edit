@@ -135,6 +135,17 @@ void ToolMain::onArcBall() {
 	
 }
 
+void ToolMain::onCamSpline()
+{
+	if (m_toolInputCommands.CameraSet) {
+		setCamType(3);
+	}
+	else {
+		MessageBox(m_toolHandle, L"Make sure to set a camera.", L"Error", MB_OK);
+
+	}
+}
+
 void ToolMain::onActivateCamSpline()
 {
 	if (!bCamSpline) {
@@ -480,6 +491,9 @@ void ToolMain::Tick(MSG *msg)
 	}
 	else if (camType == 2) {
 		m_d3dRenderer.setCamType(2);
+	}
+	if (camType == 3) {
+		m_d3dRenderer.setCamType(3);
 	}
 
 	//if (m_selectedObject != -1 && m_sceneGraph.at(m_selectedObject -1).camera) {

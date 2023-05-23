@@ -27,6 +27,7 @@ public: //methods
 	void	onActionInitialise(HWND handle, int width, int height);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
 	void	onActionFocusCamera();
 	void onArcBall();
+	void onCamSpline();
 	void    onActivateCamSpline();
 	void	onActivateScaling();
 	void	onActivateMove();

@@ -148,7 +148,12 @@ void MFCMain::ToolBarButton1()
 void MFCMain::ToolBarButton2()
 {
 	// this is going to switch to spline cam
-	
+	if (m_ToolSystem.getCamType() == 1) {
+		m_ToolSystem.onCamSpline();
+	}
+	else {
+		m_ToolSystem.setCamType(1);
+	}
 }
 
 // AI Spline

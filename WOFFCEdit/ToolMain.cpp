@@ -33,6 +33,9 @@ ToolMain::ToolMain()
 	m_toolInputCommands.mouseState_LB = Released;
 	m_toolInputCommands.terrainDir = 1;
 	m_toolInputCommands.tool = Picking;
+	m_toolInputCommands.innerRadius = 15;
+	m_toolInputCommands.outerRadius = 25;
+	m_toolInputCommands.camSpeed = 0.30;
 	
 	for (int i = 0; i < 5; i++) {
 		posVectorX.push_back(0);
@@ -491,6 +494,7 @@ void ToolMain::Tick(MSG *msg)
 
 	CamSplineUpdate();
 
+	
 
 	// update object manipulation dialogue
 	if (m_toolInputCommands.updateObject) {
@@ -564,7 +568,50 @@ void ToolMain::UpdateInput(MSG * msg)
 	case WM_RBUTTONUP:
 		m_toolInputCommands.mouse_RB_Down = false;
 		break;
+	case WM_MOUSEWHEEL:
+		m_toolInputCommands.wheelScroll = GET_WHEEL_DELTA_WPARAM(msg->wParam);
 		
+
+		// mouse scroll wheel
+		// depending on what mode the user is in either increase brush size or increase cam speed
+		if (m_toolInputCommands.tool == Picking) {
+			if (m_toolInputCommands.wheelScroll > 0) {
+				m_toolInputCommands.camSpeed += 0.1f;
+			}
+			else {
+				m_toolInputCommands.camSpeed -= 0.1f;
+			}
+			if (m_toolInputCommands.camSpeed <= 0.1) {
+				m_toolInputCommands.camSpeed = 0.1;
+			}
+		}
+		if (m_toolInputCommands.tool == TerrainEdit) {
+			if (m_toolInputCommands.wheelScroll > 0) {
+				m_toolInputCommands.innerRadius += 1.0f;
+				m_toolInputCommands.outerRadius += 1.0f;
+			}
+			else {
+				m_toolInputCommands.innerRadius -= 1.0f;
+				m_toolInputCommands.outerRadius -= 1.0f;
+			}
+			// min inner radius
+			if (m_toolInputCommands.innerRadius <= 1.0) {
+				m_toolInputCommands.innerRadius = 1.0;
+			}
+			// max inner radius
+			if (m_toolInputCommands.innerRadius >= 40.0) {
+				m_toolInputCommands.innerRadius = 40.0;
+			}
+			// min outer radius
+			if (m_toolInputCommands.outerRadius <= 5.0) {
+				m_toolInputCommands.outerRadius = 5.0f;
+			}
+			// max outer radius
+			if (m_toolInputCommands.outerRadius >= 55.f) {
+				m_toolInputCommands.outerRadius = 55.f;
+			}
+		}
+		break;
 	}
 
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
@@ -594,14 +641,14 @@ void ToolMain::UpdateInput(MSG * msg)
 	//rotation
 	if (m_keyArray['E'])
 	{
-		m_toolInputCommands.rotRight = true;
-	}
-	else m_toolInputCommands.rotRight = false;
-	if (m_keyArray['Q'])
-	{
 		m_toolInputCommands.rotLeft = true;
 	}
 	else m_toolInputCommands.rotLeft = false;
+	if (m_keyArray['Q'])
+	{
+		m_toolInputCommands.rotRight = true;
+	}
+	else m_toolInputCommands.rotRight = false;
 	// Duplicating
 	if (m_keyArray['C'])
 	{

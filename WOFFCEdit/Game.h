@@ -75,7 +75,8 @@ public:
 	void EditTerrain();
 	void EndTerrainEdit();
 	float m_ChunkY[TERRAINRESOLUTION][TERRAINRESOLUTION];	// create a 2d array the same size as the chunk
-	std::vector<std::pair<int, int>> m_pointVec;	// adds edited points to a vector for undo / redo
+	
+
 	RECT		m_ScreenDimensions;
 	Camera cam1;
 	//Camera getCam1() { return cam1; }
@@ -87,6 +88,7 @@ public:
 	// wireframe mode
 	bool bWireframe;
 	float scale;
+	
 
 private:
 

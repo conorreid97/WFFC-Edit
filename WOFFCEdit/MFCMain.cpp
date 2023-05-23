@@ -140,6 +140,7 @@ void MFCMain::ToolBarButton1()
 {
 	
 	m_ToolSystem.onActionSave();
+	m_ToolSystem.onActionSaveTerrain();
 	//m_ToolSystem.onActivateCamSpline();
 }
 

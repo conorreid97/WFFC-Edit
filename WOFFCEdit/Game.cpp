@@ -686,8 +686,8 @@ void Game::TerrainHighlight()
 		{
 			//get distance between vertex and intersection point (ignoring y axis)
 			const float distance = Vector3::Distance(Vector3(IntersectionPoint.x, 0, IntersectionPoint.z), Vector3(m_displayChunk.m_terrainGeometry[i][j].position.x, 0, m_displayChunk.m_terrainGeometry[i][j].position.z));
-			const int outerRadius = 25;
-			const int innerRadius = 15;
+			const int outerRadius = m_InputCommands.outerRadius;
+			const int innerRadius = m_InputCommands.innerRadius;
 			if (distance < outerRadius && distance> innerRadius)
 			{
 				m_displayChunk.m_bHighlight[i][j] = true;
@@ -773,8 +773,8 @@ void Game::EditTerrain()
 			const float dist = Vector3::Distance(Vector3(InterPoint.x, 0, InterPoint.z), 
 													Vector3(m_displayChunk.m_terrainGeometry[i][j].position.x, 
 														0, m_displayChunk.m_terrainGeometry[i][j].position.z));
-			const int outRadius = 25;
-			const int inRadius = 15;
+			const int outRadius = m_InputCommands.outerRadius;
+			const int inRadius = m_InputCommands.innerRadius;
 			if (dist < outRadius) {
 				if (dist < inRadius) {
 					m_displayChunk.m_terrainGeometry[i][j].position.y += 0.25f * m_InputCommands.terrainDir;
@@ -801,14 +801,14 @@ void Game::EditTerrain()
 
 void Game::EndTerrainEdit()
 {
-	std::vector<float> oldChunkYPoint;
-	std::vector<float> newChunkYpoint;
+	//std::vector<float> oldChunkYPoint;
+	//std::vector<float> newChunkYpoint;
 
-	for (int i = 0; i < m_pointVec.size(); i++) {
-		newChunkYpoint.push_back(m_displayChunk.m_terrainGeometry[m_pointVec[i].first][m_pointVec[i].second].position.y);
-		oldChunkYPoint.push_back(m_ChunkY[m_pointVec[i].first][m_pointVec[i].second]);
+	//for (int i = 0; i < m_pointVec.size(); i++) {
+	//	newChunkYpoint.push_back(m_displayChunk.m_terrainGeometry[m_pointVec[i].first][m_pointVec[i].second].position.y);
+	//	oldChunkYPoint.push_back(m_ChunkY[m_pointVec[i].first][m_pointVec[i].second]);
 
-	}
+	//}
 
 	//TerrainEditCommand
 }

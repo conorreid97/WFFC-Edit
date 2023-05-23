@@ -29,6 +29,7 @@ struct InputCommands
 	bool mouse_LB_Down;
 	bool mouse_RB_Down;
 	bool drag;
+	int wheelScroll;
 
 	// Keyboard
 	bool forward;	// W
@@ -48,6 +49,9 @@ struct InputCommands
 	// Terrain
 	int terrainDir;
 	bool endTerrainEdit;
+	float innerRadius;
+	float outerRadius;
+
 	// Duplicate
 	bool duplicate;
 
@@ -55,6 +59,8 @@ struct InputCommands
 	bool focus;
 	bool finishedLerp;
 	bool bScaleManip;
+	float camSpeed;
+
 	// Object manip dialog
 	bool updateObject;
 

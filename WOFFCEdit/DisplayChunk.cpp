@@ -182,6 +182,7 @@ void DisplayChunk::SaveHeightMap()
 		m_heightMap[i] = 0;
 	}*/
 
+	GenerateHeightmap();
 	FILE *pFile = NULL;
 
 	// Open The File In Read / Binary Mode.
@@ -199,25 +200,32 @@ void DisplayChunk::SaveHeightMap()
 	
 }
 
-void DisplayChunk::UpdateTerrain()
+//void DisplayChunk::UpdateTerrain()
+//{
+//	//all this is doing is transferring the height from the heigtmap into the terrain geometry.
+//	int index;
+//	for (size_t i = 0; i < TERRAINRESOLUTION; i++)
+//	{
+//		for (size_t j = 0; j < TERRAINRESOLUTION; j++)
+//		{
+//			index = (TERRAINRESOLUTION * i) + j;
+//			m_terrainGeometry[i][j].position.y = (float)(m_heightMap[index])*m_terrainHeightScale;	
+//		}
+//	}
+//	CalculateTerrainNormals();
+//
+//}
+void DisplayChunk::GenerateHeightmap()
 {
-	//all this is doing is transferring the height from the heigtmap into the terrain geometry.
 	int index;
 	for (size_t i = 0; i < TERRAINRESOLUTION; i++)
 	{
 		for (size_t j = 0; j < TERRAINRESOLUTION; j++)
 		{
 			index = (TERRAINRESOLUTION * i) + j;
-			m_terrainGeometry[i][j].position.y = (float)(m_heightMap[index])*m_terrainHeightScale;	
+			m_heightMap[index] = (float)(m_terrainGeometry[i][j].position.y / m_terrainHeightScale);
 		}
 	}
-	CalculateTerrainNormals();
-
-}
-
-void DisplayChunk::GenerateHeightmap()
-{
-	//insert how YOU want to update the heigtmap here! :D
 }
 
 void DisplayChunk::CalculateTerrainNormal(int i, int j)

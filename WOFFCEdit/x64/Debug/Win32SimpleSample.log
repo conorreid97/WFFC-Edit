@@ -1,1 +1,15 @@
-﻿  Win32SimpleSample.vcxproj -> D:\conor\Github\CMP405_Tools\WOFFCEdit\x64\Debug\WoFEdit.exe
+﻿  DisplayChunk.cpp
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(14,27): warning C4305: '=': truncation from 'double' to 'float'
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(15,49): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(93,36): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(94,185): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(94,81): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(114,10): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(189,10): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(225,36): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(226,68): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(252,30): warning C4101: 'index4': unreferenced local variable
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(252,14): warning C4101: 'index2': unreferenced local variable
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(252,22): warning C4101: 'index3': unreferenced local variable
+D:\conor\Github\CMP405_Tools\WOFFCEdit\DisplayChunk.cpp(252,6): warning C4101: 'index1': unreferenced local variable
+  Win32SimpleSample.vcxproj -> D:\conor\Github\CMP405_Tools\WOFFCEdit\x64\Debug\WoFEdit.exe

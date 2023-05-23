@@ -102,19 +102,19 @@ void Camera::update(InputCommands* m_InputCommands, DX::StepTimer const& t)
 	//process input and update stuff
 	if (m_InputCommands->forward)
 	{
-		m_camPosition += m_camLookDirection * m_movespeed;
+		m_camPosition += m_camLookDirection * m_InputCommands->camSpeed;
 	}
 	if (m_InputCommands->back)
 	{
-		m_camPosition -= m_camLookDirection * m_movespeed;
+		m_camPosition -= m_camLookDirection * m_InputCommands->camSpeed;
 	}
 	if (m_InputCommands->right)
 	{
-		m_camPosition += m_camRight * m_movespeed;
+		m_camPosition += m_camRight * m_InputCommands->camSpeed;
 	}
 	if (m_InputCommands->left)
 	{
-		m_camPosition -= m_camRight * m_movespeed;
+		m_camPosition -= m_camRight * m_InputCommands->camSpeed;
 	}
 
 	//update lookat point

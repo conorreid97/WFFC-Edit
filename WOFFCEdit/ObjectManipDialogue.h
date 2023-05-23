@@ -64,6 +64,8 @@ public:
 	int m_PathNode1Check;
 	int m_PathEndCheck;
 
+	int m_CameraCheck;
+
 	int m_Current = 0;
 	bool m_IsSelected;
 	afx_msg void OnBnClickedCheck1();
@@ -71,7 +73,7 @@ public:
 	afx_msg void OnBnClickedPathstart();
 	afx_msg void OnBnClickedPathnode();
 	afx_msg void OnBnClickedPathend();
-	afx_msg void OnBnClickedPathnode2();
+	afx_msg void OnBnClickedCamera();
 };
 
 INT_PTR CALLBACK SelectProc(HWND   hwndDlg, UINT   uMsg, WPARAM wParam, LPARAM lParam);

@@ -482,6 +482,9 @@ void ToolMain::Tick(MSG *msg)
 		m_d3dRenderer.setCamType(2);
 	}
 
+	//if (m_selectedObject != -1 && m_sceneGraph.at(m_selectedObject -1).camera) {
+	//	//DeleteObject();
+	//}
 
 	// update the wireframe mode
 	m_d3dRenderer.bWireframe = bWireframe;
@@ -774,12 +777,13 @@ void ToolMain::CamSplineUpdate()
 		camSpline.p3 = XMVectorSet(m_sceneGraph[m_scenePathNodes[1]].posX, m_sceneGraph[m_scenePathNodes[1]].posY, m_sceneGraph[m_scenePathNodes[1]].posZ, 1.0f);
 		//onActionPathNode(m_scenePathNodes[1] - 1);
 		
-		m_sceneGraph.at(5).editor_pivot_vis = true;
-		m_sceneGraph.at(5).pivotX = 5.0f;
+	
 		
-		XMFLOAT3 camPos = XMFLOAT3(0.0, 0.0, 0.0);
+		XMFLOAT3 AIPos = XMFLOAT3(0.0, 0.0, 0.0);
+		XMFLOAT3 CamPos = XMFLOAT3(0.0, 0.0, 0.0);
 		//XMVECTOR camPos = XMVectorSet(0.0, 0.0, 0.0, 1.0);
-		camPos = camSpline.update();
+		AIPos = camSpline.AIUpdate();
+		CamPos = camSpline.CamUpdate();
 
 		/*m_sceneGraph[8].posX = camPos.x;
 		m_sceneGraph[8].posY = camPos.y;
@@ -793,15 +797,13 @@ void ToolMain::CamSplineUpdate()
 		// update the position
 		if (m_selectedObject != -1) {
 			for (int i = 0; i < m_sceneAINodes.size(); i++) {
-				m_sceneGraph[m_sceneAINodes[i]].posX = camPos.x;
-				m_sceneGraph[m_sceneAINodes[i]].posY = camPos.y;
-				m_sceneGraph[m_sceneAINodes[i]].posZ = camPos.z;
+				m_sceneGraph[m_sceneAINodes[i]].posX = AIPos.x;
+				m_sceneGraph[m_sceneAINodes[i]].posY = AIPos.y;
+				m_sceneGraph[m_sceneAINodes[i]].posZ = AIPos.z;
+
+				m_d3dRenderer.cam2.m_camPosition = CamPos;
+				m_d3dRenderer.cam2.m_camOrientation - XMFLOAT3(1.0, 0.0, 0.0);
 			}
-		/*	if (m_sceneGraph.at(m_selectedObject - 1).AINode) {
-				m_sceneGraph[m_selectedObject - 1].posX = camPos.x;
-				m_sceneGraph[m_selectedObject - 1].posY = camPos.y;
-				m_sceneGraph[m_selectedObject - 1].posZ = camPos.z;
-			}*/
 		}
 		
 	}

@@ -18,7 +18,7 @@ BEGIN_MESSAGE_MAP(ObjectManipDialogue, CDialogEx)
 	ON_BN_CLICKED(IDC_PathStart, &ObjectManipDialogue::OnBnClickedPathstart)
 	ON_BN_CLICKED(IDC_PathNode, &ObjectManipDialogue::OnBnClickedPathnode)
 	ON_BN_CLICKED(IDC_PathEnd, &ObjectManipDialogue::OnBnClickedPathend)
-	ON_BN_CLICKED(IDC_PathNode2, &ObjectManipDialogue::OnBnClickedPathnode2)
+	ON_BN_CLICKED(IDC_Camera, &ObjectManipDialogue::OnBnClickedCamera)
 END_MESSAGE_MAP()
 
 
@@ -83,6 +83,8 @@ void ObjectManipDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, st
 		m_PathNodeCheck = SceneGraph->at(*Selection - 1).path_node;
 		m_PathEndCheck = SceneGraph->at(*Selection - 1).path_node_end;
 
+		m_CameraCheck = SceneGraph->at(*Selection - 1).camera;
+
 		//// ATTENTION
 		if (m_sceneAINodes->size() > 1) {
 			m_sceneAINodes->pop_back();
@@ -116,6 +118,7 @@ void ObjectManipDialogue::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_PathNode, m_PathNodeCheck);
 	DDX_Check(pDX, IDC_PathEnd, m_PathEndCheck);
 
+	DDX_Check(pDX, IDC_Camera, m_CameraCheck);
 }
 
 void ObjectManipDialogue::End()
@@ -243,6 +246,7 @@ void ObjectManipDialogue::OnBnClickedPathnode()
 		m_scenePathNodes->pop_back();
 	}
 	m_scenePathNodes->push_back(m_Current);
+	m_Inputcommands->PathNode1 = true;
 	//m_ToolSystem.onActionPathNode(m_Current);
 }
 
@@ -270,9 +274,20 @@ void ObjectManipDialogue::OnBnClickedPathend()
 }
 
 
-void ObjectManipDialogue::OnBnClickedPathnode2()
+void ObjectManipDialogue::OnBnClickedCamera()
 {
 	// TODO: Add your control notification handler code here
-	//m_sceneGraph->at(m_Current).path_node = true;
 
+	if (!m_Inputcommands->CameraSet) {
+		m_sceneGraph->at(m_Current).camera = true;
+		m_Inputcommands->CameraSet = true;
+		m_sceneGraph->at(prevAINodeID).camera = false;
+	}
+	else {
+		m_sceneGraph->at(m_Current).camera = false;
+		if (prevAINodeID != m_Current) {
+			m_sceneGraph->at(prevAINodeID).camera = false;
+			m_sceneGraph->at(m_Current).camera = true;
+		}
+	}
 }

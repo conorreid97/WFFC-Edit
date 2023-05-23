@@ -28,7 +28,7 @@ private:
 	float tParam;
 
 	XMVECTOR splineCamPos;
-
+	XMVECTOR splineAIPos;
 
 public:
 	CameraSpline();
@@ -36,7 +36,8 @@ public:
 
 	XMFLOAT3 catmullRomSpline(float time);
 
-	XMFLOAT3 update();
+	XMFLOAT3 AIUpdate();
+	XMFLOAT3 CamUpdate();
 
 	XMVECTOR p0, p1, p2, p3;
 	//XMFLOAT3 p0, p1, p2, p3;

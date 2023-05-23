@@ -79,6 +79,7 @@ public:
 
 	RECT		m_ScreenDimensions;
 	Camera cam1;
+	Camera cam2;
 	//Camera getCam1() { return cam1; }
 
 #ifdef DXTK_AUDIO

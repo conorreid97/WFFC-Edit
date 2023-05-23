@@ -70,4 +70,6 @@ struct InputCommands
 	bool PathNode2;
 	bool PathStart;
 	bool PathEnd;
+
+	bool CameraSet;
 };

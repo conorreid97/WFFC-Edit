@@ -38,6 +38,7 @@ Game::Game()
 	cameraType = 2;
 	bCamPath = false;
 	camView = cam1.GetViewMatrix();
+	
 
 	bFog = true;
 	
@@ -158,12 +159,14 @@ void Game::Update(DX::StepTimer const& timer, std::vector<SceneObject>* SceneGra
 		cam1.update(&m_InputCommands, timer);
 	}
 	else if (cameraType == 2) {
+		
 		camView = arcBallCam.getViewMatrix();
 		arcBallCam.Update(&m_InputCommands, scale);
-		/*if (m_LerpRemain > 0)
-			Lerp(timer);*/
 	}
-
+	else if (cameraType == 3) {
+		camView = cam2.GetViewMatrix();
+		cam2.update(&m_InputCommands, timer);
+	}
 	if (m_InputCommands.tool == TerrainEdit) {
 		TerrainHighlight();
 	}
@@ -486,6 +489,12 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		}
 		if (SceneGraph->at(i).AINode) {
 			DisplayObject  selectedHighlight = ColourObject(newDisplayObject, Colors::Coral);
+		}
+		if (SceneGraph->at(i).camera) {
+			DisplayObject selectedHighlight = ColourObject(newDisplayObject, Colors::Green);
+			cam2.m_camPosition = XMFLOAT3(SceneGraph->at(i).posX - 5, SceneGraph->at(i).posY + 2, SceneGraph->at(i).posZ);
+			
+			
 		}
 		// Colour the selected object
 		if (SceneGraph->at(i).ID == selectedID) {

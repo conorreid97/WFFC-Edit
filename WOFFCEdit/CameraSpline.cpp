@@ -82,7 +82,7 @@ XMFLOAT3 CameraSpline::catmullRomSpline(float time)
 	return c;
 }
 
-XMFLOAT3 CameraSpline::update()
+XMFLOAT3 CameraSpline::CamUpdate()
 {
 
 	// Increment the current time
@@ -101,6 +101,29 @@ XMFLOAT3 CameraSpline::update()
 	XMFLOAT3 fSplinePos = XMFLOAT3(0.0, 0.0, 0.0);
 
 	XMStoreFloat3(&fSplinePos, splineCamPos);
+	fSplinePos = XMFLOAT3(fSplinePos.x - 5, fSplinePos.y + 5, fSplinePos.z);
+	return fSplinePos;
+}
 
+XMFLOAT3 CameraSpline::AIUpdate()
+{
+
+	// Increment the current time
+	currentTime += timeDelta;
+
+	// Wrap the time around to keep it within the range [0, 1)
+	if (currentTime >= 1.0f)
+	{
+		currentTime = 0.0f;
+	}
+
+	// update camera to spline pos
+	//splineCamPos = catmullRomSpline(currentTime);
+
+	splineAIPos = XMVectorCatmullRom(p0, p1, p2, p3, currentTime);
+	XMFLOAT3 fSplinePos = XMFLOAT3(0.0, 0.0, 0.0);
+	
+	XMStoreFloat3(&fSplinePos, splineAIPos);
+	
 	return fSplinePos;
 }
